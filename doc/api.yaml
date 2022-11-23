@@ -9,7 +9,31 @@ info:
 
 paths: 
 
-  
+  /session/doLogin:
+    post:
+      tags: ["login"]
+      summary: Logs in the user
+      description: |-
+        If the user does not exist, it will be created,
+        and an identifier is returned.
+        If the user exists, the user identifier is returned.
+        
+      operationId: doLogin
+      requestBody:
+        description: User details
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Username"
+        required: true
+
+
+      responses:
+        '201': { $ref: "#/components/schemas/UserIdentifier" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '404': { $ref: "#/components/responses/NotFound" }
+
+        
   /users/{userId}/getUserProfile:
     parameters:
       - name: userId
@@ -30,7 +54,7 @@ paths:
       responses:
         "200": { $ref: "#/components/responses/UserInfo" }
         "400": { $ref: "#/components/responses/BadRequest" }
-        "404": { description: User not found}
+        "404": { $ref: "#/components/responses/NotFound"}
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 
@@ -54,7 +78,9 @@ paths:
         
       responses:
         "200": { $ref: "#/components/responses/UserInfo" }
-        '401': { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
         
 
 
@@ -86,7 +112,9 @@ paths:
                 type: string
                 format: binary
           
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
 
   /users/{userId}/getLogo:
     get: 
@@ -120,32 +148,13 @@ paths:
                     description: Logo title
                     type: string
         
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
         
 
 
-  /session/doLogin:
-    post:
-      tags: ["login"]
-      summary: Logs in the user
-      description: |-
-        If the user does not exist, it will be created,
-        and an identifier is returned.
-        If the user exists, the user identifier is returned.
-        
-      operationId: doLogin
-      requestBody:
-        description: User details
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Username"
-        required: true
-
-
-      responses:
-        '201': { $ref: "#/components/schemas/UserIdentifier" }
-        '401': { $ref: "#/components/responses/Error" }
+  
                 
   /users/{userId}/uploadPhoto:
     post:
@@ -176,7 +185,9 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
 
 
 
@@ -220,7 +231,9 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
 
 
   /users/{userId}/likePhoto/{photoId}:
@@ -253,7 +266,9 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
                 
                 
   /users/{userId}/setMyUserName:
@@ -284,7 +299,9 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
                 
                 
 
@@ -316,7 +333,9 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
                 
   /users/{userId}/banUser/{userBanned}:
     put:
@@ -346,7 +365,9 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
   
   /users/{userId}/unfollowUser/{unfollowedUserId}:
     delete:
@@ -378,7 +399,9 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
+
 
 
   /users/{userId}/unbanUser/{bannedUserId}:
@@ -411,7 +434,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
 
 
   /users/{userId}/unlikePhoto/{photoId}:
@@ -445,7 +469,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
 
 
   /users/{userId}/uncommentPhoto/{photoId}:
@@ -479,8 +504,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
-
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
 
   /users/{userId}/deletePhoto/{photoId}:
     delete:
@@ -513,14 +538,23 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/Error" }
+        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        "404": { $ref: "#/components/responses/NotFound"}
 
 
 
   
 components:
 
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
   responses:
+
+    UnauthorizedError:
+      description: Access token is missing or invalid
   
     UserInfo:
       description: Information related to the user
@@ -539,8 +573,8 @@ components:
           schema:
             $ref: "#/components/schemas/IntegerOK"
             
-    Error:
-      description: User ID not found or another error occurred.
+    NotFound:
+      description: Resource not found.
       content:
         application/json:
           schema:
@@ -580,6 +614,7 @@ components:
       maxLength: 16
     
     
-
+security:
+  - bearerAuth: []
       
       
