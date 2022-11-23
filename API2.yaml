@@ -110,7 +110,7 @@ paths:
 
 
 
-  /session/{userId}/commentPhoto:
+  /session/{userId}/commentPhoto/{photoId}:
     post:
       parameters:
       - name: userId
@@ -120,10 +120,10 @@ paths:
         required: true
         description: userId
         
-      - in: query
-        name: photoID
-        schema:
+      - name: photoId
+        schema: 
           type: integer
+        in: path
         required: true
         description: ID of the photo to be commented
         
