@@ -250,21 +250,22 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401': { $ref: "#/components/responses/Error" }
   
-  /session/{userId}/unfollowUser:
-    put:
+  /session/{userId}/unfollowUser/{unfollowedUserId}:
+    delete:
       parameters:
       - name: userId
         schema: 
           type: integer
         in: path
         required: true
-        description: userId
+        description: user logged
         
-      - in: query
-        name: followedUserID
+      - name: unfollowedUserId
         schema: 
           type: integer
+        in: path 
         required: true
+        description: user to be unfollowed
 
         
       
