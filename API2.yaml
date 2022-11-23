@@ -9,8 +9,7 @@ info:
 
 paths: 
 
-  #-----------------------------------------
-  #GET
+  
   /session/{username}:
     parameters:
       - name: username
@@ -41,7 +40,38 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 
-  components:
+  /session/{username}/stream:
+    get: 
+      parameters:
+      - name: username
+        schema: {$ref: "#/components/schemas/Username"}
+        in: path
+        required: true
+        description: Username
+      
+      
+      summary: Stream of photos of a user
+      operationId: getMyStream
+      description: |
+        Obtains the stream of photos of a user searched by its username. It returns a list with all the photos in inverse chronological order
+        
+      responses:
+        "200":
+          description: Request accepted, user found
+          
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                
+  
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { description: User not found}
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
+components:
 
   responses:
     BadRequest:
@@ -70,3 +100,7 @@ paths:
       minLength: 3
       maxLength: 16
     
+    
+
+      
+      
