@@ -574,8 +574,42 @@ components:
               photos:
                 type: array
                 items:
-                  type: integer
-                example: [10000,10001,10002]
+                  type: object
+                  properties:
+                    
+                    photoID: 
+                      type: integer
+                      
+                    likes: 
+                      type: array
+                      items:
+                        type: string
+                      
+                    #each comment is an array with [user, comment]
+                    comments:
+                      type: array
+                      items: 
+                        type: object
+                        properties: 
+                          user:
+                            type: string
+                          comment:
+                            type: string
+
+
+                        
+                    date: 
+                      type: string
+                      format: date-time
+                      description: Creation date and time
+                     
+                      
+                      
+                example: {"PhotoId": 1000, 
+                          "Likes": ["JohnDoe","CarlSagan"],
+                          "Comments": [{"JohnDoe","Wow, nice trip!"}, {"CarlSagan", "Amazing!"}],
+                          "Date":"2021-01-30T08:30:00Z"
+                         }
               
               
     OK: 
