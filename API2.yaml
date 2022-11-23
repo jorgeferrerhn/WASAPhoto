@@ -266,14 +266,6 @@ paths:
         required: true
         description: userId
         
-      - in: query
-        name: newUsername
-        schema: {$ref: "#/components/schemas/Username"}
-        required: true
-        description: new username
-        
-        
-      
       
       tags: ["setMyUserName"]
       summary: Given the user ID, changes username of the user
@@ -282,6 +274,13 @@ paths:
         
       operationId: setMyUserName
       
+      requestBody:
+        description: User name
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Username"
+        required: true
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
