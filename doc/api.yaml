@@ -571,14 +571,17 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/IntegerOK"
+            type: integer
+            example: 1
+        
             
     NotFound:
       description: Resource not found.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/IntegerError"
+            type: integer
+            example: -1
 
               
     BadRequest:
@@ -596,14 +599,6 @@ components:
     UserIdentifier:
       type: integer
       example: 9013213
-    
-    IntegerOK:
-      type: integer
-      example: 1
-        
-    IntegerError:
-      type: integer
-      example: -1
     
           
     Username:
