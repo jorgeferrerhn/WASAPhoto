@@ -42,6 +42,7 @@ paths:
 
 
   
+
   /session/{username}/stream:
     
 
@@ -143,14 +144,7 @@ paths:
         required: true
         description: Username
 
-      - in: formData
-        name: upfile
-        type: file
-        required: true
-        description: Photo 
-
-      
-      
+    
       tags: ["uploadPhoto"]
       summary: Uploads a photo by the user
       description: |-
@@ -158,18 +152,12 @@ paths:
         
       operationId: uploadPhoto
       requestBody:
-        description: User details
+        description: User photo upload
         content:
-          application/json:
+          image/png:
             schema:
-              type: object
-              properties:
-                name: 
-                  type: string
-                  example: Maria
-                  pattern: 'ˆ.*?$'
-                  minLength: 3
-                  maxLength: 16
+              type: string
+              format: binary
         required: true
 
 
@@ -206,21 +194,14 @@ paths:
         in: path
         required: true
         description: Username
-
-      - in: query
-        name: upfile
-        type: file
-        required: true
-        description: Photo 
-
       
       
-      tags: ["uploadPhoto"]
+      tags: ["commentPhoto"]
       summary: Uploads a photo by the user
       description: |-
         Uploads a photo by the logged user and it appends to the beginning of the list
         
-      operationId: uploadPhoto
+      operationId: commentPhoto
       requestBody:
         description: User details
         content:
@@ -332,7 +313,7 @@ paths:
     #DELETE
     
     
- 
+  
     
 components:
 
