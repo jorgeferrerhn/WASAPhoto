@@ -36,7 +36,8 @@ paths:
     get: 
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/IntegerOK"}
+        schema: 
+          type: integer
         in: path
         required: true
         description: userId
@@ -49,9 +50,73 @@ paths:
         
       responses:
         "200": { $ref: "#/components/responses/UserInfo" }
-        "400": { $ref: "#/components/responses/BadRequest" }
         '401': { $ref: "#/components/responses/Error" }
-        "500": { $ref: "#/components/responses/InternalServerError" }
+        
+
+
+  /images/{identifier}:
+    get: 
+      parameters:
+      - name: identifier
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: Image identifier.
+      
+      
+      summary: Get an specific image searched by its identifier.
+      operationId: getImage
+
+
+      description: |
+        Obtains the raw image. If it does not exist, it returns -1.
+        
+      responses:
+        "200": 
+          description: Requested image
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+          
+        '401': { $ref: "#/components/responses/Error" }
+
+  /session/{userId}/getLogo:
+    get: 
+      parameters:
+      - name: userId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: userId
+      
+      
+      summary: Get logo of a user specified by parameter
+      operationId: getLogo
+      description: |
+        Obtains the raw image. If it does not exist, it returns -1.
+        
+      responses:
+        "200": 
+          description: Requested image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file:
+                    description: Logo image ID
+                    type: string
+
+                  title:
+                    description: Logo title
+                    type: string
+        
+        '401': { $ref: "#/components/responses/Error" }
+        
 
 
   /session/login:
