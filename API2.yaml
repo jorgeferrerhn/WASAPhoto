@@ -89,6 +89,46 @@ paths:
               schema:
                 $ref: "#/components/schemas/IntegerReturn"
                 
+  /session/{username}/uploadPhoto:
+    post:
+      parameters:
+      - name: username
+        schema: {$ref: "#/components/schemas/Username"}
+        in: path
+        required: true
+        description: Username
+
+    
+      tags: ["uploadPhoto"]
+      summary: Uploads a photo by the user
+      description: |-
+        Uploads a photo by the logged user and it appends to the beginning of the list
+        
+      operationId: uploadPhoto
+      requestBody:
+        description: User photo upload
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+        required: true
+
+
+      responses:
+        '201':
+          description: User photo uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntegerReturn"
+
+        '401':
+          description: User photo upload action not successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntegerReturn"
 
 components:
 
