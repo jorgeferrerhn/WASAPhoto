@@ -74,7 +74,7 @@ paths:
 
 
       responses:
-        '201': { $ref: "#/components/responses/OK" }
+        '201': { $ref: "#/components/schemas/UserIdentifier" }
         '401': { $ref: "#/components/responses/Error" }
                 
   /session/{userId}/uploadPhoto:
@@ -490,6 +490,9 @@ components:
 
   schemas:
     
+    UserIdentifier:
+      type: integer
+      example: 9013213
     
     IntegerOK:
       type: integer
