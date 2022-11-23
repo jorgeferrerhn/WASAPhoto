@@ -25,6 +25,8 @@ paths:
       description: |
         Obtains an user by its userId. It returns a list with the attributes of the user, or "Error" if not found.
         
+      tags: ["getUsername"]
+
       responses:
         "200": { $ref: "#/components/responses/UserInfo" }
         "400": { $ref: "#/components/responses/BadRequest" }
@@ -42,6 +44,8 @@ paths:
         required: true
         description: userId
       
+
+      tags: ["getUserStream"]
       
       summary: Stream of photos of a user
       operationId: getStream
@@ -68,6 +72,7 @@ paths:
       summary: Get an specific image searched by its identifier.
       operationId: getImage
 
+      tags: ["getImageById"]
 
       description: |
         Obtains the raw image. If it does not exist, it returns -1.
@@ -93,7 +98,7 @@ paths:
         required: true
         description: userId
       
-      
+      tags: ["getLogo"]
       summary: Get logo of a user specified by parameter
       operationId: getLogo
       description: |
