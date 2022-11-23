@@ -74,8 +74,8 @@ paths:
 
 
       responses:
-        '201': { $ref: "#/components/responses/OKInteger" }
-        '401': { $ref: "#/components/responses/ErrorInteger" }
+        '201': { $ref: "#/components/responses/OK" }
+        '401': { $ref: "#/components/responses/Error" }
                 
   /session/{userId}/uploadPhoto:
     post:
@@ -105,8 +105,8 @@ paths:
 
 
       responses:
-        '201': { $ref: '#/components/responses/OKInteger' }
-        '401': { $ref: "#/components/responses/ErrorInteger" }
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
 
 
 
@@ -149,8 +149,8 @@ paths:
 
 
       responses:
-        '201': { $ref: '#/components/responses/OKInteger' }
-        '401': { $ref: "#/components/responses/ErrorInteger" }
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
                 
                 
   /session/{userId}/setUserName:
@@ -181,8 +181,8 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OKInteger' }
-        '401': { $ref: "#/components/responses/ErrorInteger" }
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
                 
                 
 
@@ -217,8 +217,8 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OKInteger' }
-        '401': { $ref: "#/components/responses/ErrorInteger" }
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
                 
   /session/{userId}/banUser:
     put:
@@ -251,8 +251,8 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OKInteger' }
-        '401': { $ref: "#/components/responses/ErrorInteger" }
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
   
   /session/{userId}/unfollowUser:
     put:
@@ -282,8 +282,8 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OKInteger' }
-        '401': { $ref: "#/components/responses/ErrorInteger" }
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
   
 components:
 
@@ -299,14 +299,14 @@ components:
               type: string
               
               
-    OKInteger: 
+    OK: 
       description: Successful operation
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/IntegerOK"
             
-    ErrorInteger: 
+    Error:
       description: User ID not found or another error occurred.
       content:
         application/json:
