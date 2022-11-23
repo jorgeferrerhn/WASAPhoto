@@ -10,7 +10,7 @@ info:
 paths: 
 
   
-  /session/{userId}/getUserProfile:
+  /users/{userId}/getUserProfile:
     parameters:
       - name: userId
         schema: 
@@ -34,7 +34,7 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 
-  /session/{userId}/getMyStream:
+  /users/{userId}/getMyStream:
     get: 
       parameters:
       - name: userId
@@ -88,7 +88,7 @@ paths:
           
         '401': { $ref: "#/components/responses/Error" }
 
-  /session/{userId}/getLogo:
+  /users/{userId}/getLogo:
     get: 
       parameters:
       - name: userId
@@ -147,7 +147,7 @@ paths:
         '201': { $ref: "#/components/schemas/UserIdentifier" }
         '401': { $ref: "#/components/responses/Error" }
                 
-  /session/{userId}/uploadPhoto:
+  /users/{userId}/uploadPhoto:
     post:
       parameters:
       - name: userId
@@ -180,7 +180,7 @@ paths:
 
 
 
-  /session/{userId}/commentPhoto/{photoId}:
+  /users/{userId}/commentPhoto/{photoId}:
     post:
       parameters:
       - name: userId
@@ -223,7 +223,7 @@ paths:
         '401': { $ref: "#/components/responses/Error" }
 
 
-  /session/{userId}/likePhoto/{photoId}:
+  /users/{userId}/likePhoto/{photoId}:
     put:
       parameters:
       - name: userId
@@ -256,7 +256,7 @@ paths:
         '401': { $ref: "#/components/responses/Error" }
                 
                 
-  /session/{userId}/setMyUserName:
+  /users/{userId}/setMyUserName:
     put:
       parameters:
       - name: userId
@@ -288,7 +288,7 @@ paths:
                 
                 
 
-  /session/{userId}/followUser/{userFollowed}:
+  /users/{userId}/followUser/{userFollowed}:
     put:
       parameters:
       - name: userId
@@ -318,7 +318,7 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401': { $ref: "#/components/responses/Error" }
                 
-  /session/{userId}/banUser/{userBanned}:
+  /users/{userId}/banUser/{userBanned}:
     put:
       parameters:
       - name: userId
@@ -348,7 +348,7 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401': { $ref: "#/components/responses/Error" }
   
-  /session/{userId}/unfollowUser/{unfollowedUserId}:
+  /users/{userId}/unfollowUser/{unfollowedUserId}:
     delete:
       parameters:
       - name: userId
@@ -381,7 +381,7 @@ paths:
         '401': { $ref: "#/components/responses/Error" }
 
 
-  /session/{userId}/unbanUser/{bannedUserId}:
+  /users/{userId}/unbanUser/{bannedUserId}:
     delete:
       parameters:
       - name: userId
@@ -414,7 +414,7 @@ paths:
         '401': { $ref: "#/components/responses/Error" }
 
 
-  /session/{userId}/unlikePhoto/{photoId}:
+  /users/{userId}/unlikePhoto/{photoId}:
     delete:
       parameters:
       - name: userId
@@ -448,7 +448,7 @@ paths:
         '401': { $ref: "#/components/responses/Error" }
 
 
-  /session/{userId}/uncommentPhoto/{photoId}:
+  /users/{userId}/uncommentPhoto/{photoId}:
     delete:
       parameters:
       - name: userId
@@ -482,7 +482,7 @@ paths:
         '401': { $ref: "#/components/responses/Error" }
 
 
-  /session/{userId}/deletePhoto/{photoId}:
+  /users/{userId}/deletePhoto/{photoId}:
     delete:
       parameters:
       - name: userId
