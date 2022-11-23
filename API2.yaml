@@ -139,6 +139,15 @@ paths:
         in: path
         required: true
         description: userId
+        
+      - in: query
+        name: photoID
+        schema:
+          type: integer
+        required: true
+        description: ID of the photo to be commented
+        
+        
       
       
       tags: ["commentPhoto"]
@@ -148,18 +157,14 @@ paths:
         
       operationId: commentPhoto
       requestBody:
-        description: ID of the photo to be commented
+        description: Comment to be added to the requested photo.
         content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Integer"
-              
+          
           text/plain:
             schema:
               type: string
               description: Photo comment.
               example: "Wow, such a nice picture!"
-              
         required: true
 
 
@@ -204,11 +209,8 @@ components:
   schemas:
     
     Integer:
-      type: object
-      properties:
-        identifier:    
-          type: integer
-          example: 1
+        type: integer
+        example: 1
           
     Username:
       type: string
