@@ -77,7 +77,7 @@ paths:
         Obtains the stream of photos of a user searched by its userId. It returns a list with all the photos in inverse chronological order
         
       responses:
-        "200": { $ref: "#/components/responses/UserInfo" }
+        "200": { $ref: "#/components/schemas/photos" }
         "401": { $ref: "#/components/responses/UnauthorizedError" }
         "404": { $ref: "#/components/responses/NotFound"}
 
@@ -553,6 +553,9 @@ components:
 
   responses:
 
+    
+      
+       
     UnauthorizedError:
       description: Access token is missing or invalid
   
@@ -571,49 +574,12 @@ components:
                 type: integer
                 example: 123912
               
-              photos:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    
-                    photoID: 
-                      type: integer
-                      
-                    likes: 
-                      type: array
-                      items:
-                        type: string
-                      
-                    
-                    comments:
-                      type: array
-                      items: 
-                        type: object
-                        properties: 
-                          user:
-                            type: string
-                          comment:
-                            type: string
+              photos: 
+                { $ref: "#/components/schemas/photos" }
+                
+                
 
 
-                        
-                    date: 
-                      type: string
-                      format: date-time
-                      description: Creation date and time
-                     
-                      
-                      
-                example: {"PhotoId": 100000, 
-                          "Likes": ["JohnDoe","CarlSagan"],
-                          "Comments": [
-                              {"User":"JohnDoe","Comment":"Wow, nice trip!"},
-                              {"User":"CarlSagan", "Comment":"Amazing!"}],
-                          "Date":"2021-01-30T08:30:00Z"
-                         }
-              
-              
     OK: 
       description: Successful operation
       content:
@@ -643,7 +609,51 @@ components:
         Further info in server logs.
 
   schemas:
-    
+  
+    photos:
+      type: array
+      items:
+        type: object
+        properties:
+          
+          photoID: 
+            type: integer
+            
+          likes: 
+            type: array
+            items:
+              type: string
+            
+          
+          comments:
+            type: array
+            items: 
+              type: object
+              properties: 
+                user:
+                  type: string
+                comment:
+                  type: string
+                  
+          date: 
+            type: string
+            format: date-time
+            description: Creation date and time
+            
+        
+      example: {"PhotoId": 100000, 
+                "Likes": ["JohnDoe","CarlSagan"],
+                "Comments": [
+                    {"User":"JohnDoe","Comment":"Wow, nice trip!"},
+                    {"User":"CarlSagan", "Comment":"Amazing!"}],
+                "Date":"2021-01-30T08:30:00Z"
+                }
+                
+                     
+                      
+                      
+      
+
     UserIdentifier:
       type: integer
       example: 9013213
