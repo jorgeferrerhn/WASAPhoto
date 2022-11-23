@@ -13,7 +13,8 @@ paths:
   /session/{userId}:
     parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/IntegerOK"}
+        schema: 
+          type: integer
         in: path
         required: true
         description: userId
@@ -25,7 +26,7 @@ paths:
         Obtains an user by its userId. It returns a list with the attributes of the user, or "Error" if not found.
         
       responses:
-        "200": {$ref: "#/components/responses/UserInfo" }
+        "200": { $ref: "#/components/responses/UserInfo" }
         "400": { $ref: "#/components/responses/BadRequest" }
         "404": { description: User not found}
         "500": { $ref: "#/components/responses/InternalServerError" }
@@ -73,26 +74,15 @@ paths:
 
 
       responses:
-        '201':
-          description: User log-in action successful
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerOK"
-                
-
-        '401':
-          description: User log-in action not successful
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerError"
+        '201': { $ref: "#/components/responses/OKInteger" }
+        '401': { $ref: "#/components/responses/ErrorInteger" }
                 
   /session/{userId}/uploadPhoto:
     post:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/IntegerOK"}
+        schema: 
+          type: integer
         in: path
         required: true
         description: userId
@@ -115,19 +105,8 @@ paths:
 
 
       responses:
-        '201':
-          description: User photo uploaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerOK"
-
-        '401':
-          description: User photo upload action not successful
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerError"
+        '201': { $ref: '#/components/responses/OKInteger' }
+        '401': { $ref: "#/components/responses/ErrorInteger" }
 
 
 
@@ -135,7 +114,8 @@ paths:
     post:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/IntegerOK"}
+        schema: 
+          type: integer
         in: path
         required: true
         description: userId
@@ -169,26 +149,16 @@ paths:
 
 
       responses:
-        '201':
-          description: Photo commented successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerOK"
-
-        '401':
-          description: Input photo ID does not correspond to any existing photo.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerError"
+        '201': { $ref: '#/components/responses/OKInteger' }
+        '401': { $ref: "#/components/responses/ErrorInteger" }
                 
                 
   /session/{userId}/setUserName:
     put:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/IntegerOK"}
+        schema: 
+          type: integer
         in: path
         required: true
         description: userId
@@ -211,19 +181,8 @@ paths:
       
 
       responses:
-        '201':
-          description: Username changed successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerOK"
-
-        '401':
-          description: User ID not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerError"
+        '201': { $ref: '#/components/responses/OKInteger' }
+        '401': { $ref: "#/components/responses/ErrorInteger" }
                 
                 
 
@@ -231,7 +190,8 @@ paths:
     put:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/IntegerOK"}
+        schema: 
+          type: integer
         in: path
         required: true
         description: userId
@@ -257,25 +217,15 @@ paths:
       
 
       responses:
-        '201':
-          description: User successfully followed
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerOK"
-
-        '401':
-          description: User ID not found or already following this user.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerError"
+        '201': { $ref: '#/components/responses/OKInteger' }
+        '401': { $ref: "#/components/responses/ErrorInteger" }
                 
   /session/{userId}/banUser:
     put:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/IntegerOK"}
+        schema: 
+          type: integer
         in: path
         required: true
         description: userId
@@ -301,25 +251,15 @@ paths:
       
 
       responses:
-        '201':
-          description: User successfully banned
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerOK"
-
-        '401':
-          description: User ID not found or  user already banned.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerError"
+        '201': { $ref: '#/components/responses/OKInteger' }
+        '401': { $ref: "#/components/responses/ErrorInteger" }
   
   /session/{userId}/unfollowUser:
     put:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/IntegerOK"}
+        schema: 
+          type: integer
         in: path
         required: true
         description: userId
@@ -342,19 +282,8 @@ paths:
       
 
       responses:
-        '201':
-          description: User successfully unfollowed
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerOK"
-
-        '401':
-          description: User ID not found or previously not following this user.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IntegerError"
+        '201': { $ref: '#/components/responses/OKInteger' }
+        '401': { $ref: "#/components/responses/ErrorInteger" }
   
 components:
 
@@ -368,6 +297,22 @@ components:
             type: array
             items:
               type: string
+              
+              
+    OKInteger: 
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/IntegerOK"
+            
+    ErrorInteger: 
+      description: User ID not found or another error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/IntegerError"
+
               
     BadRequest:
       description: |
@@ -386,9 +331,9 @@ components:
       type: integer
       example: 1
         
-    IntegerERROR:
+    IntegerError:
       type: integer
-      example: 1
+      example: -1
     
           
     Username:
