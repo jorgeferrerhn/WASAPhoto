@@ -129,6 +129,48 @@ paths:
               schema:
                 $ref: "#/components/schemas/Integer"
 
+
+
+  /session/{userId}/commentPhoto:
+    post:
+      parameters:
+      - name: userId
+        schema: {$ref: "#/components/schemas/Integer"}
+        in: path
+        required: true
+        description: userId
+      
+      
+      tags: ["commentPhoto"]
+      summary: Comments a photo of a user
+      description: |-
+        The logged user comments a photo of another user. Each photo has a unique identifier, so we won't have to specify the user.
+        
+      operationId: commentPhoto
+      requestBody:
+        description: ID of the photo to be commented
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Integer"
+        required: true
+
+
+      responses:
+        '201':
+          description: Photo commented successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Integer"
+
+        '401':
+          description: Input photo ID does not correspond to any existing photo.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Integer"
+  
 components:
 
   responses:
