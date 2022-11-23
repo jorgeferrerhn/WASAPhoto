@@ -411,6 +411,40 @@ paths:
       responses:
         '201': { $ref: '#/components/responses/OK' }
         '401': { $ref: "#/components/responses/Error" }
+
+
+  /session/{userId}/deletePhoto/{photoId}:
+    delete:
+      parameters:
+      - name: userId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: user logged
+        
+      - name: photoId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: ID of the photo to be deleted
+
+        
+      
+      
+      tags: ["deletePhoto"]
+      summary: Given a user ID and a photo Id, the logged user deletes it from its stream 
+      description: |-
+        The logged user deletes the photo from its stream. 
+        It returns 0 if it has been correctly deleted, or -1 if an error has occurred (userId or photoId not found).
+        
+      operationId: deletePhoto
+      
+
+      responses:
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
   
 components:
 
