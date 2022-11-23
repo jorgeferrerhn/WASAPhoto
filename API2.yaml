@@ -186,7 +186,7 @@ paths:
                 
                 
 
-  /session/{userId}/followUser:
+  /session/{userId}/followUser/{userFollowed}:
     put:
       parameters:
       - name: userId
@@ -196,17 +196,13 @@ paths:
         required: true
         description: userId
         
-      - in: query
-        name: followedUserID
+      - name: userFollowed
         schema: 
           type: integer
+        in: path
         required: true
+        description: user to be followed
 
-        
-        
-        
-        
-      
       
       tags: ["followUser"]
       summary: Given a user ID, the logged user follows it.
