@@ -182,6 +182,48 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Integer"
+                
+                
+  /session/{userId}/setUserName:
+    post:
+      parameters:
+      - name: userId
+        schema: {$ref: "#/components/schemas/Integer"}
+        in: path
+        required: true
+        description: userId
+        
+      - in: query
+        name: newUsername
+        schema: {$ref: "#/components/schemas/Username"}
+        required: true
+        description: new username
+        
+        
+      
+      
+      tags: ["setMyUserName"]
+      summary: Given the user ID, changes username of the user
+      description: |-
+        The logged user changes its username. It returns 0 if it has been correctly updated, or -1 if an error has occurred.
+        
+      operationId: setMyUserName
+      
+
+      responses:
+        '201':
+          description: Username changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Integer"
+
+        '401':
+          description: User ID not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Integer"
   
 components:
 
