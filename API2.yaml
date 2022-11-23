@@ -50,7 +50,7 @@ paths:
       responses:
         "200": { $ref: "#/components/responses/UserInfo" }
         "400": { $ref: "#/components/responses/BadRequest" }
-        "404": { description: User not found}
+        '401': { $ref: "#/components/responses/Error" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 
@@ -217,7 +217,7 @@ paths:
         '401': { $ref: "#/components/responses/Error" }
                 
   /session/{userId}/banUser/{userBanned}:
-    delete:
+    put:
       parameters:
       - name: userId
         schema: 
@@ -266,12 +266,45 @@ paths:
         
       
       
-      tags: ["followUser"]
+      tags: ["unfollowUser"]
       summary: Given a user ID, the logged user unfollows it.
       description: |-
         The logged user unfollows the user identified by the parameter. It returns 0 if it has been correctly unfollowed, or -1 if an error has occurred (previously not followed or not found).
         
       operationId: unfollowUser
+      
+
+      responses:
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
+
+
+  /session/{userId}/unbanUser/{bannedUserId}:
+    delete:
+      parameters:
+      - name: userId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: user logged
+        
+      - name: bannedUserId
+        schema: 
+          type: integer
+        in: path 
+        required: true
+        description: user to be unbanned
+
+        
+      
+      
+      tags: ["unbanUser"]
+      summary: Given a user ID, the logged user unbans it (it deletes it from the list of banned users)
+      description: |-
+        The logged user unbans the user identified by the parameter. It returns 0 if it has been correctly unbanned, or -1 if an error has occurred (previously not banned or not found).
+        
+      operationId: unbanUser
       
 
       responses:
