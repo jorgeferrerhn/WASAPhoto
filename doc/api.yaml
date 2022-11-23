@@ -10,7 +10,7 @@ info:
 paths: 
 
   
-  /session/{userId}:
+  /session/{userId}/getUserProfile:
     parameters:
       - name: userId
         schema: 
@@ -34,7 +34,7 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 
-  /session/{userId}/stream:
+  /session/{userId}/getMyStream:
     get: 
       parameters:
       - name: userId
@@ -124,7 +124,7 @@ paths:
         
 
 
-  /session/login:
+  /session/doLogin:
     post:
       tags: ["login"]
       summary: Logs in the user
@@ -256,7 +256,7 @@ paths:
         '401': { $ref: "#/components/responses/Error" }
                 
                 
-  /session/{userId}/setUserName:
+  /session/{userId}/setMyUserName:
     put:
       parameters:
       - name: userId
