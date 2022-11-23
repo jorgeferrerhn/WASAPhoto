@@ -10,19 +10,19 @@ info:
 paths: 
 
   
-  /session/{username}:
+  /session/{userId}:
     parameters:
-      - name: username
-        schema: {$ref: "#/components/schemas/Username"}
+      - name: userId
+        schema: {$ref: "#/components/schemas/Integer"}
         in: path
         required: true
-        description: Username
+        description: userId
 
     get: 
-      summary: user searched by its username
+      summary: user searched by its userId
       operationId: getUserProfile
       description: |
-        Obtains an user by its username. It returns a list with the attributes of the user, or "Error" if not found.
+        Obtains an user by its userId. It returns a list with the attributes of the user, or "Error" if not found.
         
       responses:
         "200": {$ref: "#/components/responses/UserInfo" }
@@ -31,24 +31,23 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 
-  /session/{username}/stream:
+  /session/{userId}/stream:
     get: 
       parameters:
-      - name: username
-        schema: {$ref: "#/components/schemas/Username"}
+      - name: userId
+        schema: {$ref: "#/components/schemas/Integer"}
         in: path
         required: true
-        description: Username
+        description: userId
       
       
       summary: Stream of photos of a user
       operationId: getStream
       description: |
-        Obtains the stream of photos of a user searched by its username. It returns a list with all the photos in inverse chronological order
+        Obtains the stream of photos of a user searched by its userId. It returns a list with all the photos in inverse chronological order
         
       responses:
         "200": { $ref: "#/components/responses/UserInfo" }
-
         "400": { $ref: "#/components/responses/BadRequest" }
         "404": { description: User not found}
         "500": { $ref: "#/components/responses/InternalServerError" }
@@ -79,7 +78,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/IntegerReturn"
+                $ref: "#/components/schemas/Integer"
                 
 
         '401':
@@ -87,16 +86,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/IntegerReturn"
+                $ref: "#/components/schemas/Integer"
                 
-  /session/{username}/uploadPhoto:
+  /session/{userId}/uploadPhoto:
     post:
       parameters:
-      - name: username
-        schema: {$ref: "#/components/schemas/Username"}
+      - name: userId
+        schema: {$ref: "#/components/schemas/Integer"}
         in: path
         required: true
-        description: Username
+        description: userId
 
     
       tags: ["uploadPhoto"]
@@ -121,21 +120,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/IntegerReturn"
+                $ref: "#/components/schemas/Integer"
 
         '401':
           description: User photo upload action not successful
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/IntegerReturn"
+                $ref: "#/components/schemas/Integer"
 
 components:
 
   responses:
   
     UserInfo:
-      description: Request accepted, user found
+      description: Information related to the user
       content:
         application/json:
           schema:
@@ -155,7 +154,7 @@ components:
 
   schemas:
     
-    IntegerReturn:
+    Integer:
       type: object
       properties:
         identifier:    
