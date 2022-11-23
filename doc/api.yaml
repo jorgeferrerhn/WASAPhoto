@@ -47,9 +47,9 @@ paths:
       summary: user searched by its userId
       operationId: getUserProfile
       description: |
-        Obtains an user by its userId. It returns a list with the attributes of the user, or "Error" if not found.
+        Obtains an user by its userId. It returns a list with the attributes of the user, or -1 if not found.
         
-      tags: ["getUsername"]
+      tags: ["getUserProfile"]
 
       responses:
         "200": { $ref: "#/components/responses/UserInfo" }
@@ -585,7 +585,7 @@ components:
                       items:
                         type: string
                       
-                    #each comment is an array with [user, comment]
+                    
                     comments:
                       type: array
                       items: 
@@ -605,9 +605,11 @@ components:
                      
                       
                       
-                example: {"PhotoId": 1000, 
+                example: {"PhotoId": 100000, 
                           "Likes": ["JohnDoe","CarlSagan"],
-                          "Comments": [{"JohnDoe","Wow, nice trip!"}, {"CarlSagan", "Amazing!"}],
+                          "Comments": [
+                              {"User":"JohnDoe","Comment":"Wow, nice trip!"},
+                              {"User":"CarlSagan", "Comment":"Amazing!"}],
                           "Date":"2021-01-30T08:30:00Z"
                          }
               
