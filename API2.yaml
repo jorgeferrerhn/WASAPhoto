@@ -224,6 +224,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Integer"
+                
+                
+
+  /session/{userId}/followUser:
+    put:
+      parameters:
+      - name: userId
+        schema: {$ref: "#/components/schemas/Integer"}
+        in: path
+        required: true
+        description: userId
+        
+      - in: query
+        name: followedUserID
+        schema: 
+          type: integer
+        required: true
+
+        
+        
+        
+        
+      
+      
+      tags: ["followUser"]
+      summary: Given a user ID, the logged user follows it.
+      description: |-
+        The logged user follows the user identified by the parameter. It returns 0 if it has been correctly followed, or -1 if an error has occurred (already followed or not found).
+        
+      operationId: followUser
+      
+
+      responses:
+        '201':
+          description: User successfully followed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Integer"
+
+        '401':
+          description: User ID not found or already following this user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Integer"
   
 components:
 
