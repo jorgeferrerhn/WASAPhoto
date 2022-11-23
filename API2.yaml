@@ -185,7 +185,7 @@ paths:
                 
                 
   /session/{userId}/setUserName:
-    post:
+    put:
       parameters:
       - name: userId
         schema: {$ref: "#/components/schemas/Integer"}
