@@ -151,6 +151,39 @@ paths:
       responses:
         '201': { $ref: '#/components/responses/OK' }
         '401': { $ref: "#/components/responses/Error" }
+
+
+  /session/{userId}/likePhoto/{photoId}:
+    put:
+      parameters:
+      - name: userId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: userId
+        
+      - name: photoId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: ID of the photo to be liked
+        
+        
+      
+      
+      tags: ["likePhoto"]
+      summary: Likes a photo of a user
+      description: |-
+        The logged user likes a photo of another user. Each photo has a unique identifier, so we won't have to specify the user.
+        
+      operationId: likePhoto
+    
+
+      responses:
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
                 
                 
   /session/{userId}/setUserName:
