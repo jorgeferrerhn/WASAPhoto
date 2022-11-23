@@ -13,7 +13,7 @@ paths:
   /session/{userId}:
     parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/Integer"}
+        schema: {$ref: "#/components/schemas/IntegerOK"}
         in: path
         required: true
         description: userId
@@ -35,7 +35,7 @@ paths:
     get: 
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/Integer"}
+        schema: {$ref: "#/components/schemas/IntegerOK"}
         in: path
         required: true
         description: userId
@@ -78,7 +78,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerOK"
                 
 
         '401':
@@ -86,13 +86,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerError"
                 
   /session/{userId}/uploadPhoto:
     post:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/Integer"}
+        schema: {$ref: "#/components/schemas/IntegerOK"}
         in: path
         required: true
         description: userId
@@ -120,14 +120,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerOK"
 
         '401':
           description: User photo upload action not successful
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerError"
 
 
 
@@ -135,7 +135,7 @@ paths:
     post:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/Integer"}
+        schema: {$ref: "#/components/schemas/IntegerOK"}
         in: path
         required: true
         description: userId
@@ -174,21 +174,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerOK"
 
         '401':
           description: Input photo ID does not correspond to any existing photo.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerError"
                 
                 
   /session/{userId}/setUserName:
     put:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/Integer"}
+        schema: {$ref: "#/components/schemas/IntegerOK"}
         in: path
         required: true
         description: userId
@@ -216,14 +216,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerOK"
 
         '401':
           description: User ID not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerError"
                 
                 
 
@@ -231,7 +231,7 @@ paths:
     put:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/Integer"}
+        schema: {$ref: "#/components/schemas/IntegerOK"}
         in: path
         required: true
         description: userId
@@ -262,20 +262,64 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerOK"
 
         '401':
           description: User ID not found or already following this user.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerError"
+                
+  /session/{userId}/banUser:
+    put:
+      parameters:
+      - name: userId
+        schema: {$ref: "#/components/schemas/IntegerOK"}
+        in: path
+        required: true
+        description: userId
+        
+      - in: query
+        name: targetUserID
+        schema: 
+          type: integer
+        required: true
+
+        
+        
+        
+        
+      
+      
+      tags: ["banUser"]
+      summary: Given a user ID, the logged user bans it.
+      description: |-
+        The logged user bans the user identified by the parameter. It returns 0 if it has been correctly banned, or -1 if an error has occurred (already banned or not found).
+        
+      operationId: banUser
+      
+
+      responses:
+        '201':
+          description: User successfully banned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntegerOK"
+
+        '401':
+          description: User ID not found or  user already banned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntegerError"
   
   /session/{userId}/unfollowUser:
     put:
       parameters:
       - name: userId
-        schema: {$ref: "#/components/schemas/Integer"}
+        schema: {$ref: "#/components/schemas/IntegerOK"}
         in: path
         required: true
         description: userId
@@ -303,14 +347,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerOK"
 
         '401':
           description: User ID not found or previously not following this user.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Integer"
+                $ref: "#/components/schemas/IntegerError"
   
 components:
 
@@ -337,9 +381,15 @@ components:
 
   schemas:
     
-    Integer:
-        type: integer
-        example: 1
+    
+    IntegerOK:
+      type: integer
+      example: 1
+        
+    IntegerERROR:
+      type: integer
+      example: 1
+    
           
     Username:
       type: string
