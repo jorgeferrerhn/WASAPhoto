@@ -578,7 +578,7 @@ components:
                 { $ref: "#/components/schemas/photos" }
                 
                 
-
+    
 
     OK: 
       description: Successful operation
