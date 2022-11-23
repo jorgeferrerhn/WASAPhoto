@@ -42,7 +42,7 @@ paths:
       
       
       summary: Stream of photos of a user
-      operationId: getMyStream
+      operationId: getStream
       description: |
         Obtains the stream of photos of a user searched by its username. It returns a list with all the photos in inverse chronological order
         
@@ -69,14 +69,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name: 
-                  type: string
-                  example: Maria
-                  pattern: 'ˆ.*?$'
-                  minLength: 3
-                  maxLength: 16
+              $ref: "#/components/schemas/Username"
         required: true
 
 
@@ -86,23 +79,16 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  identifier:
-                    
-                    type: integer
-                    example: 1
+                $ref: "#/components/schemas/IntegerReturn"
+                
 
         '401':
           description: User log-in action not successful
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  identifier:
-                    type: integer
-                    example: -1
+                $ref: "#/components/schemas/IntegerReturn"
+                
 
 components:
 
@@ -129,7 +115,7 @@ components:
 
   schemas:
     
-    ObjectWithInt:
+    IntegerReturn:
       type: object
       properties:
         identifier:    
