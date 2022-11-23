@@ -343,6 +343,74 @@ paths:
       responses:
         '201': { $ref: '#/components/responses/OK' }
         '401': { $ref: "#/components/responses/Error" }
+
+
+  /session/{userId}/unlikePhoto/{photoId}:
+    delete:
+      parameters:
+      - name: userId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: user logged
+        
+      - name: photoId
+        schema: 
+          type: integer
+        in: path 
+        required: true
+        description: photo to be unliked
+
+        
+      
+      
+      tags: ["unlikePhoto"]
+      summary: Given a user ID and a photo Id, the logged user unlikes it 
+      description: |-
+        The logged user deletes the logged user from the photo's list of users likes. 
+        It returns 0 if it has been correctly unliked, or -1 if an error has occurred (previously not liked, userId or photoId not found).
+        
+      operationId: unlikePhoto
+      
+
+      responses:
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
+
+
+  /session/{userId}/uncommentPhoto/{photoId}:
+    delete:
+      parameters:
+      - name: userId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: user logged
+        
+      - name: photoId
+        schema: 
+          type: integer
+        in: path
+        required: true
+        description: ID of the photo to be uncommented
+
+        
+      
+      
+      tags: ["uncommentPhoto"]
+      summary: Given a user ID and a photo Id, the logged user uncomments it 
+      description: |-
+        The logged user deletes the comment from the photo's list of comments. 
+        It returns 0 if it has been correctly uncommented, or -1 if an error has occurred (previously not commented, userId or photoId not found).
+        
+      operationId: uncommentPhoto
+      
+
+      responses:
+        '201': { $ref: '#/components/responses/OK' }
+        '401': { $ref: "#/components/responses/Error" }
   
 components:
 
