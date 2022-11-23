@@ -25,18 +25,9 @@ paths:
         Obtains an user by its username. It returns a list with the attributes of the user, or "Error" if not found.
         
       responses:
-        "200":
-          description: Request accepted, user found
-          
-          content:
-            application/json:
-              schema:
-                type: string
-                enum : 
-                - users[username]
-                #hay que ver las respuestas como devolverlas bien
+        "200": {$ref: "#/components/responses/UserInfo" }
         "400": { $ref: "#/components/responses/BadRequest" }
-        "404": { description: Fountain not found}
+        "404": { description: User not found}
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 
@@ -56,17 +47,8 @@ paths:
         Obtains the stream of photos of a user searched by its username. It returns a list with all the photos in inverse chronological order
         
       responses:
-        "200":
-          description: Request accepted, user found
-          
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                
-  
+        "200": { $ref: "#/components/responses/UserInfo" }
+
         "400": { $ref: "#/components/responses/BadRequest" }
         "404": { description: User not found}
         "500": { $ref: "#/components/responses/InternalServerError" }
@@ -74,6 +56,16 @@ paths:
 components:
 
   responses:
+  
+    UserInfo:
+      description: Request accepted, user found
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+              
     BadRequest:
       description: |
         The request was not compliant with the documentation
