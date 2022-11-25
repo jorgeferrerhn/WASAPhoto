@@ -141,8 +141,9 @@ paths:
                 type: object
                 properties:
                   file:
-                    description: Logo image ID
+                    description: Logo image
                     type: string
+                    format: binary
 
                   title:
                     description: Logo title
@@ -170,7 +171,7 @@ paths:
       tags: ["uploadPhoto"]
       summary: Uploads a photo by the user
       description: |-
-        Uploads a photo by the logged user and it appends to the beginning of the list
+        Uploads a photo by the logged user and it appends to the beginning of the list. 
         
       operationId: uploadPhoto
       requestBody:
@@ -392,7 +393,7 @@ paths:
       tags: ["unfollowUser"]
       summary: Given a user ID, the logged user unfollows it.
       description: |-
-        The logged user unfollows the user identified by the parameter. It returns 0 if it has been correctly unfollowed, or -1 if an error has occurred (previously not followed or not found).
+        The logged user unfollows the user identified by the parameter. This operation accesses to the user's followers collection and deletes it. It returns 0 if it has been correctly unfollowed, or -1 if an error has occurred (previously not followed or not found).
         
       operationId: unfollowUser
       
@@ -576,6 +577,11 @@ components:
               
               photos: 
                 { $ref: "#/components/schemas/photos" }
+                
+              followers: #we only store the followers, not the followed 
+                type: array
+                items: 
+                  type: string 
                 
                 
     
