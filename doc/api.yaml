@@ -652,7 +652,7 @@ components:
                 "Comments": [
                     {"User":"JohnDoe","Comment":"Wow, nice trip!"},
                     {"User":"CarlSagan", "Comment":"Amazing!"}],
-                "Date":"2021-01-30T08:30:00Z"
+                "Date":"2021-01-30T08:30:00Z",
                 "Followers": ["JohnDoe","KenFollet"]
                 }
                 
