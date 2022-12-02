@@ -43,7 +43,14 @@ paths:
 
         '401':            
           description: Access token is missing or invalid
-        '404': { $ref: "#/components/responses/NotFound" }
+        
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
         
   /users/{userId}/getUserProfile:
@@ -121,7 +128,13 @@ paths:
                       
                     
         "400": { $ref: "#/components/responses/BadRequest" }
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 
@@ -190,7 +203,13 @@ paths:
                         
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
         
 
@@ -225,7 +244,13 @@ paths:
           
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
 
   /users/{userId}/getLogo:
@@ -263,7 +288,13 @@ paths:
         
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
         
 
@@ -301,7 +332,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
 
 
@@ -348,7 +385,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
 
 
@@ -384,7 +427,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
                 
                 
@@ -422,7 +471,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
                 
                 
@@ -457,7 +512,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
                 
   /users/{userId}/banUser/{userBanned}:
@@ -490,7 +551,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
   
   /users/{userId}/unfollowUser/{unfollowedUserId}:
@@ -525,7 +592,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401':            
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
 
 
@@ -561,7 +634,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401': 
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
 
   /users/{userId}/unlikePhoto/{photoId}:
@@ -597,7 +676,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401': 
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
 
   /users/{userId}/uncommentPhoto/{photoId}:
@@ -633,7 +718,13 @@ paths:
         '201': { $ref: '#/components/responses/OK' }
         '401': 
           description: Access token is missing or invalid
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
   /users/{userId}/deletePhoto/{photoId}:
     delete:
@@ -670,7 +761,13 @@ paths:
         '401': 
           description: Access token is missing or invalid
           
-        "404": { $ref: "#/components/responses/NotFound"}
+        '404': 
+          description: Resource not found.       
+          content:         
+            application/json:           
+              schema:             
+                type: integer             
+                example: -1
 
 
 
@@ -694,14 +791,7 @@ components:
             type: integer
             example: 1
         
-            
-    NotFound:
-      description: Resource not found.
-      content:
-        application/json:
-          schema:
-            type: integer
-            example: -1
+ 
 
               
     BadRequest:
@@ -714,56 +804,7 @@ components:
         The server encountered an internal error.
         Further info in server logs.
 
-  schemas:
-  
-    photos:
-      type: array
-      items:
-        type: object
-        properties:
-          
-          photoID: 
-            type: integer
-            
-          likes: 
-            type: array
-            items:
-              type: string
-            
-          
-          comments:
-            type: array
-            items: 
-              type: object
-              properties: 
-                user:
-                  type: string
-                comment:
-                  type: string
-                  
-          date: 
-            type: string
-            format: date-time
-            description: Creation date and time
-            
-        
-      example: {"PhotoId": 100000, 
-                "Likes": ["JohnDoe","CarlSagan"],
-                "Comments": [
-                    {"User":"JohnDoe","Comment":"Wow, nice trip!"},
-                    {"User":"CarlSagan", "Comment":"Amazing!"}],
-                "Date":"2021-01-30T08:30:00Z",
-                "Followers": ["JohnDoe","KenFollet"]
-                }
-                
-                     
-                      
-                      
-      
 
-    
-    
-          
     
     
     
