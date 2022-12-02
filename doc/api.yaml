@@ -88,7 +88,50 @@ paths:
         Obtains the stream of photos of a user searched by its userId. It returns a list with all the photos in inverse chronological order
         
       responses:
-        "200": { $ref: "#/components/schemas/photos" }
+        "200": 
+          description: Stream of photos
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    
+                    photoID: 
+                      type: integer
+                      
+                    likes: 
+                      type: array
+                      items:
+                        type: string
+                      
+                    
+                    comments:
+                      type: array
+                      items: 
+                        type: object
+                        properties: 
+                          user:
+                            type: string
+                          comment:
+                            type: string
+                            
+                    date: 
+                      type: string
+                      format: date-time
+                      description: Creation date and time
+                      
+              
+              example: {"PhotoId": 100000, 
+                        "Likes": ["JohnDoe","CarlSagan"],
+                        "Comments": [
+                            {"User":"JohnDoe","Comment":"Wow, nice trip!"},
+                            {"User":"CarlSagan", "Comment":"Amazing!"}],
+                        "Date":"2021-01-30T08:30:00Z",
+                        "Followers": ["JohnDoe","KenFollet"]
+                        }
+                        
         "401": { $ref: "#/components/responses/UnauthorizedError" }
         "404": { $ref: "#/components/responses/NotFound"}
 
@@ -671,14 +714,6 @@ components:
                 "Followers": ["JohnDoe","KenFollet"]
                 }
                 
-                     
-                      
-                      
-      
-
-    
-    
-          
     
     
     
