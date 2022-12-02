@@ -24,7 +24,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Username"
+              type: string
+              example: "Maria"
+              readOnly: true
+              minLength: 3
+              maxLength: 16
         required: true
 
 
@@ -302,7 +306,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Username"
+              type: string
+              example: "Maria"
+              readOnly: true
+              minLength: 3
+              maxLength: 16
         required: true
 
       responses:
@@ -671,12 +679,7 @@ components:
     
     
           
-    Username:
-      type: string
-      example: "Maria"
-      readOnly: true
-      minLength: 3
-      maxLength: 16
+    
     
     
 security:
