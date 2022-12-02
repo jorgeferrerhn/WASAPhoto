@@ -29,7 +29,14 @@ paths:
 
 
       responses:
-        '201': { $ref: "#/components/schemas/UserIdentifier" }
+        '201': 
+          description: User identifier
+          content:
+            text/plain:
+              schema:
+                type: integer
+                example: 9013213
+
         '401': { $ref: "#/components/responses/UnauthorizedError" }
         '404': { $ref: "#/components/responses/NotFound" }
 
@@ -661,9 +668,7 @@ components:
                       
       
 
-    UserIdentifier:
-      type: integer
-      example: 9013213
+    
     
           
     Username:
