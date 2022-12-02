@@ -63,7 +63,62 @@ paths:
       tags: ["getUserProfile"]
 
       responses:
-        "200": { $ref: "#/components/responses/UserInfo" }
+        "200": 
+          description: Information related to the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Maria"
+    
+                  profilePictureID:
+                    type: integer
+                    example: 123912
+                  
+                  
+                  followers: #we only store the followers, not the followed 
+                    type: array
+                    items: 
+                      type: string 
+                      
+                      
+                  photos: 
+                    description: Stream of photos
+                    
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        
+                        photoID: 
+                          type: integer
+                          
+                        likes: 
+                          type: array
+                          items:
+                            type: string
+                          
+                        
+                        comments:
+                          type: array
+                          items: 
+                            type: object
+                            properties: 
+                              user:
+                                type: string
+                              comment:
+                                type: string
+                                
+                        date: 
+                          type: string
+                          format: date-time
+                          description: Creation date and time
+                          
+                      
+                    
         "400": { $ref: "#/components/responses/BadRequest" }
         "404": { $ref: "#/components/responses/NotFound"}
         "500": { $ref: "#/components/responses/InternalServerError" }
@@ -618,29 +673,8 @@ components:
     UnauthorizedError:
       description: Access token is missing or invalid
   
-    UserInfo:
-      description: Information related to the user
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                example: "Maria"
-
-              profilePictureID:
-                type: integer
-                example: 123912
-              
-              photos: 
-                { $ref: "#/components/schemas/photos" }
-                
-              followers: #we only store the followers, not the followed 
-                type: array
-                items: 
-                  type: string 
-                
+    
+      
                 
     
 
@@ -714,6 +748,14 @@ components:
                 "Followers": ["JohnDoe","KenFollet"]
                 }
                 
+                     
+                      
+                      
+      
+
+    
+    
+          
     
     
     
