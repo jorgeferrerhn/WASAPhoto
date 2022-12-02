@@ -41,7 +41,8 @@ paths:
                 type: integer
                 example: 9013213
 
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         '404': { $ref: "#/components/responses/NotFound" }
 
         
@@ -187,7 +188,8 @@ paths:
                         "Followers": ["JohnDoe","KenFollet"]
                         }
                         
-        "401": { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
         
@@ -221,7 +223,8 @@ paths:
                 type: string
                 format: binary
           
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
 
@@ -258,7 +261,8 @@ paths:
                     description: Logo title
                     type: string
         
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
         
@@ -295,7 +299,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
 
@@ -341,7 +346,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
 
@@ -376,7 +382,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
                 
@@ -413,7 +420,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
                 
@@ -447,7 +455,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
                 
@@ -479,7 +488,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
   
@@ -513,7 +523,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401':            
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
 
@@ -548,7 +559,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401': 
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
 
@@ -583,7 +595,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401': 
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
 
@@ -618,7 +631,8 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        '401': 
+          description: Access token is missing or invalid
         "404": { $ref: "#/components/responses/NotFound"}
 
   /users/{userId}/deletePhoto/{photoId}:
@@ -652,7 +666,10 @@ paths:
 
       responses:
         '201': { $ref: '#/components/responses/OK' }
-        '401': { $ref: "#/components/responses/UnauthorizedError" }
+        
+        '401': 
+          description: Access token is missing or invalid
+          
         "404": { $ref: "#/components/responses/NotFound"}
 
 
@@ -667,16 +684,7 @@ components:
 
   responses:
 
-    
-      
-       
-    UnauthorizedError:
-      description: Access token is missing or invalid
-  
-    
-      
-                
-    
+
 
     OK: 
       description: Successful operation
