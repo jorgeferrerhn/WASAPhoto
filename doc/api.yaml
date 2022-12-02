@@ -127,7 +127,11 @@ paths:
                           
                       
                     
-        "400": { $ref: "#/components/responses/BadRequest" }
+        "400":  
+          description: |
+            The request was not compliant with the documentation
+            (eg. missing fields, etc).
+  
         '404': 
           description: Resource not found.       
           content:         
