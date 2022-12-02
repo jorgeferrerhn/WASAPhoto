@@ -139,7 +139,10 @@ paths:
               schema:             
                 type: integer             
                 example: -1
-        "500": { $ref: "#/components/responses/InternalServerError" }
+        "500": 
+          description: |
+            The server encountered an internal error.
+            Further info in server logs.
 
 
   /users/{userId}/getMyStream:
@@ -333,7 +336,13 @@ paths:
 
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -386,7 +395,15 @@ paths:
 
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                
+                
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -428,7 +445,13 @@ paths:
     
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -472,7 +495,13 @@ paths:
         required: true
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -513,7 +542,13 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -552,7 +587,13 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -593,7 +634,13 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -635,7 +682,13 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401': 
           description: Access token is missing or invalid
         '404': 
@@ -677,7 +730,13 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401': 
           description: Access token is missing or invalid
         '404': 
@@ -719,7 +778,13 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         '401': 
           description: Access token is missing or invalid
         '404': 
@@ -760,7 +825,13 @@ paths:
       
 
       responses:
-        '201': { $ref: '#/components/responses/OK' }
+        '201': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
         
         '401': 
           description: Access token is missing or invalid
@@ -783,34 +854,7 @@ components:
       type: http
       scheme: bearer
 
-  responses:
 
-
-
-    OK: 
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: integer
-            example: 1
-        
- 
-
-              
-    BadRequest:
-      description: |
-        The request was not compliant with the documentation
-        (eg. missing fields, etc).
-
-    InternalServerError:
-      description: |
-        The server encountered an internal error.
-        Further info in server logs.
-
-
-    
-    
     
 security:
   - bearerAuth: []
