@@ -1,8 +1,17 @@
 package database
 
-// GetName is an example that shows you how to query data
-func (db *appdbimpl) GetName() (string, error) {
-	var name string
-	err := db.c.QueryRow("SELECT name FROM example_table WHERE id=1").Scan(&name)
-	return name, err
-}
+func (db *appdbimpl) doLogin(u User) (User, error) {
+	res, err := db.c.Exec(`INSERT INTO fountains (name) VALUES (?)`, //falta
+		u.Name)
+	if err != nil {
+		return u, err
+	}
+
+	lastInsertID, err := res.LastInsertId()
+	if err != nil {
+		return u, err
+	}
+
+	f.ID = uint64(lastInsertID)
+	return f, nil
+} //comprobar aquí
