@@ -110,6 +110,8 @@ paths:
                   
                   followers: #we only store the followers, not the followed 
                     type: array
+                    minItems: 0
+                    maxItems: 100
                     items: 
                       type: string 
                       minLength: 3
@@ -120,6 +122,8 @@ paths:
                     description: Stream of photos
                     
                     type: array
+                    minItems: 0
+                    maxItems: 100
                     items:
                       type: object
                       properties:
@@ -129,6 +133,8 @@ paths:
                           
                         likes: 
                           type: array
+                          minItems: 0
+                          maxItems: 100
                           items:
                             type: string
                             minLength: 3
@@ -137,6 +143,8 @@ paths:
                         
                         comments:
                           type: array
+                          minItems: 0
+                          maxItems: 100
                           items: 
                             type: object
                             properties: 
@@ -209,6 +217,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100
                 description: Stream of photos
 
                 items:
@@ -220,6 +230,8 @@ paths:
                       
                     likes: 
                       type: array
+                      minItems: 0
+                      maxItems: 100
                       items:
                         type: string
                         minLength: 3
@@ -230,6 +242,9 @@ paths:
                     
                     comments:
                       type: array
+                      minItems: 0
+                      maxItems: 100
+                      
                       items: 
                         type: object
                         properties: 
