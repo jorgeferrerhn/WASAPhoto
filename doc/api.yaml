@@ -83,7 +83,7 @@ paths:
           content:
             application/json:
               schema:
-                description: Information of the user: username, profile pic, followers,photos
+                description: Information of the user; username, profile pic, followers,photos
 
                 type: object
                 properties:
@@ -289,6 +289,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: userId
@@ -337,6 +339,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: userId
