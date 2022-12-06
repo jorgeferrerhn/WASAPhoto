@@ -307,6 +307,7 @@ paths:
           content:
             application/json:
               schema:
+                description: Image requested
                 type: object
                 properties:
                   file:
@@ -327,6 +328,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Operation not successful
+
 
         
 
