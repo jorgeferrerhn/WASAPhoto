@@ -332,6 +332,7 @@ paths:
             schema:
               type: string
               format: binary
+              description: PNG image file
         required: true
 
 
@@ -343,6 +344,7 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -352,6 +354,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
 
 
@@ -362,6 +366,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: userId
@@ -369,6 +375,8 @@ paths:
       - name: photoId
         schema: 
           type: integer
+          description: Photo identifier
+
         in: path
         required: true
         description: ID of the photo to be commented
@@ -402,6 +410,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
                 
                 
         '401':            
@@ -413,6 +423,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
 
 
@@ -422,6 +434,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: userId
@@ -429,6 +443,8 @@ paths:
       - name: photoId
         schema: 
           type: integer
+          description: Photo identifier
+
         in: path
         required: true
         description: ID of the photo to be liked
@@ -452,6 +468,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -461,6 +479,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
                 
                 
@@ -470,6 +490,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: userId
@@ -492,6 +514,8 @@ paths:
               readOnly: true
               minLength: 3
               maxLength: 16
+              description: Username
+          
         required: true
 
       responses:
@@ -502,6 +526,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -511,6 +537,7 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
 
                 
                 
@@ -521,6 +548,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: userId
@@ -528,6 +557,8 @@ paths:
       - name: userFollowed
         schema: 
           type: integer
+          description: User identifier
+      
         in: path
         required: true
         description: user to be followed
@@ -549,6 +580,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -558,6 +591,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
                 
   /users/{userId}/banUser/{userBanned}:
@@ -566,6 +601,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+      
         in: path
         required: true
         description: user logged
@@ -573,6 +610,8 @@ paths:
       - name: userBanned
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: user to be banned
@@ -594,6 +633,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -603,6 +644,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
   
   /users/{userId}/unfollowUser/{unfollowedUserId}:
@@ -611,6 +654,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+    
         in: path
         required: true
         description: user logged
@@ -618,6 +663,8 @@ paths:
       - name: unfollowedUserId
         schema: 
           type: integer
+          description: User identifier
+
         in: path 
         required: true
         description: user to be unfollowed
@@ -641,6 +688,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
         '401':            
           description: Access token is missing or invalid
         '404': 
@@ -650,6 +699,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
 
 
@@ -659,6 +710,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: user logged
@@ -666,6 +719,8 @@ paths:
       - name: bannedUserId
         schema: 
           type: integer
+          description: User identifier
+
         in: path 
         required: true
         description: user to be unbanned
@@ -689,6 +744,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
         '401': 
           description: Access token is missing or invalid
         '404': 
@@ -698,6 +755,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
 
   /users/{userId}/unlikePhoto/{photoId}:
@@ -706,6 +765,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: user logged
@@ -713,6 +774,8 @@ paths:
       - name: photoId
         schema: 
           type: integer
+          description: Photo identifier
+  
         in: path 
         required: true
         description: photo to be unliked
@@ -737,6 +800,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
         '401': 
           description: Access token is missing or invalid
         '404': 
@@ -746,6 +811,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
 
   /users/{userId}/uncommentPhoto/{photoId}:
@@ -754,6 +821,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: user logged
@@ -761,6 +830,8 @@ paths:
       - name: photoId
         schema: 
           type: integer
+          description: Photo identifier
+    
         in: path
         required: true
         description: ID of the photo to be uncommented
@@ -785,6 +856,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Successful operation
+
         '401': 
           description: Access token is missing or invalid
         '404': 
@@ -794,6 +867,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non successful operation
+
 
   /users/{userId}/deletePhoto/{photoId}:
     delete:
@@ -801,6 +876,7 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
         in: path
         required: true
         description: user logged
@@ -808,6 +884,8 @@ paths:
       - name: photoId
         schema: 
           type: integer
+          description: Photo identifier
+
         in: path
         required: true
         description: ID of the photo to be deleted
