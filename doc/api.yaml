@@ -90,6 +90,8 @@ paths:
                   name:
                     type: string
                     example: "Maria"
+                    minLength: 3
+                    maxLength: 16
     
                   profilePictureID:
                     type: integer
@@ -100,6 +102,8 @@ paths:
                     type: array
                     items: 
                       type: string 
+                      minLength: 3
+                      maxLength: 16
                       
                       
                   photos: 
@@ -117,6 +121,8 @@ paths:
                           type: array
                           items:
                             type: string
+                            minLength: 3
+                            maxLength: 16
                           
                         
                         comments:
@@ -126,11 +132,21 @@ paths:
                             properties: 
                               user:
                                 type: string
+                                minLength: 3
+                                maxLength: 16
+
                               comment:
                                 type: string
+                                minLength: 3
+                                maxLength: 16
                                 
+                   
                         date: 
                           type: string
+                          minLength: 3
+                          maxLength: 16
+                                
+ 
                           format: date-time
                           description: Creation date and time
                           
@@ -196,6 +212,10 @@ paths:
                       type: array
                       items:
                         type: string
+                        minLength: 3
+                        maxLength: 16
+                        
+ 
                       
                     
                     comments:
@@ -205,11 +225,22 @@ paths:
                         properties: 
                           user:
                             type: string
+                            minLength: 3
+                            maxLength: 16
+                                
+ 
                           comment:
                             type: string
-                            
+                            minLength: 3
+                            maxLength: 16
+                                
+ 
                     date: 
                       type: string
+                      minLength: 3
+                      maxLength: 16
+                                
+ 
                       format: date-time
                       description: Creation date and time
                       
@@ -268,6 +299,10 @@ paths:
                 type: string
                 format: binary
                 description: Image file
+                minLength: 3
+                maxLength: 16
+                                
+ 
 
           
         '401':            
@@ -314,10 +349,18 @@ paths:
                     description: Logo image
                     type: string
                     format: binary
+                    minLength: 3
+                    maxLength: 160
+                                
+ 
 
                   title:
                     description: Logo title
                     type: string
+                    minLength: 3
+                    maxLength: 16
+                                
+ 
         
         '401':            
           description: Access token is missing or invalid
@@ -363,6 +406,10 @@ paths:
               type: string
               format: binary
               description: PNG image file
+              minLength: 3
+              maxLength: 160
+                                
+ 
         required: true
 
 
@@ -429,6 +476,10 @@ paths:
               type: string
               description: Photo comment.
               example: "Wow, such a nice picture!"
+              minLength: 3
+              maxLength: 144
+                                
+ 
         required: true
 
 
