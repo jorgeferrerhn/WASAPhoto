@@ -21,7 +21,7 @@ paths:
 
   /session/doLogin:
     post:
-      tags: ["login"]
+      tags: ["Login"]
       summary: Logs in the user
       description: |-
         If the user does not exist, it will be created,
