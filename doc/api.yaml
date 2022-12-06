@@ -255,14 +255,14 @@ paths:
                       description: Creation date and time
                       
               
-              example: {"PhotoId": 100000, 
+              example: ["PhotoId": 100000, 
                         "Likes": ["JohnDoe","CarlSagan"],
                         "Comments": [
                             {"User":"JohnDoe","Comment":"Wow, nice trip!"},
                             {"User":"CarlSagan", "Comment":"Amazing!"}],
                         "Date":"2021-01-30T08:30:00Z",
                         "Followers": ["JohnDoe","KenFollet"]
-                        }
+                        ]
                         
         '401':            
           description: Access token is missing or invalid
