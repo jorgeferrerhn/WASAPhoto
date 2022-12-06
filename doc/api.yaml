@@ -63,6 +63,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: userId
@@ -81,6 +83,8 @@ paths:
           content:
             application/json:
               schema:
+                description: Information of the user: username, profile pic, followers,photos
+
                 type: object
                 properties:
                   name:
@@ -144,6 +148,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Operation not sucessful
+
         "500": 
           description: |
             The server encountered an internal error.
@@ -156,6 +162,8 @@ paths:
       - name: userId
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: userId
@@ -175,6 +183,8 @@ paths:
             application/json:
               schema:
                 type: array
+                description: Stream of photos
+
                 items:
                   type: object
                   properties:
@@ -222,6 +232,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Not sucessful operation
+
 
         
 
@@ -232,6 +244,8 @@ paths:
       - name: identifier
         schema: 
           type: integer
+          description: User identifier
+
         in: path
         required: true
         description: Image identifier.
@@ -253,6 +267,8 @@ paths:
               schema:
                 type: string
                 format: binary
+                description: Image file
+
           
         '401':            
           description: Access token is missing or invalid
@@ -263,6 +279,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Not successful operation
+
 
 
   /users/{userId}/getLogo:
