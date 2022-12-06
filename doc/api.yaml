@@ -159,7 +159,7 @@ paths:
       tags: ["getUserStream"]
       
       summary: Stream of photos of a user
-      operationId: getStream
+      operationId: getMyStream
       description: |
         Obtains the stream of photos of a user searched by its userId. It returns a list with all the photos in inverse chronological order
         
