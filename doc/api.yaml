@@ -244,7 +244,7 @@ paths:
                       type: array
                       minItems: 0
                       maxItems: 100
-                      
+
                       items: 
                         type: object
                         properties: 
@@ -252,12 +252,14 @@ paths:
                             type: string
                             minLength: 3
                             maxLength: 16
+                            pattern: ^[A-Z][0-9]$
                                 
  
                           comment:
                             type: string
                             minLength: 3
                             maxLength: 16
+                            pattern: ^[A-Z][0-9]$
                                 
  
                     date: 
@@ -621,7 +623,7 @@ paths:
               minLength: 3
               maxLength: 16
               description: Username
-          
+              pattern: ^[A-Z][0-9]$
         required: true
 
       responses:
