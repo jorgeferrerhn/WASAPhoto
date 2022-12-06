@@ -6,7 +6,17 @@ info:
     Copy and paste the API from the `paths` key to your OpenAPI document.
   version: "1"
 
+tags: 
+  - name: "Login"
+    description: endpoints for login
 
+  - name: "User"
+    description: endpoints related to the user
+
+  - name: "Photos"
+    description: endpoints related to photos
+
+  
 paths: 
 
   /session/doLogin:
@@ -75,7 +85,7 @@ paths:
       description: |
         Obtains an user by its userId. It returns a list with the attributes of the user, or -1 if not found.
         
-      tags: ["getUserProfile"]
+      tags: ["User"]
 
       responses:
         "200": 
@@ -185,7 +195,7 @@ paths:
         description: userId
       
 
-      tags: ["getUserStream"]
+      tags: ["User"]
       
       summary: Stream of photos of a user
       operationId: getMyStream
@@ -285,7 +295,7 @@ paths:
       summary: Get an specific image searched by its identifier.
       operationId: getImage
 
-      tags: ["getImageById"]
+      tags: ["Photos"]
 
       description: |
         Obtains the raw image. If it does not exist, it returns -1.
@@ -330,7 +340,7 @@ paths:
         required: true
         description: userId
       
-      tags: ["getLogo"]
+      tags: ["Photos"]
       summary: Get logo of a user specified by parameter
       operationId: getLogo
       description: |
@@ -392,7 +402,7 @@ paths:
         description: userId
 
     
-      tags: ["uploadPhoto"]
+      tags: ["Photos"]
       summary: Uploads a photo by the user
       description: |-
         Uploads a photo by the logged user and it appends to the beginning of the list. 
@@ -461,7 +471,7 @@ paths:
         
       
       
-      tags: ["commentPhoto"]
+      tags: ["Photos"]
       summary: Comments a photo of a user
       description: |-
         The logged user comments a photo of another user. Each photo has a unique identifier, so we won't have to specify the user.
@@ -533,7 +543,7 @@ paths:
         
       
       
-      tags: ["likePhoto"]
+      tags: ["Photos"]
       summary: Likes a photo of a user
       description: |-
         The logged user likes a photo of another user. Each photo has a unique identifier, so we won't have to specify the user.
@@ -578,7 +588,7 @@ paths:
         description: userId
         
       
-      tags: ["setMyUserName"]
+      tags: ["User"]
       summary: Given the user ID, changes username of the user
       description: |-
         The logged user changes its username. It returns 0 if it has been correctly updated, or -1 if an error has occurred.
@@ -645,7 +655,7 @@ paths:
         description: user to be followed
 
       
-      tags: ["followUser"]
+      tags: ["User"]
       summary: Given a user ID, the logged user follows it.
       description: |-
         The logged user follows the user identified by the parameter. It returns 0 if it has been correctly followed, or -1 if an error has occurred (already followed or not found).
@@ -698,7 +708,7 @@ paths:
         description: user to be banned
         
       
-      tags: ["banUser"]
+      tags: ["User"]
       summary: Given a user ID, the logged user bans it.
       description: |-
         The logged user bans the user identified by the parameter. It returns 0 if it has been correctly banned, or -1 if an error has occurred (already banned or not found).
@@ -753,7 +763,7 @@ paths:
         
       
       
-      tags: ["unfollowUser"]
+      tags: ["User"]
       summary: Given a user ID, the logged user unfollows it.
       description: |-
         The logged user unfollows the user identified by the parameter. This operation accesses to the user's followers collection and deletes it. It returns 0 if it has been correctly unfollowed, or -1 if an error has occurred (previously not followed or not found).
@@ -809,7 +819,7 @@ paths:
         
       
       
-      tags: ["unbanUser"]
+      tags: ["User"]
       summary: Given a user ID, the logged user unbans it (it deletes it from the list of banned users)
       description: |-
         The logged user unbans the user identified by the parameter. It returns 0 if it has been correctly unbanned, or -1 if an error has occurred (previously not banned or not found).
@@ -864,7 +874,7 @@ paths:
         
       
       
-      tags: ["unlikePhoto"]
+      tags: ["Photos"]
       summary: Given a user ID and a photo Id, the logged user unlikes it 
       description: |-
         The logged user deletes the logged user from the photo's list of users likes. 
@@ -920,7 +930,7 @@ paths:
         
       
       
-      tags: ["uncommentPhoto"]
+      tags: ["Photos"]
       summary: Given a user ID and a photo Id, the logged user uncomments it 
       description: |-
         The logged user deletes the comment from the photo's list of comments. 
@@ -974,7 +984,7 @@ paths:
         
       
       
-      tags: ["deletePhoto"]
+      tags: ["Photos"]
       summary: Given a user ID and a photo Id, the logged user deletes it from its stream 
       description: |-
         The logged user deletes the photo from its stream. 
