@@ -29,6 +29,7 @@ paths:
               readOnly: true
               minLength: 3
               maxLength: 16
+              description: Username
         required: true
 
 
@@ -40,6 +41,8 @@ paths:
               schema:
                 type: integer
                 example: 9013213
+                description: User identifier
+
 
         '401':            
           description: Access token is missing or invalid
@@ -51,6 +54,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non sucessful operation
+
 
         
   /users/{userId}/getUserProfile:
@@ -910,6 +915,8 @@ paths:
               schema:
                 type: integer
                 example: 1
+                description: Sucessful operation
+
         
         '401': 
           description: Access token is missing or invalid
@@ -921,6 +928,8 @@ paths:
               schema:             
                 type: integer             
                 example: -1
+                description: Non sucessful operation
+
 
 
 
