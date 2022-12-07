@@ -19,7 +19,7 @@
     
   paths: 
 
-    /session/doLogin:
+    /session:
       post:
         tags: ["Login"]
         summary: Logs in the user
