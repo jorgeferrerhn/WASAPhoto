@@ -104,14 +104,17 @@
                       minLength: 3
                       maxLength: 16
                       pattern: ^[a-zA-Z0-9]{1,20}$
+                      description: Username
       
                     profilePictureID:
+                      description: Profile picture identifier
                       type: integer
                       example: 123912
                     
                     
-                    followers: #we only store the followers, not the followed 
+                    followers: 
                       type: array
+                      description: An array with the followers. We only store the followers, not the followed. 
                       minItems: 0
                       maxItems: 100
                       items: 
@@ -122,20 +125,22 @@
                         
                         
                     photos: 
-                      description: Stream of photos
-                      
                       type: array
+                      description: An array with the stream of photos.
                       minItems: 0
                       maxItems: 100
                       items:
                         type: object
                         properties:
                           
+                          
                           photoID: 
+                            description: ID of the photo
                             type: integer
                             
                           likes: 
                             type: array
+                            description: A sub-array with the likes of each photo.
                             minItems: 0
                             maxItems: 100
                             items:
@@ -146,28 +151,31 @@
                           
                           comments:
                             type: array
+                            description: A sub-array with the comments of each photo.
                             minItems: 0
                             maxItems: 100
                             items: 
                               type: object
                               properties: 
+                                
                                 user:
                                   type: string
                                   minLength: 3
                                   maxLength: 16
+                                  description: Username
+                                  
 
                                 comment:
                                   type: string
                                   minLength: 3
                                   maxLength: 16
+                                  description: comment
                                   
                     
                           date: 
                             type: string
                             minLength: 3
                             maxLength: 16
-                                  
-  
                             format: date-time
                             description: Creation date and time
                             
@@ -230,9 +238,12 @@
                       
                       photoID: 
                         type: integer
+                        description: ID of the photo
+                        example: 9123
                         
                       likes: 
                         type: array
+                        description: An array with the likes of each photo
                         minItems: 0
                         maxItems: 100
                         items:
@@ -245,14 +256,17 @@
                       
                       comments:
                         type: array
+                        description: An array with the comments of each photo
                         minItems: 0
                         maxItems: 100
+
 
                         items: 
                           type: object
                           properties: 
                             user:
                               type: string
+                              description: Username
                               minLength: 3
                               maxLength: 16
                               pattern: ^[A-Z][0-9]$
@@ -260,6 +274,7 @@
   
                             comment:
                               type: string
+                              description: Comment
                               minLength: 3
                               maxLength: 16
                               pattern: ^[A-Z][0-9]$
@@ -267,12 +282,10 @@
   
                       date: 
                         type: string
+                        description: Date in which the photo was uploaded
                         minLength: 3
-                        maxLength: 16
-                                  
-  
+                        maxLength: 16  
                         format: date-time
-                        description: Creation date and time
                         
                 
                 example: ["PhotoId": 100000, 
