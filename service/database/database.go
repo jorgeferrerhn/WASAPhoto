@@ -36,7 +36,7 @@ import (
 
 var ErrFountainDoesNotExist = errors.New("fountain does not exist")
 
-// Fountain struct represent a fountain in every API call between this package and the outside world.
+// Fountain struct represent a fountain in every API call between  this package and the outside world.
 // Note that the internal representation of fountain in the database might be different.
 type Fountain struct {
 	ID        uint64
