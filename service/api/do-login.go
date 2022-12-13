@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"git.sapienzaapps.it/gamificationlab/wasa-fontanelle/service/api/reqcontext"
+	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
 
