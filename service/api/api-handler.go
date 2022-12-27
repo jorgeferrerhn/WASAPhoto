@@ -8,7 +8,7 @@ import (
 func (rt *_router) Handler() http.Handler {
 	// Register routes
 	//rt.router.GET("/fountains/", rt.wrap(rt.listFountains))
-	rt.router.POST("/fountains/", rt.wrap(rt.doLogin))
+	rt.router.POST("/users", rt.wrap(rt.doLogin))
 	//rt.router.PUT("/fountains/:id", rt.wrap(rt.updateFountain))
 	//rt.router.DELETE("/fountains/:id", rt.wrap(rt.deleteFountain))
 
