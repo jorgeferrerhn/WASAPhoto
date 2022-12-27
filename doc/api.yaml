@@ -45,7 +45,7 @@
 
 
         responses:
-          '201': 
+          '200': 
             description: User identifier
             content:
               text/plain:
@@ -55,8 +55,8 @@
                   description: User identifier
 
 
-          '401':            
-            description: Access token is missing or invalid
+          '400':            
+            description: Bad Request. Error parsing data or information not valid.
           
           '404': 
             description: Resource not found.       
