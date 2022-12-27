@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
@@ -15,10 +14,8 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	//Devuelve identificador del usuario
 
 	var user User
-	fmt.Println(r.Body)
 	err := json.NewDecoder(r.Body).Decode(&user)
 
-	fmt.Println(err)
 	if err != nil {
 		// The body was not a parseable JSON, reject it
 		w.WriteHeader(http.StatusBadRequest)

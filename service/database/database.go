@@ -49,6 +49,9 @@ type AppDatabase interface {
 	// CreateUser creates a new user in the database. It returns an updated User object (with the ID)
 	CreateUser(User) (User, error)
 
+	// getUserProfile gets the information of an user from its ID.
+	GetUserProfile(int) (sql.Rows, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
 }
