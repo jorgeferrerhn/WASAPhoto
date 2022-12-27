@@ -17,5 +17,6 @@ func (db *appdbimpl) CreateUser(u User) (User, error) {
 	}
 
 	u.ID = uint64(lastInsertID)
+
 	return u, nil
 }
