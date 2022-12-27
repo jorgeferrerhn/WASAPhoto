@@ -9,8 +9,8 @@ log:
 #  file: /tmp/debug.log
 #  combinedtostdout: true
 #web:
-#  apihost: 0.0.0.0:3000
-#  debughost: 0.0.0.0:4000
+#  apihost: 127.0.0.1:3000
+#  debughost: 127.0.0.1:4000
 #  readtimeout: 5s
 #  writetimeout: 5s
 #  shutdowntimeout: 5s

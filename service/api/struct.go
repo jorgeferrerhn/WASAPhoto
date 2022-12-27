@@ -4,7 +4,7 @@ import (
 	"regexp"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/database"
-) //este import da error
+)
 
 // User struct represent a user in every data exchange with the external world via REST API. JSON tags have been
 // added to the struct to conform to the OpenAPI specifications regarding JSON key names.
