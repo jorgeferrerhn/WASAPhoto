@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -28,9 +29,17 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	//Searchs for the user to get the profile and returns the information
 
-	row, err := rt.db.GetUserProfile(i)
+	var user User
+	rowJson, err := rt.db.GetUserProfile(i)
+	json.Unmarshal(rowJson, &user)
+	//cast to string
 
-	fmt.Println(string(row))
+	if user.ID == 0 && user.Name == "" {
+		//user not found
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
 
 	fmt.Println(err)
 
