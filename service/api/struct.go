@@ -2,6 +2,7 @@ package api
 
 import (
 	"regexp"
+	"time"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/database"
 )
@@ -15,6 +16,18 @@ type User struct {
 	ProfilePic uint64 `json:"ProfilePic"`
 	Followers  string `json:"Followers"`
 	Photos     string `json:"Photos"`
+}
+
+type Photo struct {
+	PhotoID  uint64
+	Likes    uint64
+	Comments []Comment
+	Date     time.Time
+}
+
+type Comment struct {
+	username string
+	comment  string
 }
 
 // FromDatabase populates the struct with data from the database, overwriting all values.
