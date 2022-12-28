@@ -36,6 +36,8 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	json.Unmarshal(rowJson, &user)
 	//cast to string
 
+	fmt.Println(user)
+
 	if user.ID == 0 && user.Name == "" {
 		//user not found
 		w.WriteHeader(http.StatusBadRequest)

@@ -19,12 +19,16 @@ func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
 
 	rows, err := db.c.Query(`select id, name,profilepic,followers from users where id=?`, id) //Here followers will be a string, then casted to string array
 
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	defer rows.Close()
 
 	var u User
 
 	for rows.Next() {
-		err := rows.Scan(&id1, &name, &profilepic, followers)
+		err := rows.Scan(&id1, &name, &profilepic, &followers)
 
 		if err != nil {
 			log.Fatal(err)
