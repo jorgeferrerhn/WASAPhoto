@@ -47,14 +47,12 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 	fmt.Println(userId)
 	fmt.Println(imageId)
 
-	//fmt.Println(imageId)
-
 	//Searchs for the user to get its logo
 
-	//img, err := rt.db.GetImage(userId, imageId)
-	//fmt.println(img)
+	img, err := rt.db.GetImage(userId, imageId)
+	fmt.Println(img)
 
-	/*if err != nil {
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
@@ -62,7 +60,6 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 
 	defer r.Body.Close()
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "image/png")
 
-	*/
 }

@@ -60,7 +60,7 @@ type AppDatabase interface {
 	GetLogo(int) (uint64, error)
 
 	//getImage gets a picture given its ID
-	GetImage(int, int) (uint64, error)
+	GetImage(int, int) (byte, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
