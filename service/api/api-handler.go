@@ -12,7 +12,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:id/getUserProfile", rt.wrap(rt.getUserProfile))
 	rt.router.GET("/users/:id/getMyStream", rt.wrap(rt.getMyStream))
 	rt.router.GET("/users/:id/getLogo", rt.wrap(rt.getLogo))
-
+	rt.router.GET("/images/:id", rt.wrap(rt.getImage))
 	//rt.router.PUT("/fountains/:id", rt.wrap(rt.updateFountain))
 	//rt.router.DELETE("/fountains/:id", rt.wrap(rt.deleteFountain))
 
