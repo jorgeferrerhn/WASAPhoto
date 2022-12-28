@@ -34,13 +34,12 @@ import (
 	"fmt"
 )
 
-var ErrFountainDoesNotExist = errors.New("fountain does not exist")
-
 // User struct represent a fountain in every API call between this package and the outside world.
 // Note that the internal representation of fountain in the database might be different.
 type User struct {
-	ID   uint64
-	Name string
+	ID         uint64
+	Name       string
+	ProfilePic uint64
 }
 
 // AppDatabase is the high level interface for the DB
@@ -73,7 +72,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE users (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL);`
+    name TEXT NOT NULL,
+	profilepic INTEGER);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)

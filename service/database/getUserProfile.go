@@ -2,32 +2,38 @@ package database
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 )
 
 var (
-	id1  uint64
-	name string
+	id1        uint64
+	name       string
+	profilepic uint64
 )
 
 func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
 
-	rows, err := db.c.Query(`select id, name from users where id=?`, id)
+	fmt.Println("AQUI")
+
+	rows, err := db.c.Query(`select id, name,profilepic from users where id=?`, id)
 
 	defer rows.Close()
 
 	var u User
 
 	for rows.Next() {
-		err := rows.Scan(&id1, &name)
+		err := rows.Scan(&id1, &name, &profilepic)
+
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("this: ", id1, name)
+		log.Println("this: ", id1, name, profilepic)
 
 		//cast to json
 		u.ID = id1
 		u.Name = name
+		u.ProfilePic = profilepic
 
 	}
 	err = rows.Err()
