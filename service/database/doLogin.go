@@ -21,12 +21,12 @@ func (db *appdbimpl) CreateUser(u User) (User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
+
 		err := rows.Scan(&id, &nameSearch)
 
 		if err != nil {
 			log.Fatal(err)
 		}
-
 	}
 
 	err = rows.Err()
