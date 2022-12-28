@@ -17,7 +17,6 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	fmt.Println(r.Body)
 	err := json.NewDecoder(r.Body).Decode(&user)
 
-	r.Close = true
 	defer r.Body.Close()
 
 	fmt.Println(err)
