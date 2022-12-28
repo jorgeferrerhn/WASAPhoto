@@ -293,7 +293,7 @@
                           "Followers": ["JohnDoe","KenFollet"]
                           ]
                           
-          '401':            
+          '400':            
             description: Access token is missing or invalid
           '404': 
             description: Resource not found.       
@@ -344,7 +344,7 @@
   
 
             
-          '401':            
+          '400':            
             description: Access token is missing or invalid
           '404': 
             description: Resource not found.       
