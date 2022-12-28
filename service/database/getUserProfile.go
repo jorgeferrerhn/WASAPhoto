@@ -2,7 +2,6 @@ package database
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 )
 
@@ -15,8 +14,6 @@ var (
 )
 
 func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
-
-	fmt.Println("AQUI")
 
 	rows, err := db.c.Query(`select id, name,profilepic,followers,photos from users where id=?`, id) //Here followers will be a string, then casted to string array
 
@@ -34,7 +31,7 @@ func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("this: ", id1, name, profilepic, followers, photos)
+		//log.Println("this: ", id1, name, profilepic, followers, photos)
 
 		//cast to json
 		u.ID = id1

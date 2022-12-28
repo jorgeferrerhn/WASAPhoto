@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -36,8 +35,6 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	json.Unmarshal(rowJson, &user)
 	//cast to string
 
-	fmt.Println(user)
-
 	if user.ID == 0 && user.Name == "" {
 		//user not found
 		w.WriteHeader(http.StatusBadRequest)
@@ -45,9 +42,15 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	}
 
-	fmt.Println(err)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
 
+	}
 	defer r.Body.Close()
+
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(user)
 
 	//función que recibe userId y devuelve el userProfile
 

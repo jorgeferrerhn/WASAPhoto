@@ -18,8 +18,6 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	fmt.Println(r.Body)
 	err := json.NewDecoder(r.Body).Decode(&user)
 
-	fmt.Println(err)
-
 	if err != nil {
 		// The body was not a parseable JSON, reject it
 		w.WriteHeader(http.StatusBadRequest)

@@ -184,7 +184,7 @@
           "400":  
             description: |
               The request was not compliant with the documentation
-              (eg. missing fields, etc).
+              (eg. missing fields, etc). 
     
           '404': 
             description: Resource not found.       
@@ -195,11 +195,7 @@
                   example: -1
                   description: Operation not sucessful
 
-          "500": 
-            description: |
-              The server encountered an internal error.
-              Further info in server logs.
-
+          
 
     /users/{userId}/getMyStream:
       get: 
