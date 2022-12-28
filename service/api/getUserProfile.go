@@ -12,6 +12,8 @@ import (
 
 func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
+	r.Close = true
+
 	id := ps.ByName("id")
 
 	if id == "" {
@@ -34,6 +36,8 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	json.Unmarshal(rowJson, &user)
 	//cast to string
 
+	fmt.Println(user)
+
 	if user.ID == 0 && user.Name == "" {
 		//user not found
 		w.WriteHeader(http.StatusBadRequest)
@@ -42,6 +46,8 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	fmt.Println(err)
+
+	defer r.Body.Close()
 
 	//función que recibe userId y devuelve el userProfile
 
