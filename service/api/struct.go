@@ -13,6 +13,7 @@ type User struct {
 	ID         uint64 `json:"Id"`
 	Name       string `json:"Name"`
 	ProfilePic uint64 `json:"ProfilePic"`
+	Followers  string `json:"Followers"`
 }
 
 // FromDatabase populates the struct with data from the database, overwriting all values.
@@ -30,6 +31,7 @@ func (u *User) ToDatabase() database.User {
 		ID:         u.ID,
 		Name:       u.Name,
 		ProfilePic: u.ProfilePic,
+		Followers:  u.Followers,
 	}
 }
 

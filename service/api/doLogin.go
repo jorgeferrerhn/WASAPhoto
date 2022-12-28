@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
@@ -12,9 +13,14 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	//función que recibe username. Busca en la base de datos, si no existe lo crea.
 	//Devuelve identificador del usuario
-
 	var user User
+	fmt.Println(r.Body)
 	err := json.NewDecoder(r.Body).Decode(&user)
+
+	r.Close = true
+	defer r.Body.Close()
+
+	fmt.Println(err)
 
 	if err != nil {
 		// The body was not a parseable JSON, reject it
@@ -44,4 +50,5 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(user)
+
 }

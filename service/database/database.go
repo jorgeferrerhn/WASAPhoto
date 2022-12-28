@@ -40,6 +40,7 @@ type User struct {
 	ID         uint64
 	Name       string
 	ProfilePic uint64
+	Followers  string
 }
 
 // AppDatabase is the high level interface for the DB
@@ -73,7 +74,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 		sqlStmt := `CREATE TABLE users (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-	profilepic INTEGER);`
+	profilepic INTEGER,
+	followers TEXT NOT NULL);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)
