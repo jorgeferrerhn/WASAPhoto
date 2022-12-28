@@ -56,6 +56,9 @@ type AppDatabase interface {
 	//getMyStream gets the stream of photos of the user searched from its ID
 	GetMyStream(int) (string, error)
 
+	//getLogo gets the profile picture of a user given its ID
+	GetLogo(int) (uint64, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
 }
