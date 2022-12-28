@@ -26,8 +26,11 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	rows, err := rt.db.GetUserProfile(i)
-	fmt.Println(rows)
+	//Searchs for the user to get the profile and returns the information
+
+	row, err := rt.db.GetUserProfile(i)
+
+	fmt.Println(string(row))
 
 	fmt.Println(err)
 

@@ -50,7 +50,7 @@ type AppDatabase interface {
 	CreateUser(User) (User, error)
 
 	// getUserProfile gets the information of an user from its ID.
-	GetUserProfile(int) (sql.Rows, error)
+	GetUserProfile(int) ([]byte, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
