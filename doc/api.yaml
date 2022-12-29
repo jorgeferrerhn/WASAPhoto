@@ -132,6 +132,12 @@
                       items:
                         type: object
                         properties:
+
+                          imagePath:
+                            description: path to the image
+                            type: string
+                            minLength: 3
+                            maxLength: 100
                           
                           
                           photoID: 
