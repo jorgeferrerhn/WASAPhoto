@@ -32,6 +32,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 )
 
 // User struct represent a fountain in every API call between this package and the outside world.
@@ -42,6 +43,15 @@ type User struct {
 	ProfilePic uint64
 	Followers  string
 	Photos     string
+}
+
+type Photo struct {
+	ID       uint64
+	UserId   int
+	Path     string
+	Likes    string
+	Comments string
+	Date     time.Time
 }
 
 // AppDatabase is the high level interface for the DB
@@ -63,7 +73,7 @@ type AppDatabase interface {
 	GetImage(int, int) (byte, error)
 
 	//uploadPhoto gets a path of an image and uploads the photo. It returns the photo ID
-	UploadPhoto(int, string) (int, error)
+	UploadPhoto(Photo) (Photo, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
@@ -90,6 +100,21 @@ func New(db *sql.DB) (AppDatabase, error) {
 	profilepic INTEGER,
 	followers TEXT NOT NULL,
 	photos TEXT NOT NULL);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+	}
+
+	err2 := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='photos';`).Scan(&tableName)
+	if errors.Is(err2, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE photos (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER NOT NULL,
+	path TEXT NOT NULL,
+	likes TEXT NOT NULL,
+	comments TEXT NOT NULL,
+	date DATE);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)

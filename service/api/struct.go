@@ -19,16 +19,12 @@ type User struct {
 }
 
 type Photo struct {
-	Path     string
-	PhotoID  uint64
-	Likes    uint64
-	Comments []Comment
-	Date     time.Time
-}
-
-type Comment struct {
-	username string
-	comment  string
+	ID       uint64    `json:"Id"`
+	UserId   int       `json:"userId"`
+	Path     string    `json:"path"`
+	Likes    string    `json:"likes"`
+	Comments string    `json:"comments"`
+	Date     time.Time `json:"date"`
 }
 
 // FromDatabase populates the struct with data from the database, overwriting all values.
@@ -37,6 +33,8 @@ func (u *User) FromDatabase(user database.User) {
 	u.ID = user.ID
 	u.Name = user.Name
 	u.ProfilePic = user.ProfilePic
+	u.Followers = user.Followers
+	u.Photos = user.Photos
 
 }
 
@@ -48,6 +46,30 @@ func (u *User) ToDatabase() database.User {
 		ProfilePic: u.ProfilePic,
 		Followers:  u.Followers,
 		Photos:     u.Photos,
+	}
+}
+
+// FromDatabase populates the struct with data from the database, overwriting all values.
+
+func (p *Photo) FromDatabase(photo database.Photo) {
+	p.ID = photo.ID
+	p.UserId = photo.UserId
+	p.Path = photo.Path
+	p.Likes = photo.Likes
+	p.Comments = photo.Comments
+	p.Date = photo.Date
+
+}
+
+// ToDatabase returns the user in a database-compatible representation
+func (p *Photo) ToDatabase() database.Photo {
+	return database.Photo{
+		ID:       p.ID,
+		UserId:   p.UserId,
+		Path:     p.Path,
+		Likes:    p.Likes,
+		Comments: p.Comments,
+		Date:     p.Date,
 	}
 }
 

@@ -5,14 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
-
-type Path struct {
-	path string
-}
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
@@ -42,9 +39,18 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	fmt.Println("Path: ", newStr)
 
+	//create a Photo Struct
+	var p Photo
+	p.ID = 0 //default
+	p.UserId = intId
+	p.Path = newStr
+	p.Comments = "[]"
+	p.Date = time.Now()
+	p.Likes = "[]"
+
 	//update info from database
-	id, err := rt.db.UploadPhoto(intId, newStr)
-	fmt.Println(id)
+	dbphoto, err := rt.db.UploadPhoto(p.ToDatabase())
+	fmt.Println(dbphoto)
 	if err != nil {
 		// error updating database
 		w.WriteHeader(http.StatusBadRequest)
