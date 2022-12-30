@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -52,40 +53,19 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	dbphoto, err := rt.db.UploadPhoto(p.ToDatabase())
 	fmt.Println(dbphoto)
 	if err != nil {
-		// error updating database
-		w.WriteHeader(http.StatusBadRequest)
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
+		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
+		ctx.Logger.WithError(err).Error("can't upload the photo")
+		w.WriteHeader(http.StatusInternalServerError) //500
 		return
 	}
-	/*
-		if err != nil {
-			// The body was not a parseable JSON, reject it
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		} else if !user.IsValid() {
-			// Here we validated the user structure content (correct name), and we
-			// discovered that the user data are not valid.
-			// Note: the IsValid() function skips the ID check (see below).
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
+	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
+	p.FromDatabase(dbphoto)
 
-		dbuser, err := rt.db.UploadPhoto()
+	// Send the output to the user.
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(p)
 
-		if err != nil {
-			// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-			// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-			ctx.Logger.WithError(err).Error("can't create the user")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
+	defer r.Body.Close()
 
-		// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
-		user.FromDatabase(dbuser)
-
-		// Send the output to the user.
-		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(user)
-
-		defer r.Body.Close()
-	*/
 }
