@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
@@ -27,6 +28,13 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	intId, err := strconv.Atoi(i)
+	if err != nil {
+		// id wasn`t properly casted
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	//path to the image
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
@@ -34,6 +42,14 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	fmt.Println("Path: ", newStr)
 
+	//update info from database
+	id, err := rt.db.UploadPhoto(intId, newStr)
+	fmt.Println(id)
+	if err != nil {
+		// error updating database
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	/*
 		if err != nil {
 			// The body was not a parseable JSON, reject it

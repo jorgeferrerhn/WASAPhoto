@@ -19,6 +19,7 @@ type User struct {
 }
 
 type Photo struct {
+	Path     string
 	PhotoID  uint64
 	Likes    uint64
 	Comments []Comment

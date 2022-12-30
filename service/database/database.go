@@ -63,7 +63,7 @@ type AppDatabase interface {
 	GetImage(int, int) (byte, error)
 
 	//uploadPhoto gets a path of an image and uploads the photo. It returns the photo ID
-	UploadPhoto(string) (int, error)
+	UploadPhoto(int, string) (int, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
