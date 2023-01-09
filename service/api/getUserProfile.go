@@ -32,7 +32,13 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	var user User
 	rowJson, err := rt.db.GetUserProfile(i)
-	json.Unmarshal(rowJson, &user)
+	err = json.Unmarshal(rowJson, &user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
+
 	//cast to string
 
 	if user.ID == 0 && user.Name == "" {

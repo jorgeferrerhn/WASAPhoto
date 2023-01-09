@@ -58,6 +58,13 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 	var p ProfileLogo
 
 	err = json.Unmarshal([]byte(a), &p)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
+
 	_ = json.NewEncoder(w).Encode(p)
 
 }
