@@ -105,6 +105,9 @@ type AppDatabase interface {
 	// unbanUser removes the user banned from the list of banned users of the user1
 	UnbanUser(int, int) (int, error)
 
+	//unlike phoyo updates a photo and removes a like from a user,
+	UnlikePhoto(int) (int, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
 }
