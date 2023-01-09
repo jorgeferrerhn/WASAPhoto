@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -51,15 +52,23 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 	fmt.Println(intPhoto)
 
+	//Comment
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	comment := buf.String()
+
+	fmt.Println("Comment: ", comment)
+
 	//create a Photo Struct
 	var c Comment
 	c.ID = 0 //default
 	c.UserId = intId
+	c.Content = comment
 	c.PhotoId = intPhoto
 	c.Date = time.Now()
 
 	//update info from database
-	ret, err := rt.db.CommentPhoto(c.ToDatabase())
+	dbcomment, err := rt.db.CommentPhoto(c.ToDatabase())
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
@@ -68,9 +77,8 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	fmt.Println(ret)
 	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
-	// c.FromDatabase(dbcomment)
+	c.FromDatabase(dbcomment)
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")

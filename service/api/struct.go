@@ -29,6 +29,7 @@ type Photo struct {
 
 type Comment struct {
 	ID      uint64    `json:"Id"`
+	Content string    `json:"content"`
 	PhotoId uint64    `json:"PhotoId"`
 	UserId  int       `json:"userId"`
 	Date    time.Time `json:"date"`
@@ -84,6 +85,7 @@ func (p *Photo) ToDatabase() database.Photo {
 
 func (c *Comment) FromDatabase(comment database.Comment) {
 	c.ID = comment.ID
+	c.Content = comment.Content
 	c.PhotoId = comment.PhotoId
 	c.UserId = comment.UserId
 	c.Date = comment.Date
@@ -94,6 +96,7 @@ func (c *Comment) FromDatabase(comment database.Comment) {
 func (c *Comment) ToDatabase() database.Comment {
 	return database.Comment{
 		ID:      c.ID,
+		Content: c.Content,
 		PhotoId: c.PhotoId,
 		UserId:  c.UserId,
 		Date:    c.Date,

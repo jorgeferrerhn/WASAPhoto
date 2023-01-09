@@ -56,6 +56,7 @@ type Photo struct {
 
 type Comment struct {
 	ID      uint64
+	Content string
 	PhotoId uint64
 	UserId  int
 	Date    time.Time
@@ -83,7 +84,7 @@ type AppDatabase interface {
 	UploadPhoto(Photo) (Photo, error)
 
 	//commentPhoto inserts a comment on the comments table,
-	CommentPhoto(Comment) (int, error)
+	CommentPhoto(Comment) (Comment, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
@@ -134,9 +135,10 @@ func New(db *sql.DB) (AppDatabase, error) {
 	err3 := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='comments';`).Scan(&tableName)
 	if errors.Is(err3, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE comments (
-    commentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    photoId INTEGER NOT NULL,
-	user TEXT NOT NULL,
+    commentid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	content TEXT NOT NULL,
+    photoid INTEGER NOT NULL,
+	userid INTEGER NOT NULL,
 	date DATE);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {

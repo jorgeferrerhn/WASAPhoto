@@ -1,54 +1,105 @@
 package database
 
-func (db *appdbimpl) CommentPhoto(c Comment) (int, error) {
+import (
+	"fmt"
+	"log"
+)
+
+func (db *appdbimpl) CommentPhoto(c Comment) (Comment, error) {
+
+	var commentId uint64
+	// var userId uint64
 
 	/*
-
-		var photoId uint64
-		//first we search the user. It should have a unique username, so we'll search for it
-		rows, err := db.c.Query(`select id from photos where path=? and userid=?`, p.Path, p.UserId)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		defer rows.Close()
-
-		for rows.Next() {
-
-			err := rows.Scan(&photoId)
+		//lastly, we check that the user existed
+			rows3, err := db.c.Query(`select id from users where id=?`, c.UserId)
 
 			if err != nil {
 				log.Fatal(err)
 			}
-		}
 
-		err = rows.Err()
-		if err != nil {
-			log.Fatal(err)
-		}
+			defer rows3.Close()
 
-		if photoId == 0 { //photo has not been uploaded before
-			res, err := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
-				p.UserId, p.Path, "[]", "[]", p.Date)
-			if err != nil {
-				return p, err
+			for rows3.Next() {
+				err := rows.Scan(&userId)
+
+				if err != nil {
+					fmt.Println("El error")
+
+					log.Fatal(err)
+				}
+
+				fmt.Println("User id: ", userId)
 			}
 
-			lastInsertID, err := res.LastInsertId()
+			err = rows3.Err()
 			if err != nil {
-				return p, err
+				log.Fatal(err)
 			}
-
-			p.ID = uint64(lastInsertID)
-
-		} else {
-			p.ID = photoId
-		}
-
-		return p, nil
-
 	*/
 
-	return 0, nil
+	//first we search the comment. It should have a unique commentId, so we'll search for it
+	rows, err := db.c.Query(`select commentid from comments where commentid=?`, c.ID)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+
+		err := rows.Scan(&commentId)
+
+		if err != nil {
+
+			log.Fatal(err)
+		}
+	}
+
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//then we search the photo id. If it doesn't exist, we cannot comment on the photo
+
+	rows2, err := db.c.Query(`select * from photos where id=?`, c.PhotoId)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows2.Close()
+
+	for rows2.Next() {
+
+		fmt.Println("Photo id: ", rows2)
+	}
+
+	err = rows2.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if commentId == 0 { //comment has not been uploaded before
+		res, err := db.c.Exec(`INSERT INTO comments (commentid,content,photoid,userid,date) VALUES (NULL,?,?,?,?)`,
+			c.ID, c.Content, c.PhotoId, c.UserId, c.Date)
+		if err != nil {
+			return c, err
+		}
+
+		lastInsertID, err := res.LastInsertId()
+		if err != nil {
+			return c, err
+		}
+
+		c.ID = uint64(lastInsertID)
+
+	} else {
+		c.ID = commentId
+	}
+
+	return c, nil
+
 }
