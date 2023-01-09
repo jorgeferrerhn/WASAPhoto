@@ -54,6 +54,13 @@ type Photo struct {
 	Date     time.Time
 }
 
+type Comment struct {
+	ID      uint64
+	PhotoId uint64
+	UserId  int
+	Date    time.Time
+}
+
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 
@@ -76,7 +83,7 @@ type AppDatabase interface {
 	UploadPhoto(Photo) (Photo, error)
 
 	//commentPhoto inserts a comment on the comments table,
-	CommentPhoto(int, int) (int, error)
+	CommentPhoto(Comment) (int, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error

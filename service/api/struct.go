@@ -27,6 +27,13 @@ type Photo struct {
 	Date     time.Time `json:"date"`
 }
 
+type Comment struct {
+	ID      uint64    `json:"Id"`
+	PhotoId uint64    `json:"PhotoId"`
+	UserId  int       `json:"userId"`
+	Date    time.Time `json:"date"`
+}
+
 // FromDatabase populates the struct with data from the database, overwriting all values.
 
 func (u *User) FromDatabase(user database.User) {
@@ -61,7 +68,7 @@ func (p *Photo) FromDatabase(photo database.Photo) {
 
 }
 
-// ToDatabase returns the user in a database-compatible representation
+// ToDatabase returns the photo in a database-compatible representation
 func (p *Photo) ToDatabase() database.Photo {
 	return database.Photo{
 		ID:       p.ID,
@@ -70,6 +77,26 @@ func (p *Photo) ToDatabase() database.Photo {
 		Likes:    p.Likes,
 		Comments: p.Comments,
 		Date:     p.Date,
+	}
+}
+
+// FromDatabase populates the struct with data from the database, overwriting all values.
+
+func (c *Comment) FromDatabase(comment database.Comment) {
+	c.ID = comment.ID
+	c.PhotoId = comment.PhotoId
+	c.UserId = comment.UserId
+	c.Date = comment.Date
+
+}
+
+// ToDatabase returns the comment in a database-compatible representation
+func (c *Comment) ToDatabase() database.Comment {
+	return database.Comment{
+		ID:      c.ID,
+		PhotoId: c.PhotoId,
+		UserId:  c.UserId,
+		Date:    c.Date,
 	}
 }
 

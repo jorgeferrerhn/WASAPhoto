@@ -1,6 +1,6 @@
 package database
 
-func (db *appdbimpl) CommentPhoto(p int, uid int) (int, error) {
+func (db *appdbimpl) CommentPhoto(c Comment) (int, error) {
 
 	/*
 
