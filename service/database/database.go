@@ -75,6 +75,9 @@ type AppDatabase interface {
 	//uploadPhoto gets a path of an image and uploads the photo. It returns the photo ID
 	UploadPhoto(Photo) (Photo, error)
 
+	//commentPhoto inserts a comment on the comments table,
+	CommentPhoto(int, int) (int, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
 }
@@ -114,6 +117,19 @@ func New(db *sql.DB) (AppDatabase, error) {
 	path TEXT NOT NULL,
 	likes TEXT NOT NULL,
 	comments TEXT NOT NULL,
+	date DATE);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+	}
+
+	err3 := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='comments';`).Scan(&tableName)
+	if errors.Is(err3, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE comments (
+    commentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    photoId INTEGER NOT NULL,
+	user TEXT NOT NULL,
 	date DATE);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
