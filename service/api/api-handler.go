@@ -11,6 +11,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/session", rt.wrap(rt.doLogin))
 	rt.router.POST("/users/:id/uploadPhoto", rt.wrap(rt.uploadPhoto))
 	rt.router.POST("/users/:id/commentPhoto/:photoId", rt.wrap(rt.commentPhoto))
+	rt.router.POST("/users/:id/likePhoto/:photoId", rt.wrap(rt.likePhoto))
 	rt.router.GET("/users/:id/getUserProfile", rt.wrap(rt.getUserProfile))
 	rt.router.GET("/users/:id/getMyStream", rt.wrap(rt.getMyStream))
 	rt.router.GET("/users/:id/getLogo", rt.wrap(rt.getLogo))

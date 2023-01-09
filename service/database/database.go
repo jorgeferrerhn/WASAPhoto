@@ -86,6 +86,9 @@ type AppDatabase interface {
 	//commentPhoto inserts a comment on the comments table,
 	CommentPhoto(Comment) (Comment, error)
 
+	//likePhoto updates a table with  comment on the comments table,
+	LikePhoto(int) (int, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
 }
