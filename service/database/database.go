@@ -99,6 +99,9 @@ type AppDatabase interface {
 	// banUser updates the list of banned users of the user
 	BanUser(int, int) (int, error)
 
+	// unfollowUser removes the user followed from the list of followers of the user
+	UnfollowUser(int, int) (int, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
 }
