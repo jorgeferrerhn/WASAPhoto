@@ -1,98 +1,58 @@
 package database
 
+import (
+	"fmt"
+	"log"
+	"strings"
+)
+
 func (db *appdbimpl) LikePhoto(photoId int) (int, error) {
 
-	// var userId uint64
+	var uID int
+	var likes string
 
-	/*
-			//lastly, we check that the user existed
-				rows3, err := db.c.Query(`select id from users where id=?`, c.UserId)
+	//search the photo
+	rows, err := db.c.Query(`select userid,likes from photos where id=?`, photoId)
 
-				if err != nil {
-					log.Fatal(err)
-				}
+	if err != nil {
+		log.Fatal(err)
+	}
 
-				defer rows3.Close()
+	defer rows.Close()
 
-				for rows3.Next() {
-					err := rows.Scan(&userId)
+	for rows.Next() {
 
-					if err != nil {
-						fmt.Println("El error")
-
-						log.Fatal(err)
-					}
-
-					fmt.Println("User id: ", userId)
-				}
-
-				err = rows3.Err()
-				if err != nil {
-					log.Fatal(err)
-				}
-
-		//first we search the comment. It should have a unique commentId, so we'll search for it
-		rows, err := db.c.Query(`select commentid from comments where commentid=?`, c.ID)
+		err := rows.Scan(&uID, &likes)
 
 		if err != nil {
+
 			log.Fatal(err)
 		}
 
-		defer rows.Close()
+		fmt.Println(likes)
+	}
 
-		for rows.Next() {
+	lista := make([]int, 0)
 
-			err := rows.Scan(&commentId)
+	fmt.Println("likes: ", likes)
 
-			if err != nil {
+	if likes != "[]" {
+		output := likes[1 : len(likes)-1]
+		res := strings.Split(output, ",")
+		fmt.Println(res)
+	}
 
-				log.Fatal(err)
-			}
-		}
+	lista = append(lista, uID)
+	fmt.Println(lista)
 
-		err = rows.Err()
-		if err != nil {
-			log.Fatal(err)
-		}
+	//actualizar base de datos de fotos
 
-		//then we search the photo id. If it doesn't exist, we cannot comment on the photo
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		rows2, err := db.c.Query(`select * from photos where id=?`, c.PhotoId)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		defer rows2.Close()
-
-		for rows2.Next() {
-
-			fmt.Println("Photo id: ", rows2)
-		}
-
-		err = rows2.Err()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if commentId == 0 { //comment has not been uploaded before
-			res, err := db.c.Exec(`INSERT INTO comments (commentid,content,photoid,userid,date) VALUES (NULL,?,?,?,?)`,
-				c.ID, c.Content, c.PhotoId, c.UserId, c.Date)
-			if err != nil {
-				return c, err
-			}
-
-			lastInsertID, err := res.LastInsertId()
-			if err != nil {
-				return c, err
-			}
-
-			c.ID = uint64(lastInsertID)
-
-		} else {
-			c.ID = commentId
-		}
-	*/
+	//update number of likes
 
 	return 0, nil
 
