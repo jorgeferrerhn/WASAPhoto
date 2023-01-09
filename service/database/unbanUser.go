@@ -45,6 +45,8 @@ func (db *appdbimpl) UnbanUser(id1 int, id2 int) (int, error) {
 
 	//actualizar base de datos de usuarios (delete)
 
+	//también tenemos que comprobar que el usuario ya estaba baneado
+
 	err = rows.Err()
 	if err != nil {
 		log.Fatal(err)
