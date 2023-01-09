@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
@@ -9,25 +11,45 @@ import (
 
 func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
+	//Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
+
+	// user id
+	i := ps.ByName("id")
+	fmt.Println("ID: ", i)
+
+	if i == "" {
+		//Empty ID
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	intId, err := strconv.Atoi(i)
+	if err != nil {
+		// id wasn`t properly casted
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(intId)
+
+	// user id
+	photoId := ps.ByName("photoId")
+	fmt.Println("Photo ID: ", photoId)
+
+	if photoId == "" {
+		//Empty Photo ID
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	intPhoto, err := strconv.Atoi(photoId)
+	if err != nil {
+		// id wasn`t properly casted
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(intPhoto)
+
 	/*
-		//Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
-
-		//user id
-		i := ps.ByName("id")
-		fmt.Println("ID: ", i)
-
-		if i == "" {
-			//Empty ID
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		intId, err := strconv.Atoi(i)
-		if err != nil {
-			// id wasn`t properly casted
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
 
 		//path to the image
 		buf := new(bytes.Buffer)
