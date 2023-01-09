@@ -14,12 +14,11 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.PUT("/users/:id/likePhoto/:photoId", rt.wrap(rt.likePhoto))
 	rt.router.PUT("/users/:id/setMyUserName", rt.wrap(rt.setMyUserName))
 	rt.router.PUT("/users/:id/followUser/:id2", rt.wrap(rt.followUser))
+	rt.router.PUT("/users/:id/banUser/:id2", rt.wrap(rt.banUser))
 	rt.router.GET("/users/:id/getUserProfile", rt.wrap(rt.getUserProfile))
 	rt.router.GET("/users/:id/getMyStream", rt.wrap(rt.getMyStream))
 	rt.router.GET("/users/:id/getLogo", rt.wrap(rt.getLogo))
 	rt.router.GET("/images/:id", rt.wrap(rt.getImage))
-	//rt.router.PUT("/fountains/:id", rt.wrap(rt.updateFountain))
-	//rt.router.DELETE("/fountains/:id", rt.wrap(rt.deleteFountain))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)

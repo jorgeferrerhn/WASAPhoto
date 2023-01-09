@@ -42,6 +42,7 @@ type User struct {
 	Name       string
 	ProfilePic uint64
 	Followers  string
+	Banned     string
 	Photos     string
 }
 
@@ -95,6 +96,9 @@ type AppDatabase interface {
 	// followUser updates the list of followers of the user followed
 	FollowUser(int, int) (int, error)
 
+	// banUser updates the list of banned users of the user
+	BanUser(int, int) (int, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
 }
@@ -119,6 +123,7 @@ func New(db *sql.DB) (AppDatabase, error) {
     name TEXT NOT NULL,
 	profilepic INTEGER,
 	followers TEXT NOT NULL,
+	banned TEXT NOT NULL,
 	photos TEXT NOT NULL);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {

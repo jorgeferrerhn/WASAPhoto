@@ -15,6 +15,7 @@ type User struct {
 	Name       string `json:"Name"`
 	ProfilePic uint64 `json:"ProfilePic"`
 	Followers  string `json:"Followers"`
+	Banned     string `json:"Banned"`
 	Photos     string `json:"Photos"`
 }
 
@@ -42,6 +43,7 @@ func (u *User) FromDatabase(user database.User) {
 	u.Name = user.Name
 	u.ProfilePic = user.ProfilePic
 	u.Followers = user.Followers
+	u.Banned = user.Banned
 	u.Photos = user.Photos
 
 }
@@ -53,6 +55,7 @@ func (u *User) ToDatabase() database.User {
 		Name:       u.Name,
 		ProfilePic: u.ProfilePic,
 		Followers:  u.Followers,
+		Banned:     u.Banned,
 		Photos:     u.Photos,
 	}
 }

@@ -10,12 +10,13 @@ var (
 	name       string
 	profilepic uint64
 	followers  string
+	banned     string
 	photos     string
 )
 
 func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
 
-	rows, err := db.c.Query(`select id, name,profilepic,followers,photos from users where id=?`, id) //Here followers will be a string, then casted to string array
+	rows, err := db.c.Query(`select id, name,profilepic,followers,banned, photos from users where id=?`, id) //Here followers will be a string, then casted to string array
 
 	if err != nil {
 		log.Fatal(err)
@@ -26,7 +27,7 @@ func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
 	var u User
 
 	for rows.Next() {
-		err := rows.Scan(&id1, &name, &profilepic, &followers, &photos)
+		err := rows.Scan(&id1, &name, &profilepic, &followers, &banned, &photos)
 
 		if err != nil {
 			log.Fatal(err)
@@ -38,6 +39,7 @@ func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
 		u.Name = name
 		u.ProfilePic = profilepic
 		u.Followers = followers
+		u.Banned = banned
 		u.Photos = photos
 
 	}

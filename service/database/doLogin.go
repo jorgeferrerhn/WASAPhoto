@@ -36,8 +36,8 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 
 	fmt.Println("name: ", nameSearch)
 	if nameSearch == "" { //user has not been created before
-		res, err := db.c.Exec(`INSERT INTO users (id, name,profilepic,followers,photos) VALUES (NULL, ?,?,?,?)`,
-			u.Name, 0, "[]", "[]")
+		res, err := db.c.Exec(`INSERT INTO users (id, name,profilepic,followers,banned,photos) VALUES (NULL, ?,?,?,?,?)`,
+			u.Name, 0, "[]", "[]", "[]")
 		if err != nil {
 			return u, err
 		}
@@ -50,6 +50,7 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 		u.ID = uint64(lastInsertID)
 		u.ProfilePic = 0
 		u.Followers = "[]"
+		u.Banned = "[]"
 		u.Photos = "[]"
 	} else {
 		u.ID = id
