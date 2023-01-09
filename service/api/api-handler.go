@@ -23,6 +23,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.DELETE("/users/:id/unbanUser/:id2", rt.wrap(rt.unbanUser))
 	rt.router.DELETE("/users/:id/unlikePhoto/:photoId", rt.wrap(rt.unlikePhoto))
 	rt.router.DELETE("/users/:id/uncommentPhoto/:commentId", rt.wrap(rt.uncommentPhoto))
+	rt.router.DELETE("/users/:id/deletePhoto/:photoId", rt.wrap(rt.deletePhoto))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)
