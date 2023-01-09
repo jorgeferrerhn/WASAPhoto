@@ -43,14 +43,14 @@ func (db *appdbimpl) FollowUser(id1 int, id2 int) (int, error) {
 	lista = append(lista, id1)
 	fmt.Println(lista)
 
-	//actualizar base de datos de fotos
+	//actualizar base de datos de usuarios
 
 	err = rows.Err()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//update number of likes
+	//update list of followers
 
 	return 0, nil
 
