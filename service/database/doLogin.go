@@ -35,7 +35,7 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 	}
 
 	fmt.Println("name: ", nameSearch)
-	if nameSearch == "" { //user has not been created before
+	if nameSearch == "" || nameSearch != u.Name { //this user has not been created before
 		res, err := db.c.Exec(`INSERT INTO users (id, name,profilepic,followers,banned,photos) VALUES (NULL, ?,?,?,?,?)`,
 			u.Name, 0, "[]", "[]", "[]")
 		if err != nil {
