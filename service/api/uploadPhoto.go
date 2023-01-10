@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
@@ -42,12 +41,8 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	//create a Photo Struct
 	var p Photo
-	p.ID = 0 //default
 	p.UserId = intId
 	p.Path = newStr
-	p.Comments = "[]"
-	p.Date = time.Now()
-	p.Likes = "[]"
 
 	//update info from database
 	dbphoto, err := rt.db.UploadPhoto(p.ToDatabase())
@@ -61,6 +56,12 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
 	p.FromDatabase(dbphoto)
+
+	if p.ID == 0 { //user not found
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
