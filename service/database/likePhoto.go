@@ -6,13 +6,13 @@ import (
 	"strings"
 )
 
-func (db *appdbimpl) LikePhoto(photoId int) (int, error) {
+func (db *appdbimpl) LikePhoto(p Photo) (Photo, error) {
 
-	var uID int
 	var likes string
+	var userName string
 
-	//search the photo
-	rows, err := db.c.Query(`select userid,likes from photos where id=?`, photoId)
+	//search for the user
+	rows, err := db.c.Query(`select name from users where id=?`, p.UserId)
 
 	if err != nil {
 		log.Fatal(err)
@@ -22,7 +22,30 @@ func (db *appdbimpl) LikePhoto(photoId int) (int, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&uID, &likes)
+		err := rows.Scan(&userName)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//search the photo
+	rows2, err := db.c.Query(`select likes from photos where id=?`, p.ID)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows2.Close()
+
+	for rows2.Next() {
+
+		err := rows2.Scan(&likes)
 
 		if err != nil {
 
@@ -36,24 +59,26 @@ func (db *appdbimpl) LikePhoto(photoId int) (int, error) {
 
 	fmt.Println("likes: ", likes)
 
-	if likes != "[]" {
+	if p.Likes != "[]" {
+		fmt.Println("Likes: ", likes)
 		output := likes[1 : len(likes)-1]
 		res := strings.Split(output, ",")
-		fmt.Println(res)
+		fmt.Println("This output: ", res)
 	}
 
-	lista = append(lista, uID)
-	fmt.Println(lista)
+	lista = append(lista, p.UserId)
 
-	//actualizar base de datos de fotos
+	// cast from array to string
+	justString := fmt.Sprint(lista)
 
-	err = rows.Err()
+	//pass to database
+	p.Likes = justString
+
+	err = rows2.Err()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//update number of likes
-
-	return 0, nil
+	return p, nil
 
 }
