@@ -636,14 +636,43 @@
 
 
         responses:
-          '201': 
-            description: Successful operation
-            content:
+          "200": 
+            description: Posted comment
+            content: 
               application/json:
                 schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
+                  type: object
+                  properties:
+                    
+                    id: 
+                      type: integer
+                      description: ID of the comment
+                      example: 9123
+                      
+                    content: 
+                      type: string
+                      description: Photo comment.
+                      example: "Wow, such a nice picture!"
+                      minLength: 3
+                      maxLength: 144
+
+                    photoId: 
+                      type: integer
+                      description: ID of the photo commented
+                      example: 131
+
+                    userId: 
+                      type: integer
+                      description: ID of the user that commented
+                      example: 1
+                        
+                    date: 
+                      type: string
+                      description: Date in which the photo was uploaded
+                      minLength: 3
+                      maxLength: 16  
+                      format: date-time
+                                
 
                   
                   
