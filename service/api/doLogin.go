@@ -24,16 +24,13 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	buf.ReadFrom(r.Body)
 	user.Name = buf.String()
 
-	/*
-		Esto no funciona
-		if !user.IsValid() {
-			// Here we validated the user structure content (correct name), and we
-			// discovered that the user data are not valid.
-			// Note: the IsValid() function skips the ID check (see below).
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-	*/
+	if !user.IsValid() {
+		// Here we validated the user structure content (correct name), and we
+		// discovered that the user data are not valid.
+		// Note: the IsValid() function skips the ID check (see below).
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	fmt.Println("USER before: ", user.Name)
 
