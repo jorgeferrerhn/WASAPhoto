@@ -139,7 +139,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 	profilepic INTEGER,
 	followers TEXT NOT NULL,
 	banned TEXT NOT NULL,
-	photos TEXT NOT NULL);`
+	photos TEXT NOT NULL,
+	logged TEXT NOT NULL);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)

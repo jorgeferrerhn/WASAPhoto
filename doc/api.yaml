@@ -29,10 +29,11 @@
           If the user exists, the user identifier is returned.
           
         operationId: doLogin
+        
         requestBody:
           description: User details
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 example: "Maria"
