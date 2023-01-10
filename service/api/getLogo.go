@@ -1,17 +1,12 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
-
-type ProfileLogo struct {
-	logo uint64
-}
 
 func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
@@ -40,30 +35,11 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 
 	}
+	// Send the output to the user.
 
-	//cast u.Photos to array
-	//photos := strings.Fields(stringJson)
-
-	//return the array on string format
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte(strconv.Itoa(logo)))
 
 	defer r.Body.Close()
-
-	w.Header().Set("Content-Type", "application/json")
-
-	a := `{"ProfileLogo":`
-	a += strconv.FormatUint(logo, 10)
-	a += "}"
-
-	var p ProfileLogo
-
-	err = json.Unmarshal([]byte(a), &p)
-
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-
-	}
-
-	_ = json.NewEncoder(w).Encode(p)
 
 }

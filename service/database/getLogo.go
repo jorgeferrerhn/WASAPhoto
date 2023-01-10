@@ -5,10 +5,10 @@ import (
 )
 
 var (
-	searchedLogo uint64
+	searchedLogo int
 )
 
-func (db *appdbimpl) GetLogo(id int) (uint64, error) {
+func (db *appdbimpl) GetLogo(id int) (int, error) {
 
 	rows, err := db.c.Query(`select profilepic from users where id=?`, id)
 
