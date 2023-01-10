@@ -1,19 +1,63 @@
 package database
 
-func (db *appdbimpl) CreateUser(u User) (User, error) {
+import (
+	"fmt"
+	"log"
+)
 
-	res, err := db.c.Exec(`INSERT INTO users (id, name,profilepic,followers) VALUES (NULL, ?,?,?)`,
-		u.Name, 0, "[]")
+var (
+	id         uint64
+	nameSearch string
+)
+
+func (db *appdbimpl) DoLogin(u User) (User, error) {
+
+	//first we search the user. It should have a unique username, so we'll search for it
+	rows, err := db.c.Query(`select id, name from users where name=?`, u.Name)
+
 	if err != nil {
-		return u, err
+		log.Fatal(err)
 	}
 
-	lastInsertID, err := res.LastInsertId()
-	if err != nil {
-		return u, err
+	defer rows.Close()
+
+	for rows.Next() {
+
+		err := rows.Scan(&id, &nameSearch)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
-	u.ID = uint64(lastInsertID)
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("name: ", nameSearch)
+	if nameSearch == "" || nameSearch != u.Name { //this user has not been created before
+
+		u.ProfilePic = 0
+		u.Followers = "[]"
+		u.Banned = "[]"
+		u.Photos = "{}"
+
+		res, err := db.c.Exec(`INSERT INTO users (id, name,profilepic,followers,banned,photos) VALUES (NULL, ?,?,?,?,?)`,
+			u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos)
+		if err != nil {
+			return u, err
+		}
+
+		lastInsertID, err := res.LastInsertId()
+		if err != nil {
+			return u, err
+		}
+
+		u.ID = uint64(lastInsertID)
+
+	} else {
+		u.ID = id
+	}
 
 	return u, nil
 }

@@ -32,6 +32,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 )
 
 // User struct represent a fountain in every API call between this package and the outside world.
@@ -41,16 +42,77 @@ type User struct {
 	Name       string
 	ProfilePic uint64
 	Followers  string
+	Banned     string
+	Photos     string
+}
+
+type Photo struct {
+	ID       uint64
+	UserId   int
+	Path     string
+	Likes    string
+	Comments string
+	Date     time.Time
+}
+
+type Comment struct {
+	ID      uint64
+	Content string
+	PhotoId uint64
+	UserId  int
+	Date    time.Time
 }
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 
 	// CreateUser creates a new user in the database. It returns an updated User object (with the ID)
-	CreateUser(User) (User, error)
+	DoLogin(User) (User, error)
 
 	// getUserProfile gets the information of an user from its ID.
 	GetUserProfile(int) ([]byte, error)
+
+	//getMyStream gets the stream of photos of the user searched from its ID
+	GetMyStream(int) (string, error)
+
+	//getLogo gets the profile picture of a user given its ID
+	GetLogo(int) (int, error)
+
+	//getImage gets a picture given its ID
+	GetImage(Photo) (Photo, error)
+
+	//uploadPhoto gets a path of an image and uploads the photo. It returns the photo ID
+	UploadPhoto(Photo) (Photo, error)
+
+	//commentPhoto inserts a comment on the comments table,
+	CommentPhoto(Comment) (Comment, error)
+
+	//likePhoto updates a photo and adds a like from a user,
+	LikePhoto(Photo) (Photo, error)
+
+	//setMyUserName updates a table with  comment on the comments table,
+	SetMyUserName(int, string) (int, error)
+
+	// followUser updates the list of followers of the user followed
+	FollowUser(int, int) (int, error)
+
+	// banUser updates the list of banned users of the user
+	BanUser(int, int) (int, error)
+
+	// unfollowUser removes the user followed from the list of followers of the user
+	UnfollowUser(int, int) (int, error)
+
+	// unbanUser removes the user banned from the list of banned users of the user1
+	UnbanUser(int, int) (int, error)
+
+	// unlike photo updates a photo and removes a like from an user,
+	UnlikePhoto(int) (int, error)
+
+	// uncomment photo updates a photo and removes a comment from an user,
+	UncommentPhoto(Comment) (int, error)
+
+	// deletePhoto removes a photo
+	DeletePhoto(Photo) (int, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
@@ -75,7 +137,39 @@ func New(db *sql.DB) (AppDatabase, error) {
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
 	profilepic INTEGER,
-	followers TEXT NOT NULL);`
+	followers TEXT NOT NULL,
+	banned TEXT NOT NULL,
+	photos TEXT NOT NULL,
+	logged TEXT NOT NULL);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+	}
+
+	err2 := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='photos';`).Scan(&tableName)
+	if errors.Is(err2, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE photos (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER NOT NULL,
+	path TEXT NOT NULL,
+	likes TEXT NOT NULL,
+	comments TEXT NOT NULL,
+	date DATE);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+	}
+
+	err3 := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='comments';`).Scan(&tableName)
+	if errors.Is(err3, sql.ErrNoRows) {
+		sqlStmt := `CREATE TABLE comments (
+    commentid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	content TEXT NOT NULL,
+    photoid INTEGER NOT NULL,
+	userid INTEGER NOT NULL,
+	date DATE);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)

@@ -2,6 +2,7 @@ package api
 
 import (
 	"regexp"
+	"time"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/database"
 )
@@ -14,6 +15,25 @@ type User struct {
 	Name       string `json:"Name"`
 	ProfilePic uint64 `json:"ProfilePic"`
 	Followers  string `json:"Followers"`
+	Banned     string `json:"Banned"`
+	Photos     string `json:"Photos"`
+}
+
+type Photo struct {
+	ID       uint64    `json:"Id"`
+	UserId   int       `json:"userId"`
+	Path     string    `json:"path"`
+	Likes    string    `json:"likes"`
+	Comments string    `json:"comments"`
+	Date     time.Time `json:"date"`
+}
+
+type Comment struct {
+	ID      uint64    `json:"Id"`
+	Content string    `json:"content"`
+	PhotoId uint64    `json:"PhotoId"`
+	UserId  int       `json:"userId"`
+	Date    time.Time `json:"date"`
 }
 
 // FromDatabase populates the struct with data from the database, overwriting all values.
@@ -22,6 +42,9 @@ func (u *User) FromDatabase(user database.User) {
 	u.ID = user.ID
 	u.Name = user.Name
 	u.ProfilePic = user.ProfilePic
+	u.Followers = user.Followers
+	u.Banned = user.Banned
+	u.Photos = user.Photos
 
 }
 
@@ -32,6 +55,54 @@ func (u *User) ToDatabase() database.User {
 		Name:       u.Name,
 		ProfilePic: u.ProfilePic,
 		Followers:  u.Followers,
+		Banned:     u.Banned,
+		Photos:     u.Photos,
+	}
+}
+
+// FromDatabase populates the struct with data from the database, overwriting all values.
+
+func (p *Photo) FromDatabase(photo database.Photo) {
+	p.ID = photo.ID
+	p.UserId = photo.UserId
+	p.Path = photo.Path
+	p.Likes = photo.Likes
+	p.Comments = photo.Comments
+	p.Date = photo.Date
+
+}
+
+// ToDatabase returns the photo in a database-compatible representation
+func (p *Photo) ToDatabase() database.Photo {
+	return database.Photo{
+		ID:       p.ID,
+		UserId:   p.UserId,
+		Path:     p.Path,
+		Likes:    p.Likes,
+		Comments: p.Comments,
+		Date:     p.Date,
+	}
+}
+
+// FromDatabase populates the struct with data from the database, overwriting all values.
+
+func (c *Comment) FromDatabase(comment database.Comment) {
+	c.ID = comment.ID
+	c.Content = comment.Content
+	c.PhotoId = comment.PhotoId
+	c.UserId = comment.UserId
+	c.Date = comment.Date
+
+}
+
+// ToDatabase returns the comment in a database-compatible representation
+func (c *Comment) ToDatabase() database.Comment {
+	return database.Comment{
+		ID:      c.ID,
+		Content: c.Content,
+		PhotoId: c.PhotoId,
+		UserId:  c.UserId,
+		Date:    c.Date,
 	}
 }
 

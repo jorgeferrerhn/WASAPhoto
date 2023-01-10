@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -16,15 +17,14 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	var user User
 
 	fmt.Println(r.Body)
-	err := json.NewDecoder(r.Body).Decode(&user)
+	//err := json.NewDecoder(r.Body).Decode(&user)
 
-	fmt.Println(err)
+	//new user name
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	user.Name = buf.String()
 
-	if err != nil {
-		// The body was not a parseable JSON, reject it
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	} else if !user.IsValid() {
+	if !user.IsValid() {
 		// Here we validated the user structure content (correct name), and we
 		// discovered that the user data are not valid.
 		// Note: the IsValid() function skips the ID check (see below).
@@ -32,7 +32,9 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	dbuser, err := rt.db.CreateUser(user.ToDatabase())
+	fmt.Println("USER before: ", user.Name)
+
+	dbuser, err := rt.db.DoLogin(user.ToDatabase())
 
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
@@ -44,6 +46,8 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
 	user.FromDatabase(dbuser)
+
+	fmt.Println(user)
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")

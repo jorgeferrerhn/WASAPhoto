@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -33,10 +32,14 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	var user User
 	rowJson, err := rt.db.GetUserProfile(i)
-	json.Unmarshal(rowJson, &user)
-	//cast to string
+	err = json.Unmarshal(rowJson, &user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
 
-	fmt.Println(user)
+	}
+
+	//cast to string
 
 	if user.ID == 0 && user.Name == "" {
 		//user not found
@@ -45,33 +48,14 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	}
 
-	fmt.Println(err)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
 
+	}
 	defer r.Body.Close()
 
-	//función que recibe userId y devuelve el userProfile
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(user)
 
-	/*
-
-
-
-
-		dbuser, err := rt.db.CreateUser(user.ToDatabase())
-
-		if err != nil {
-			// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-			// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-			ctx.Logger.WithError(err).Error("can't create the user")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
-		user.FromDatabase(dbuser)
-
-		// Send the output to the user.
-		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(user)
-
-	*/
 }
