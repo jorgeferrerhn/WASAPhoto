@@ -11,7 +11,6 @@ import (
 func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	//this function receives a user id and returns the stream of photos of that user
-	r.Close = true
 
 	id := ps.ByName("id")
 
@@ -40,7 +39,7 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 	//cast u.Photos to array
 	//photos := strings.Fields(stringJson)
 
-	stringJson = `{"PhotoId": 100000,"Likes": ["JohnDoe","CarlSagan"],"Comments": [{"User":"JohnDoe","Comment":"Wow, nice trip!"},{"User":"CarlSagan", "Comment":"Amazing!"}],"Date":"2021-01-30T08:30:00Z","Followers": ["JohnDoe","KenFollet"]};{"PhotoId": 100001,"Likes": ["JohnDoe","CarlSagan"],"Comments": [{"User":"JohnDoe","Comment":"Wow, nice trip!"},{"User":"CarlSagan", "Comment":"Amazing!"}],"Date":"2021-01-30T08:30:00Z","Followers": ["JohnDoe","KenFollet"]}`
+	//stringJson = `{"PhotoId": 100000,"Likes": ["JohnDoe","CarlSagan"],"Comments": [{"User":"JohnDoe","Comment":"Wow, nice trip!"},{"User":"CarlSagan", "Comment":"Amazing!"}],"Date":"2021-01-30T08:30:00Z","Followers": ["JohnDoe","KenFollet"]};{"PhotoId": 100001,"Likes": ["JohnDoe","CarlSagan"],"Comments": [{"User":"JohnDoe","Comment":"Wow, nice trip!"},{"User":"CarlSagan", "Comment":"Amazing!"}],"Date":"2021-01-30T08:30:00Z","Followers": ["JohnDoe","KenFollet"]}`
 	//faltaría decodificar la información en cada uno de los structs (comentarios, fechas, etc)
 	/*example
 	example := `

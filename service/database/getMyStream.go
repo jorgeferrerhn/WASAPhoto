@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -31,6 +32,8 @@ func (db *appdbimpl) GetMyStream(id int) (string, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Searched photos: ", searchedPhotos)
 
 	return searchedPhotos, err
 }
