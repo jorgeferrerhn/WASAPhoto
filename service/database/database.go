@@ -79,7 +79,7 @@ type AppDatabase interface {
 	GetLogo(int) (uint64, error)
 
 	//getImage gets a picture given its ID
-	GetImage(int, int) (byte, error)
+	GetImage(Photo) (Photo, error)
 
 	//uploadPhoto gets a path of an image and uploads the photo. It returns the photo ID
 	UploadPhoto(Photo) (Photo, error)

@@ -16,7 +16,6 @@ type ProfileLogo struct {
 func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	//this function receives a user id and returns the stream of photos of that user
-	r.Close = true
 
 	id := ps.ByName("id")
 

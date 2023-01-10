@@ -1,16 +1,17 @@
 package database
 
 import (
-	"fmt"
 	"log"
+	"time"
 )
 
-func (db *appdbimpl) GetImage(userId int, imageId int) (byte, error) {
+func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 
-	var searchedPhotos string
-	var img byte
+	var userId int
+	var path, likes, comments string
+	var date time.Time
 
-	rows, err := db.c.Query(`select photos from users where id=?`, userId)
+	rows, err := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
 
 	if err != nil {
 		log.Fatal(err)
@@ -19,18 +20,20 @@ func (db *appdbimpl) GetImage(userId int, imageId int) (byte, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&searchedPhotos)
+		err := rows.Scan(&userId, &path, &likes, &comments, &date)
 
-		fmt.Println(err)
+		//we update the information of our struct
+		p.UserId = userId
+		p.Path = path
+		p.Likes = likes
+		p.Comments = comments
+		p.Date = date
 
 		if err != nil {
 			log.Fatal(err)
 		}
-		//log.Println("this: ", id1, name, profilepic, followers, photos)
-
-		//at this point, we access the imageID photo and return it
-		img = searchedPhotos[imageId] //aquí está el error: tenemos que probar con un ejemplo que funcione
+		log.Println("this: ", p.UserId, p.Path, p.Likes, p.Comments, p.Date)
 
 	}
-	return img, err
+	return p, err
 }

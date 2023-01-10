@@ -1,10 +1,10 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
@@ -12,8 +12,7 @@ import (
 
 func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	var userId int
-	var imageId int
+	var imageId uint64
 
 	//This function receives an image ID and returns the image.
 	//Due to the complexity of the search of an image ID through a SQL Text (Photos), we will suppose that the image ID is a string with the format <userID>.<imageID>
@@ -28,38 +27,41 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	//now, we will separate the userID and the imageID
+	imageId, e2 := strconv.ParseUint(i, 10, 64)
 
-	s := strings.Split(i, ".")
-	a := s[0]
-	b := s[1]
-
-	userId, e1 := strconv.Atoi(a)
-	imageId, e2 := strconv.Atoi(b)
-
-	if e1 != nil || e2 != nil {
+	if e2 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
 	}
-	//imageId = strconv.Atoi(b)
 
-	fmt.Println(userId)
 	fmt.Println(imageId)
 
 	//Searchs for the user to get its logo
 
-	img, err := rt.db.GetImage(userId, imageId)
-	fmt.Println(img)
+	var p Photo
+
+	p.ID = imageId
+	dbphoto, err := rt.db.GetImage(p.ToDatabase())
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
 	}
+	// Here we can re-use `photo` as FromDatabase is overwriting every variabile in the structure.
+	p.FromDatabase(dbphoto)
+
+	if p.Path == "" { //photo didn't exist
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
+
+	// Send the output to the user.
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(p)
 
 	defer r.Body.Close()
-
-	w.Header().Set("Content-Type", "image/png")
 
 }
