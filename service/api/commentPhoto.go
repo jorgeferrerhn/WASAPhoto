@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
@@ -14,7 +13,7 @@ import (
 
 func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	//Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
+	//Takes the userId and the comment, and uploads it (updates the comments table)
 
 	// user id
 	i := ps.ByName("id")
@@ -61,11 +60,10 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	//create a Photo Struct
 	var c Comment
-	c.ID = 0 //default
+
 	c.UserId = intId
 	c.Content = comment
 	c.PhotoId = intPhoto
-	c.Date = time.Now()
 
 	//update info from database
 	dbcomment, err := rt.db.CommentPhoto(c.ToDatabase())
@@ -79,6 +77,12 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
 	c.FromDatabase(dbcomment)
+
+	if c.ID == 0 { //user not found
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
