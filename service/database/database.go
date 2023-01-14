@@ -85,7 +85,7 @@ type AppDatabase interface {
 	UploadLogo(Photo, User) (Photo, User, error)
 
 	//uploadLogo gets a path of an image and uploads the profile picture.
-	UploadPhoto(Photo) (Photo, error)
+	UploadPhoto(Photo, User) (Photo, User, error)
 
 	//commentPhoto inserts a comment on the comments table,
 	CommentPhoto(Comment) (Comment, error)

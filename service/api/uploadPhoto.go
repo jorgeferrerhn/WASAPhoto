@@ -32,6 +32,12 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	intId2, err := strconv.ParseUint(i, 10, 64)
+	if err != nil {
+		// id wasn`t properly casted
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	//path to the image
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
@@ -43,9 +49,11 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	var p Photo
 	p.UserId = intId
 	p.Path = newStr
+	var u User
+	u.ID = intId2
 
 	//update info from database
-	dbphoto, err := rt.db.UploadPhoto(p.ToDatabase())
+	dbphoto, dbuser, err := rt.db.UploadPhoto(p.ToDatabase(), u.ToDatabase())
 	fmt.Println(dbphoto)
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
@@ -56,6 +64,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
 	p.FromDatabase(dbphoto)
+	u.FromDatabase(dbuser)
 
 	if p.ID == 0 { //user not found
 		w.WriteHeader(http.StatusBadRequest)
