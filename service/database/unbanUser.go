@@ -8,7 +8,7 @@ import (
 
 func (db *appdbimpl) UnbanUser(id1 int, id2 int) (int, error) {
 
-	var followers string
+	var followers, banned string
 	//search the photo
 	rows, err := db.c.Query(`select banned from users where id=?`, id2)
 

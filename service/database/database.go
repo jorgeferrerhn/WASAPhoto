@@ -70,7 +70,7 @@ type AppDatabase interface {
 	DoLogin(User) (User, error)
 
 	// getUserProfile gets the information of an user from its ID.
-	GetUserProfile(int) ([]byte, error)
+	GetUserProfile(User) (User, error)
 
 	//getMyStream gets the stream of photos of the user searched from its ID
 	GetMyStream(int) (string, error)

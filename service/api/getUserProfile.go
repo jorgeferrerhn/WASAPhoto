@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -11,48 +12,38 @@ import (
 
 func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	r.Close = true
+	i := ps.ByName("id")
+	fmt.Println("ID: ", i)
 
-	id := ps.ByName("id")
-
-	if id == "" {
-		//ID not found
+	if i == "" {
+		//Empty ID
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	i, e := strconv.Atoi(id)
-
-	if e != nil {
+	intId, err := strconv.ParseUint(i, 10, 64)
+	if err != nil {
+		// id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	fmt.Println(intId)
 
 	//Searchs for the user to get the profile and returns the information
 
 	var user User
-	rowJson, err := rt.db.GetUserProfile(i)
-	err = json.Unmarshal(rowJson, &user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-
-	}
-
-	//cast to string
-
-	if user.ID == 0 && user.Name == "" {
-		//user not found
-		w.WriteHeader(http.StatusBadRequest)
-		return
-
-	}
+	user.ID = intId
+	dbuser, err := rt.db.GetUserProfile(user.ToDatabase())
 
 	if err != nil {
+		//error on database
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
 	}
+
+	user.FromDatabase(dbuser)
+
 	defer r.Body.Close()
 
 	w.Header().Set("Content-Type", "application/json")

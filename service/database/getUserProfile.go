@@ -1,22 +1,15 @@
 package database
 
 import (
-	"encoding/json"
+	"errors"
+	"fmt"
 	"log"
 )
 
-var (
-	id1        uint64
-	name       string
-	profilepic uint64
-	followers  string
-	banned     string
-	photos     string
-)
-
-func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
-
-	rows, err := db.c.Query(`select id, name,profilepic,followers,banned, photos from users where id=?`, id) //Here followers will be a string, then casted to string array
+func (db *appdbimpl) GetUserProfile(u User) (User, error) {
+	var id, profilepic uint64
+	var name, followers, banned, photos string
+	rows, err := db.c.Query(`select id, name,profilepic,followers,banned, photos from users where id=?`, u.ID) //Here followers will be a string, then casted to string array
 
 	if err != nil {
 		log.Fatal(err)
@@ -24,31 +17,31 @@ func (db *appdbimpl) GetUserProfile(id int) ([]byte, error) {
 
 	defer rows.Close()
 
-	var u User
-
 	for rows.Next() {
-		err := rows.Scan(&id1, &name, &profilepic, &followers, &banned, &photos)
+		err := rows.Scan(&id, &name, &profilepic, &followers, &banned, &photos)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 		//log.Println("this: ", id1, name, profilepic, followers, photos)
-
-		//cast to json
-		u.ID = id1
-		u.Name = name
-		u.ProfilePic = profilepic
-		u.Followers = followers
-		u.Banned = banned
-		u.Photos = photos
-
 	}
 	err = rows.Err()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	json, _ := json.Marshal(u)
+	fmt.Println("Name: ", name)
+	if name == "" {
+		return u, errors.New("User not found")
+	}
 
-	return json, err
+	//cast to json
+	u.ID = id
+	u.Name = name
+	u.ProfilePic = profilepic
+	u.Followers = followers
+	u.Banned = banned
+	u.Photos = photos
+
+	return u, nil
 }
