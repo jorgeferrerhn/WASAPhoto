@@ -42,11 +42,16 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 		u.Banned = "[]"
 		u.Photos = "{}"
 
+		fmt.Println("User name: ", u.Name)
+
 		res, err := db.c.Exec(`INSERT INTO users (id, name,profilepic,followers,banned,photos) VALUES (NULL, ?,?,?,?,?)`,
 			u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos)
+
 		if err != nil {
 			return u, err
 		}
+
+		fmt.Println("Aqui")
 
 		lastInsertID, err := res.LastInsertId()
 		if err != nil {
