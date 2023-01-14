@@ -81,7 +81,10 @@ type AppDatabase interface {
 	//getImage gets a picture given its ID
 	GetImage(Photo) (Photo, error)
 
-	//uploadPhoto gets a path of an image and uploads the photo. It returns the photo ID
+	//uploadPhoto gets a path of an image and uploads the photo.
+	UploadLogo(Photo, User) (Photo, User, error)
+
+	//uploadLogo gets a path of an image and uploads the profile picture.
 	UploadPhoto(Photo) (Photo, error)
 
 	//commentPhoto inserts a comment on the comments table,
