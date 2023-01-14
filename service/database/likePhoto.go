@@ -1,20 +1,25 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
+	"time"
 )
 
 func (db *appdbimpl) LikePhoto(p Photo) (Photo, error) {
 
-	var likes string
+	var likes, path, comments string
+	var userId int
+	var date time.Time
 	var userName string
 
 	//search for the user
 	rows, err := db.c.Query(`select name from users where id=?`, p.UserId)
 
 	if err != nil {
+
 		log.Fatal(err)
 	}
 
@@ -25,17 +30,21 @@ func (db *appdbimpl) LikePhoto(p Photo) (Photo, error) {
 		err := rows.Scan(&userName)
 
 		if err != nil {
-			log.Fatal(err)
+			return p, err
 		}
 	}
 
+	if userName == "" {
+		//el usuario no existía
+		return p, errors.New("User not found")
+	}
 	err = rows.Err()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	//search the photo
-	rows2, err := db.c.Query(`select likes from photos where id=?`, p.ID)
+	rows2, err := db.c.Query(`select userId,path,likes,comments,date from photos where id=?`, p.ID)
 
 	if err != nil {
 		log.Fatal(err)
@@ -45,7 +54,7 @@ func (db *appdbimpl) LikePhoto(p Photo) (Photo, error) {
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&likes)
+		err := rows2.Scan(&userId, &path, &likes, &comments, &date)
 
 		if err != nil {
 
@@ -60,52 +69,59 @@ func (db *appdbimpl) LikePhoto(p Photo) (Photo, error) {
 		log.Fatal(err)
 	}
 
+	if path == "" {
+		//el usuario no existía
+		return p, errors.New("Photo not found")
+	}
+
 	if userName != "" { //user exists
 
-		lista := make([]int, 0)
+		var liked bool
 
-		fmt.Println("likes: ", likes)
+		// We check that the photo hasn't been liked before
+		strId := fmt.Sprint(p.UserId)
+		liked = strings.ContainsAny(likes, strId)
+		fmt.Println("Likes : ", likes, " of ", p.UserId, ": ", liked)
 
-		if likes != "[]" {
-			fmt.Println("Likes: ", likes)
-			output := likes[1 : len(likes)-1]
-			res := strings.Split(output, ",")
-			fmt.Println("This output: ", res)
+		fmt.Println("Liked: ", liked)
+
+		if !liked {
+			var add string
+
+			new_list := likes[0 : len(likes)-1]
+			strUID := fmt.Sprint(p.UserId)
+
+			if likes == "[]" {
+				add = strUID + "]"
+
+			} else {
+				add = "," + strUID + "]"
+
+			}
+			new_list += add
+
+			p.Likes = new_list
+
+			fmt.Println("Lista despues: ", p.Likes)
+
+		} else {
+			p.Likes = likes // remains the same
+
 		}
 
-		lista = append(lista, p.UserId)
+		// We don't change the rest of the attributes
+		p.Path = path
+		p.Comments = comments
+		p.Date = date
+		p.UserId = userId
 
-		// cast from array to string
-		justString := fmt.Sprint(lista)
-
-		//pass to database
-		p.Likes = justString
-
-		fmt.Println("Lista despues: ", p.Likes)
-
-		res, err := db.c.Exec(`UPDATE photos SET likes=? WHERE id=?`,
-			p.Likes, p.ID)
+		res, err := db.c.Exec(`UPDATE photos SET path=?,comments=?,date=?,userid=?,likes=? WHERE id=?`,
+			p.Path, p.Comments, p.Date, p.UserId, p.Likes, p.ID)
 		if err != nil {
 			return p, err
 		}
 
 		fmt.Println(res)
-
-		/*
-
-			c.Date = time.Now()
-
-
-
-
-			lastInsertID, err := res.LastInsertId()
-			if err != nil {
-				return c, err
-			}
-
-			c.ID = uint64(lastInsertID)
-
-		*/
 
 	}
 

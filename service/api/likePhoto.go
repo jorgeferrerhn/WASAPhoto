@@ -52,7 +52,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	var p Photo
 
 	p.ID = intPhoto
-	p.UserId = intId
+	p.UserId = intId // only for sending it to the database function
 
 	//update info from database
 	dbphoto, err := rt.db.LikePhoto(p.ToDatabase())

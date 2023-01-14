@@ -724,14 +724,69 @@
 
         responses:
           '201': 
-            description: Successful operation
+            description: Updated image
             content:
               application/json:
                 schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
+                  type: object
+                  properties:
 
+                    imagePath:
+                      description: path to the image
+                      type: string
+                      minLength: 3
+                      maxLength: 100
+
+                    photoID:
+                      type: integer
+                      description: ID of the photo
+                      example: 9123
+
+                    likes:
+                      type: array
+                      description: An array with the likes of each photo
+                      minItems: 0
+                      maxItems: 100
+                      items:
+                        type: string
+                        minLength: 3
+                        maxLength: 16
+
+
+
+
+                    comments:
+                      type: array
+                      description: An array with the comments of each photo
+                      minItems: 0
+                      maxItems: 100
+
+
+                      items:
+                        type: object
+                        properties:
+                          user:
+                            type: string
+                            description: Username
+                            minLength: 3
+                            maxLength: 16
+                            pattern: ^[A-Z][0-9]$
+
+
+                          comment:
+                            type: string
+                            description: Comment
+                            minLength: 3
+                            maxLength: 16
+                            pattern: ^[A-Z][0-9]$
+
+
+                    date:
+                      type: string
+                      description: Date in which the photo was uploaded
+                      minLength: 3
+                      maxLength: 16
+                      format: date-time
           '401':            
             description: Access token is missing or invalid
           '404': 
