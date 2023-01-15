@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"strconv"
 	"time"
 )
 
@@ -96,8 +95,9 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 		var add string
 
 		new_list := photos[0 : len(photos)-1]
-		strDate := fmt.Sprint(p.Date)
-		strPhoto := "['ID':" + strconv.Itoa(p.ID) + ",'UserID':" + strconv.Itoa(p.UserId) + ",'Path':" + p.Path + "',Comments':" + p.Comments + ",'Likes':" + p.Likes + ",'Date':" + strDate + "]"
+		//strDate := fmt.Sprint(p.Date)
+		//strPhoto := "['ID':" + strconv.Itoa(p.ID) + ",'UserID':" + strconv.Itoa(p.UserId) + ",'Path':" + p.Path + ",'Comments':" + p.Comments + ",'Likes':" + p.Likes + ",'Date':" + strDate + "]"
+		strPhoto := fmt.Sprint(p)
 
 		if photos == "{}" {
 			add = strPhoto + "}"

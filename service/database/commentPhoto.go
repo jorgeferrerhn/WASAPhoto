@@ -1,12 +1,56 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"time"
 )
 
+type Photos struct {
+	photos []CastPhoto
+}
+
+type CastPhoto struct {
+	id       int
+	userid   int
+	path     string
+	comments string
+	likes    string
+	date     time.Time
+}
+
+/*
+	func searchComments(splitted_list []string, id int) {
+		strIdSearched := strconv.Itoa(id)
+
+		for i := 0; i < len(splitted_list); i++ {
+			fmt.Println("Photo: ", splitted_list[i])
+			splitted_photo := strings.Split(splitted_list[i][1:len(splitted_list[i])-1], ",")
+
+			photo_id := splitted_photo[0]        //this is the id
+			last := strings.Split(photo_id, ":") //for getting the second part: the id
+
+			if last[1] == strIdSearched {
+				comments := strings.Split(splitted_photo[3], ":") //for getting the second part: the id
+
+				fmt.Println("Here we are:", comments[1])
+
+				if comments[1] == "[]" {
+					add = newComment + "]"
+
+				} else {
+					add = "," + newComment + "]"
+
+				}
+
+			}
+
+		}
+
+}
+*/
 func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, User, error) {
 
 	var photoId, profilePic, photoUserId int
@@ -144,7 +188,20 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 		p.Comments = new_list
 
-		fmt.Println("Lista despues: ", p.Comments)
+		//fmt.Println("Lista despues: ", p.Comments)
+		fmt.Println("Photos here: ", photos)
+
+		data := Photos{}
+
+		_ = json.Unmarshal([]byte(photos), &data)
+		for i := 0; i < len(data.photos); i++ {
+			fmt.Println("ID: ", data.photos[i].id)
+		}
+
+		//splitted_list := strings.Split(photos[1:len(photos)-1], ";")
+		//fmt.Println(splitted_list)
+
+		//searchComments(splitted_list, p.ID)
 
 		res, err = db.c.Exec(`UPDATE photos SET userid=?,path=?,likes=?,comments=?,date=? WHERE id=?`,
 			p.UserId, p.Path, p.Likes, p.Comments, p.Date, p.ID)
@@ -158,7 +215,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 		//get the photo from the stream of photos of the user
 
-		fmt.Println("Photos of the user:", photos)
+		//fmt.Println("Photos of the user:", photos)
 
 		//get to the comments of the photo
 

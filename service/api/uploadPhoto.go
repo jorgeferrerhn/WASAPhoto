@@ -32,12 +32,6 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	intId2, err := strconv.Atoi(i)
-	if err != nil {
-		// id wasn`t properly casted
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 	//path to the image
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
@@ -50,7 +44,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	p.UserId = intId
 	p.Path = newStr
 	var u User
-	u.ID = intId2
+	u.ID = intId
 
 	//update info from database
 	dbphoto, dbuser, err := rt.db.UploadPhoto(p.ToDatabase(), u.ToDatabase())
