@@ -1,12 +1,12 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import NewFountainView from '../views/doLogin.vue'
+import doLoginView from '../views/doLogin.vue'
 
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes: [
 		{path: '/', component: HomeView},
-		{path: '/session', component: NewFountainView},
+		{path: '/session', component: doLoginView},
 	]
 })
 

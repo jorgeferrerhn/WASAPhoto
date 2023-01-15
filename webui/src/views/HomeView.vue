@@ -4,7 +4,7 @@ export default {
 		return {
 			errormsg: null,
 			loading: false,
-			fountains: [],
+			users: [],
 		}
 	},
 	methods: {
@@ -16,14 +16,14 @@ export default {
 			this.errormsg = null;
 			try {
 				let response = await this.$axios.get("/fountains/");
-				this.fountains = response.data;
+				this.users = response.data;
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
 		},
 		async newItem() {
-			this.$router.push("/doLogin");
+			this.$router.push("/session");
 		},
 		async deleteFountain(id) {
 			this.loading = true;
@@ -67,7 +67,7 @@ export default {
 
 		<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-		<div class="card" v-if="fountains.length === 0">
+		<div class="card" v-if="users.length === 0">
 			<div class="card-body">
 				<p>No users in the database.</p>
 
@@ -75,17 +75,17 @@ export default {
 			</div>
 		</div>
 
-		<div class="card" v-if="!loading" v-for="f in fountains">
+		<div class="card" v-if="!loading" v-for="u in users">
 			<div class="card-header">
 				Fountain
 			</div>
 			<div class="card-body">
 				<p class="card-text">
-					Latitude: {{ f.latitude }}<br />
-					Longitude: {{ f.longitude }}<br />
-					Status: {{ f.status }}
+					Name: u.name<br />
+					Longitude: {{ u.longitude }}<br />
+					Status: {{ u.status }}
 				</p>
-				<a href="javascript:" class="btn btn-danger" @click="deleteFountain(f.id)">Delete</a>
+				<a href="javascript:" class="btn btn-danger" @click="deleteFountain(u.id)">Delete</a>
 			</div>
 		</div>
 	</div>
