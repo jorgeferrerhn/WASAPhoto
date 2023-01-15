@@ -88,7 +88,7 @@ type AppDatabase interface {
 	UploadPhoto(Photo, User) (Photo, User, error)
 
 	//commentPhoto inserts a comment on the comments table,
-	CommentPhoto(Comment) (Comment, error)
+	CommentPhoto(Comment, Photo, User) (Comment, Photo, User, error)
 
 	//likePhoto updates a photo and adds a like from a user,
 	LikePhoto(Photo) (Photo, error)

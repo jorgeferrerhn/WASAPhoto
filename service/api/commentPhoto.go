@@ -65,8 +65,14 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	c.Content = comment
 	c.PhotoId = intPhoto
 
+	var p Photo
+	p.ID = intPhoto
+
+	var u User
+	u.ID = intId
+
 	//update info from database
-	dbcomment, err := rt.db.CommentPhoto(c.ToDatabase())
+	dbcomment, dbphoto, dbuser, err := rt.db.CommentPhoto(c.ToDatabase(), p.ToDatabase(), u.ToDatabase())
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
@@ -77,6 +83,8 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	// Here we can re-use `comment` as FromDatabase is overwriting every variabile in the structure.
 	c.FromDatabase(dbcomment)
+	p.FromDatabase(dbphoto)
+	u.FromDatabase(dbuser)
 
 	if c.ID == 0 { //user not found
 		w.WriteHeader(http.StatusBadRequest)
