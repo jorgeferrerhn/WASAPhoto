@@ -46,6 +46,10 @@ type User struct {
 	Photos     string
 }
 
+type Photos struct {
+	Photos []Photo
+}
+
 type Photo struct {
 	ID       int
 	UserId   int
@@ -66,52 +70,55 @@ type Comment struct {
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 
-	// CreateUser creates a new user in the database. It returns an updated User object (with the ID)
+	// ShowPhotos is the home page function
+	ShowPhotos(Photos) (Photos, error)
+
+	// DoLogin CreateUser creates a new user in the database. It returns an updated User object (with the ID)
 	DoLogin(User) (User, error)
 
-	// getUserProfile gets the information of an user from its ID.
+	// GetUserProfile gets the information of a user from its ID.
 	GetUserProfile(User) (User, error)
 
-	//getMyStream gets the stream of photos of the user searched from its ID
+	// GetMyStream gets the stream of photos of the user searched from its ID
 	GetMyStream(int) (string, error)
 
-	//getLogo gets the profile picture of a user given its ID
+	// GetLogo gets the profile picture of a user given its ID
 	GetLogo(int) (int, error)
 
-	//getImage gets a picture given its ID
+	// GetImage getImage gets a picture given its ID
 	GetImage(Photo) (Photo, error)
 
-	//uploadPhoto gets a path of an image and uploads the photo.
+	// UploadLogo uploadPhoto gets a path of an image and uploads the photo.
 	UploadLogo(Photo, User) (Photo, User, error)
 
-	//uploadLogo gets a path of an image and uploads the profile picture.
+	// UploadPhoto uploadLogo gets a path of an image and uploads the profile picture.
 	UploadPhoto(Photo, User) (Photo, User, error)
 
-	//commentPhoto inserts a comment on the comments table,
+	// CommentPhoto inserts a comment on the comments table,
 	CommentPhoto(Comment, Photo, User) (Comment, Photo, User, error)
 
-	//likePhoto updates a photo and adds a like from a user,
+	// LikePhoto updates a photo and adds a like from a user,
 	LikePhoto(Photo) (Photo, error)
 
-	//setMyUserName updates a table with  comment on the comments table,
+	// SetMyUserName updates a table with  comment on the comments table,
 	SetMyUserName(int, string) (int, error)
 
-	// followUser updates the list of followers of the user followed
+	// FollowUser updates the list of followers of the user followed
 	FollowUser(int, int) (int, error)
 
-	// banUser updates the list of banned users of the user
+	// BanUser updates the list of banned users of the user
 	BanUser(int, int) (int, error)
 
-	// unfollowUser removes the user followed from the list of followers of the user
+	// UnfollowUser removes the user followed from the list of followers of the user
 	UnfollowUser(int, int) (int, error)
 
-	// unbanUser removes the user banned from the list of banned users of the user1
+	// UnbanUser UnbanUser unbanUser removes the user banned from the list of banned users of the user1
 	UnbanUser(int, int) (int, error)
 
-	// unlike photo updates a photo and removes a like from an user,
+	// UnlikePhoto unlike photo updates a photo and removes a like from a user,
 	UnlikePhoto(int) (int, error)
 
-	// uncomment photo updates a photo and removes a comment from an user,
+	// UncommentPhoto uncomment photo updates a photo and removes a comment from a user,
 	UncommentPhoto(Comment) (int, error)
 
 	// deletePhoto removes a photo
