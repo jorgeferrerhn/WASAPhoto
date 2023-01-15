@@ -32,7 +32,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	intId2, err := strconv.ParseUint(i, 10, 64)
+	intId2, err := strconv.Atoi(i)
 	if err != nil {
 		// id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)

@@ -9,7 +9,7 @@ import (
 
 func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
-	var photoId, profilePic uint64
+	var photoId, profilePic int
 	var userName, followers, banned, photos string
 
 	//search for the user
@@ -82,7 +82,7 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 			return p, u, err
 		}
 
-		p.ID = uint64(lastInsertID)
+		p.ID = int(lastInsertID)
 
 		// We also have to update the photo's stream of the user
 		u.Name = userName

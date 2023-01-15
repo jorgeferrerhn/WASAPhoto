@@ -40,7 +40,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	intPhotoId, err := strconv.ParseUint(p, 10, 64)
+	intPhotoId, err := strconv.Atoi(p)
 	if err != nil {
 		// id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)

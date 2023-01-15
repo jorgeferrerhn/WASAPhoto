@@ -38,16 +38,16 @@ import (
 // User struct represent a fountain in every API call between this package and the outside world.
 // Note that the internal representation of fountain in the database might be different.
 type User struct {
-	ID         uint64
+	ID         int
 	Name       string
-	ProfilePic uint64
+	ProfilePic int
 	Followers  string
 	Banned     string
 	Photos     string
 }
 
 type Photo struct {
-	ID       uint64
+	ID       int
 	UserId   int
 	Path     string
 	Likes    string
@@ -56,9 +56,9 @@ type Photo struct {
 }
 
 type Comment struct {
-	ID      uint64
+	ID      int
 	Content string
-	PhotoId uint64
+	PhotoId int
 	UserId  int
 	Date    time.Time
 }

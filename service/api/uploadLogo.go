@@ -25,7 +25,7 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	intId, err := strconv.ParseUint(i, 10, 64)
+	intId, err := strconv.Atoi(i)
 	if err != nil {
 		// id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)

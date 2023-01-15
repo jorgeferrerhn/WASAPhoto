@@ -12,7 +12,7 @@ import (
 
 func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	var imageId uint64
+	var imageId int
 
 	//This function receives an image ID and returns the image.
 	//Due to the complexity of the search of an image ID through a SQL Text (Photos), we will suppose that the image ID is a string with the format <userID>.<imageID>
@@ -27,7 +27,7 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	imageId, e2 := strconv.ParseUint(i, 10, 64)
+	imageId, e2 := strconv.Atoi(i)
 
 	if e2 != nil {
 		w.WriteHeader(http.StatusBadRequest)

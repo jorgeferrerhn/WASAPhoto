@@ -43,7 +43,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	intPhoto, err := strconv.ParseUint(photoId, 10, 64)
+	intPhoto, err := strconv.Atoi(photoId)
 	if err != nil {
 		// id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)

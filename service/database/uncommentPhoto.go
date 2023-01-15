@@ -7,8 +7,8 @@ import (
 
 func (db *appdbimpl) UncommentPhoto(c Comment) (int, error) {
 
-	var commentId uint64
-	// var userId uint64
+	var commentId int
+	// var userId int
 
 	/*
 		//lastly, we check that the user existed

@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	id         uint64
+	id         int
 	nameSearch string
 )
 
@@ -58,7 +58,7 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 			return u, err
 		}
 
-		u.ID = uint64(lastInsertID)
+		u.ID = int(lastInsertID)
 
 	} else {
 		u.ID = id

@@ -43,7 +43,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	intComment, err := strconv.ParseUint(commentId, 10, 64)
+	intComment, err := strconv.Atoi(commentId)
 	if err != nil {
 		// id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)

@@ -11,16 +11,16 @@ import (
 // added to the struct to conform to the OpenAPI specifications regarding JSON key names.
 // Note: there is a similar struct in the database package. See User.FromDatabase (below) to understand why.
 type User struct {
-	ID         uint64 `json:"Id"`
+	ID         int    `json:"Id"`
 	Name       string `json:"Name"`
-	ProfilePic uint64 `json:"ProfilePic"`
+	ProfilePic int    `json:"ProfilePic"`
 	Followers  string `json:"Followers"`
 	Banned     string `json:"Banned"`
 	Photos     string `json:"Photos"`
 }
 
 type Photo struct {
-	ID       uint64    `json:"Id"`
+	ID       int       `json:"Id"`
 	UserId   int       `json:"userId"`
 	Path     string    `json:"path"`
 	Likes    string    `json:"likes"`
@@ -29,9 +29,9 @@ type Photo struct {
 }
 
 type Comment struct {
-	ID      uint64    `json:"Id"`
+	ID      int       `json:"Id"`
 	Content string    `json:"content"`
-	PhotoId uint64    `json:"PhotoId"`
+	PhotoId int       `json:"PhotoId"`
 	UserId  int       `json:"userId"`
 	Date    time.Time `json:"date"`
 }

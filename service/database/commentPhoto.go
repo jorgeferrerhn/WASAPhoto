@@ -8,9 +8,9 @@ import (
 
 func (db *appdbimpl) CommentPhoto(c Comment) (Comment, error) {
 
-	var photoId uint64
+	var photoId int
 	var userName string
-	// var userId uint64
+	// var userId int
 
 	//search for the user
 	rows, err := db.c.Query(`select name from users where id=?`, c.UserId)
@@ -78,7 +78,7 @@ func (db *appdbimpl) CommentPhoto(c Comment) (Comment, error) {
 			return c, err
 		}
 
-		c.ID = uint64(lastInsertID)
+		c.ID = int(lastInsertID)
 
 	}
 
