@@ -11,20 +11,18 @@ export default {
 		load() {
 			return load
 		},
-		/*async refresh() {
-			this.loading = true;
-			this.errormsg = null;
-			try {
-				let response = await this.$axios.post("/session");
-				this.users = response.data;
-			} catch (e) {
-				this.errormsg = e.toString();
-			}
-			this.loading = false;
-		},*/
-		async refresh() {
-			this.$router.push("/");
-		},
+
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let response = await this.$axios.get("/");
+        this.fountains = response.data;
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+      this.loading = false;
+    },
 
     /*async deleteFountain(id) {
 			this.loading = true;
@@ -58,11 +56,7 @@ export default {
 						Refresh
 					</button>
 				</div>
-				<div class="btn-group me-2">
-					<button type="button" class="btn btn-sm btn-outline-primary" @click="newItem">
-						New
-					</button>
-				</div>
+
 			</div>
 		</div>
 
