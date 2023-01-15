@@ -10,12 +10,12 @@ import (
 func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, User, error) {
 
 	var photoId, profilePic, photoUserId int
-	var userName, followers, banned, photos, likes, photosComments, path string
+	var userName, userNameTarget, followers, banned, photos, likes, photosComments, path string
 	var date time.Time
 	// var userId int
 
-	//search for the user
-	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, c.UserId)
+	//search for the user that comments
+	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, c.UserId)
 
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +25,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	for rows.Next() {
 
-		err := rows.Scan(&userName, &profilePic, &followers, &banned, &photos)
+		err := rows.Scan(&userName)
 
 		if err != nil {
 			log.Fatal(err)
@@ -66,11 +66,39 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		log.Fatal(err)
 	}
 
-	if path == "" {
-		return c, p, u, errors.New("Photo not found")
+	//lastly, we need to check up the user that gets commented
+	p.UserId = photoUserId //to check for the target id
+
+	fmt.Println("P. userid: ", p.UserId)
+
+	rows3, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
+
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	if userName != "" && photoId != 0 { //comment has not been uploaded before and the user and photo exist
+	defer rows3.Close()
+
+	for rows3.Next() {
+
+		err := rows3.Scan(&userNameTarget, &profilePic, &followers, &banned, &photos)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	}
+
+	err = rows3.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if userNameTarget == "" {
+		return c, p, u, errors.New("Target user not found")
+	}
+
+	if userName != "" && userNameTarget != "" && photoId != 0 { //comment has not been uploaded before and the user and photo exist
 		c.Date = time.Now()
 
 		res, err := db.c.Exec(`INSERT INTO comments (commentid,content,photoid,userid,date) VALUES (NULL,?,?,?,?)`,
@@ -86,7 +114,8 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 		c.ID = int(lastInsertID)
 
-		// We also have to update the comments's stream of the user
+		// We also have to update the comments's stream of the COMMENTED user
+		u.ID = p.UserId //this is important: the id of the user we need to update is not the one who comments, but the one who gets the comment on the photo
 		u.Followers = followers
 		u.Photos = photos
 		u.Banned = banned
@@ -126,6 +155,15 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		fmt.Println(res)
 
 		// UPDATING the user's stream
+
+		//get the photo from the stream of photos of the user
+
+		fmt.Println("Photos of the user:", photos)
+
+		//get to the comments of the photo
+
+		//update the user
+
 		//res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		//	u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
 
