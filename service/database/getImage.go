@@ -1,6 +1,8 @@
 package database
 
 import (
+	"errors"
+	"fmt"
 	"log"
 	"time"
 )
@@ -14,6 +16,7 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 	rows, err := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
 
 	if err != nil {
+
 		log.Fatal(err)
 	}
 
@@ -32,8 +35,18 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("this: ", p.UserId, p.Path, p.Likes, p.Comments, p.Date)
+		fmt.Println("this: ", p.UserId, p.Path, p.Likes, p.Comments, p.Date)
 
 	}
-	return p, err
+
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if path == "" {
+		return p, errors.New("Photo not found")
+	}
+
+	return p, nil
 }

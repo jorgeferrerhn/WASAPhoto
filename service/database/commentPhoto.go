@@ -96,6 +96,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		p.UserId = photoUserId
 		p.Likes = likes
 		p.Date = date
+		p.Path = path
 
 		// UPDATING the photo
 
