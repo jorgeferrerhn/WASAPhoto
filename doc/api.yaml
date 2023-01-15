@@ -1,487 +1,319 @@
-  openapi: 3.0.3
-  info:
-    title: Simplified login API specification
-    description: |-
-      This OpenAPI document describes the simplified login API.
-      Copy and paste the API from the `paths` key to your OpenAPI document.
-    version: "1"
+openapi: 3.0.3
+info:
+  title: Simplified login API specification
+  description: |-
+    This OpenAPI document describes the simplified login API.
+    Copy and paste the API from the `paths` key to your OpenAPI document.
+  version: "1"
 
-  tags: 
-    - name: "Login"
-      description: endpoints for login
+tags:
+  - name: "Login"
+    description: endpoints for login
 
-    - name: "User"
-      description: endpoints related to the user
+  - name: "User"
+    description: endpoints related to the user
 
-    - name: "Photos"
-      description: endpoints related to photos
+  - name: "Photos"
+    description: endpoints related to photos
 
-    
-  paths: 
 
-    /session:
-      post:
-        tags: ["Login"]
-        summary: Logs in the user
-        description: |-
-          If the user does not exist, it will be created,
-          and an identifier is returned.
-          If the user exists, the user identifier is returned.
-          
-        operationId: doLogin
-        
-        requestBody:
-          description: User details
+paths:
+
+  /photos:
+    get:
+      tags: ["Home"]
+      summary: Logs in the user
+      description: |-
+        Returns a list with all the photos
+
+      operationId: showPhotos
+
+
+
+
+      responses:
+        '200':
+          description: User identifier
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: "Maria"
-                readOnly: true
-                minLength: 3
-                maxLength: 16
-                description: Username
-                pattern: ^[a-zA-Z0-9]{1,20}$
-          required: true
-
-
-        responses:
-          '200': 
-            description: User identifier
-            content:
-              text/plain:
-                schema:
-                  type: integer
-                  example: 9013213
-                  description: User identifier
-
-
-          '400':            
-            description: Bad Request. Error parsing data or information not valid.
-          
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non sucessful operation
-
-
-          
-    /users/{userId}/getUserProfile:
-      parameters:
-        - name: userId
-          schema: 
-            type: integer
-            description: User identifier
-
-          in: path
-          required: true
-          description: userId
-
-      get: 
-        summary: user searched by its userId
-        operationId: getUserProfile
-        description: |
-          Obtains an user by its userId. It returns a list with the attributes of the user, or -1 if not found.
-          
-        tags: ["User"]
-
-        responses:
-          "200": 
-            description: Information related to the user
-            content:
-              application/json:
-                schema:
-                  description: Information of the user; username, profile pic, followers,photos
+                type: array
+                description: An array with the stream of photos.
+                minItems: 0
+                maxItems: 100
+                items:
                   type: object
                   properties:
 
-                    id:
-                      description: User identifier
-                      type: integer
-                      example: 9013213
-                    
-                    name:
+                    imagePath:
+                      description: path to the image
                       type: string
-                      example: "Maria"
                       minLength: 3
-                      maxLength: 16
-                      pattern: ^[a-zA-Z0-9]{1,20}$
-                      description: Username
-      
-                    profilePictureID:
-                      description: Profile picture identifier
+                      maxLength: 100
+
+
+                    photoID:
+                      description: ID of the photo
                       type: integer
-                      example: 123912
-                    
-                    banned: 
+
+                    likes:
                       type: array
-                      description: An array with the bannedUsers. 
+                      description: A sub-array with the likes of each photo.
                       minItems: 0
                       maxItems: 100
-                      items: 
-                        type: string 
+                      items:
+                        type: string
                         minLength: 3
                         maxLength: 16
 
-                    followers: 
+
+                    comments:
                       type: array
-                      description: An array with the followers. We only store the followers, not the followed. 
-                      minItems: 0
-                      maxItems: 100
-                      items: 
-                        type: string 
-                        minLength: 3
-                        maxLength: 16
-                        
-                        
-                        
-                    photos: 
-                      type: array
-                      description: An array with the stream of photos.
+                      description: A sub-array with the comments of each photo.
                       minItems: 0
                       maxItems: 100
                       items:
                         type: object
                         properties:
 
-                          imagePath:
-                            description: path to the image
-                            type: string
-                            minLength: 3
-                            maxLength: 100
-                          
-                          
-                          photoID: 
-                            description: ID of the photo
-                            type: integer
-                            
-                          likes: 
-                            type: array
-                            description: A sub-array with the likes of each photo.
-                            minItems: 0
-                            maxItems: 100
-                            items:
-                              type: string
-                              minLength: 3
-                              maxLength: 16
-                            
-                          
-                          comments:
-                            type: array
-                            description: A sub-array with the comments of each photo.
-                            minItems: 0
-                            maxItems: 100
-                            items: 
-                              type: object
-                              properties: 
-                                
-                                user:
-                                  type: string
-                                  minLength: 3
-                                  maxLength: 16
-                                  description: Username
-                                  
-
-                                comment:
-                                  type: string
-                                  minLength: 3
-                                  maxLength: 16
-                                  description: comment
-                                  
-                    
-                          date: 
+                          user:
                             type: string
                             minLength: 3
                             maxLength: 16
-                            format: date-time
-                            description: Creation date and time
-                            
-                        
-                      
-          "400":  
-            description: |
-              The request was not compliant with the documentation
-              (eg. missing fields, etc). 
-    
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Operation not sucessful
+                            description: Username
 
-          
 
-    /users/{userId}/getMyStream:
-      get: 
-        parameters:
-        - name: userId
-          schema: 
-            type: integer
-            description: User identifier
-
-          in: path
-          required: true
-          description: userId
-        
-
-        tags: ["User"]
-        
-        summary: Stream of photos of a user
-        operationId: getMyStream
-        description: |
-          Obtains the stream of photos of a user searched by its userId. It returns a list with all the photos in inverse chronological order
-          
-        responses:
-          "200": 
-            description: Stream of photos
-            content: 
-              application/json:
-                schema:
-                  type: array
-                  minItems: 0
-                  maxItems: 100
-                  description: Stream of photos
-
-                  items:
-                    type: object
-                    properties:
-
-                      imagePath:
-                            description: path to the image
+                          comment:
                             type: string
                             minLength: 3
-                            maxLength: 100
-                      
-                      photoID: 
-                        type: integer
-                        description: ID of the photo
-                        example: 9123
-                        
-                      likes: 
-                        type: array
-                        description: An array with the likes of each photo
-                        minItems: 0
-                        maxItems: 100
-                        items:
+                            maxLength: 16
+                            description: comment
+
+
+                    date:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
+                      format: date-time
+                      description: Creation date and time
+
+
+        '400':
+          description: Bad Request. Error parsing data or information not valid.
+
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non sucessful operation
+
+  /session:
+    post:
+      tags: ["Login"]
+      summary: Logs in the user
+      description: |-
+        If the user does not exist, it will be created,
+        and an identifier is returned.
+        If the user exists, the user identifier is returned.
+
+      operationId: doLogin
+
+      requestBody:
+        description: User details
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: "Maria"
+              readOnly: true
+              minLength: 3
+              maxLength: 16
+              description: Username
+              pattern: ^[a-zA-Z0-9]{1,20}$
+        required: true
+
+
+      responses:
+        '200':
+          description: User identifier
+          content:
+            text/plain:
+              schema:
+                type: integer
+                example: 9013213
+                description: User identifier
+
+
+        '400':
+          description: Bad Request. Error parsing data or information not valid.
+
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non sucessful operation
+
+
+
+  /users/{userId}/getUserProfile:
+    parameters:
+      - name: userId
+        schema:
+          type: integer
+          description: User identifier
+
+        in: path
+        required: true
+        description: userId
+
+    get:
+      summary: user searched by its userId
+      operationId: getUserProfile
+      description: |
+        Obtains an user by its userId. It returns a list with the attributes of the user, or -1 if not found.
+
+      tags: ["User"]
+
+      responses:
+        "200":
+          description: Information related to the user
+          content:
+            application/json:
+              schema:
+                description: Information of the user; username, profile pic, followers,photos
+                type: object
+                properties:
+
+                  id:
+                    description: User identifier
+                    type: integer
+                    example: 9013213
+
+                  name:
+                    type: string
+                    example: "Maria"
+                    minLength: 3
+                    maxLength: 16
+                    pattern: ^[a-zA-Z0-9]{1,20}$
+                    description: Username
+
+                  profilePictureID:
+                    description: Profile picture identifier
+                    type: integer
+                    example: 123912
+
+                  banned:
+                    type: array
+                    description: An array with the bannedUsers.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
+
+                  followers:
+                    type: array
+                    description: An array with the followers. We only store the followers, not the followed.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
+
+
+
+                  photos:
+                    type: array
+                    description: An array with the stream of photos.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: object
+                      properties:
+
+                        imagePath:
+                          description: path to the image
+                          type: string
+                          minLength: 3
+                          maxLength: 100
+
+
+                        photoID:
+                          description: ID of the photo
+                          type: integer
+
+                        likes:
+                          type: array
+                          description: A sub-array with the likes of each photo.
+                          minItems: 0
+                          maxItems: 100
+                          items:
+                            type: string
+                            minLength: 3
+                            maxLength: 16
+
+
+                        comments:
+                          type: array
+                          description: A sub-array with the comments of each photo.
+                          minItems: 0
+                          maxItems: 100
+                          items:
+                            type: object
+                            properties:
+
+                              user:
+                                type: string
+                                minLength: 3
+                                maxLength: 16
+                                description: Username
+
+
+                              comment:
+                                type: string
+                                minLength: 3
+                                maxLength: 16
+                                description: comment
+
+
+                        date:
                           type: string
                           minLength: 3
                           maxLength: 16
-                          
-  
-                        
-                      
-                      comments:
-                        type: array
-                        description: An array with the comments of each photo
-                        minItems: 0
-                        maxItems: 100
-
-
-                        items: 
-                          type: object
-                          properties: 
-                            user:
-                              type: string
-                              description: Username
-                              minLength: 3
-                              maxLength: 16
-                              pattern: ^[A-Z][0-9]$
-                                  
-  
-                            comment:
-                              type: string
-                              description: Comment
-                              minLength: 3
-                              maxLength: 16
-                              pattern: ^[A-Z][0-9]$
-                                  
-  
-                      date: 
-                        type: string
-                        description: Date in which the photo was uploaded
-                        minLength: 3
-                        maxLength: 16  
-                        format: date-time
-                        
-                
-                example: ["PhotoId": 100000, 
-                          "Likes": ["JohnDoe","CarlSagan"],
-                          "Comments": [
-                              {"User":"JohnDoe","Comment":"Wow, nice trip!"},
-                              {"User":"CarlSagan", "Comment":"Amazing!"}],
-                          "Date":"2021-01-30T08:30:00Z",
-                          "Followers": ["JohnDoe","KenFollet"]
-                          ]
-                          
-          '400':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Not sucessful operation
-
-
-          
-
-
-    /images/{identifier}:
-      get: 
-        parameters:
-        - name: identifier
-          schema: 
-            type: string
-            description: User identifier. It is a string because it has the format <userID>.<userImage>. 
-            example: "3.3"
-
-          in: path
-          required: true
-          description: Image identifier.
-        
-        
-        summary: Get an specific image searched by its identifier.
-        operationId: getImage
-
-        tags: ["Photos"]
-
-        description: |
-          Obtains the raw image. If it does not exist, it returns -1.
-          
-        responses:
-          "200": 
-            description: Requested image
-            content: 
-              application/json:
-                schema:
-                  type: object
-                  properties:
-
-                    imagePath:
-                          description: path to the image
-                          type: string
-                          minLength: 3
-                          maxLength: 100
-                    
-                    photoID: 
-                      type: integer
-                      description: ID of the photo
-                      example: 9123
-                      
-                    likes: 
-                      type: array
-                      description: An array with the likes of each photo
-                      minItems: 0
-                      maxItems: 100
-                      items:
-                        type: string
-                        minLength: 3
-                        maxLength: 16
-                        
-
-                      
-                    
-                    comments:
-                      type: array
-                      description: An array with the comments of each photo
-                      minItems: 0
-                      maxItems: 100
-
-
-                      items: 
-                        type: object
-                        properties: 
-                          user:
-                            type: string
-                            description: Username
-                            minLength: 3
-                            maxLength: 16
-                            pattern: ^[A-Z][0-9]$
-                                
-
-                          comment:
-                            type: string
-                            description: Comment
-                            minLength: 3
-                            maxLength: 16
-                            pattern: ^[A-Z][0-9]$
-                                
-
-                    date: 
-                      type: string
-                      description: Date in which the photo was uploaded
-                      minLength: 3
-                      maxLength: 16  
-                      format: date-time
-                                
-  
-
-            
-          '400':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Not successful operation
+                          format: date-time
+                          description: Creation date and time
 
 
 
-    /users/{userId}/getLogo:
-      get: 
-        parameters:
+        "400":
+          description: |
+            The request was not compliant with the documentation
+            (eg. missing fields, etc). 
+
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Operation not sucessful
+
+
+
+  /users/{userId}/getMyStream:
+    get:
+      parameters:
         - name: userId
-          schema: 
-            type: integer
-            description: User identifier
-
-          in: path
-          required: true
-          description: userId
-        
-        tags: ["Photos"]
-        summary: Get logo of a user specified by parameter
-        operationId: getLogo
-        description: |
-          Obtains the raw image. If it does not exist, it returns -1.
-          
-        responses:
-          "200": 
-            description: Logo identifier
-            content:
-              text/plain:
-                schema:
-                  type: integer
-                  example: 9013213
-                  description: Logo's identifier
-                      
-          
-          '400':            
-            description: Access token is missing or invalid
-
-          '404': 
-            description: 404 Not found 
-            
-
-    
-                  
-    /users/{userId}/uploadPhoto:
-      post:
-        parameters:
-        - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
@@ -489,143 +321,26 @@
           required: true
           description: userId
 
-      
-        tags: ["Photos"]
-        summary: Uploads a photo by the user
-        description: |-
-          Uploads a photo by the logged user and it appends to the beginning of the list. 
-          
-        operationId: uploadPhoto
-        requestBody:
-          description: User photo upload
+
+      tags: ["User"]
+
+      summary: Stream of photos of a user
+      operationId: getMyStream
+      description: |
+        Obtains the stream of photos of a user searched by its userId. It returns a list with all the photos in inverse chronological order
+
+      responses:
+        "200":
+          description: Stream of photos
           content:
-            image/png:
+            application/json:
               schema:
-                type: string
-                format: binary
-                description: PNG image file
-                minLength: 3
-                maxLength: 160
-                                  
-  
-          required: true
+                type: array
+                minItems: 0
+                maxItems: 100
+                description: Stream of photos
 
-
-        responses:
-          '201': 
-            description: Requested image
-            content: 
-              application/json:
-                schema:
-                  type: object
-                  properties:
-
-                    imagePath:
-                          description: path to the image
-                          type: string
-                          minLength: 3
-                          maxLength: 100
-                    
-                    photoID: 
-                      type: integer
-                      description: ID of the photo
-                      example: 9123
-                      
-                    likes: 
-                      type: array
-                      description: An array with the likes of each photo
-                      minItems: 0
-                      maxItems: 100
-                      items:
-                        type: string
-                        minLength: 3
-                        maxLength: 16
-                    
-                    comments:
-                      type: array
-                      description: An array with the comments of each photo
-                      minItems: 0
-                      maxItems: 100
-
-
-                      items: 
-                        type: object
-                        properties: 
-                          user:
-                            type: string
-                            description: Username
-                            minLength: 3
-                            maxLength: 16
-                            pattern: ^[A-Z][0-9]$
-                                
-
-                          comment:
-                            type: string
-                            description: Comment
-                            minLength: 3
-                            maxLength: 16
-                            pattern: ^[A-Z][0-9]$
-                                
-
-                    date: 
-                      type: string
-                      description: Date in which the photo was uploaded
-                      minLength: 3
-                      maxLength: 16  
-                      format: date-time
-                                
-          '401':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
-
-
-    /users/{userId}/uploadLogo:
-      post:
-        parameters:
-          - name: userId
-            schema:
-              type: integer
-              description: User identifier
-
-            in: path
-            required: true
-            description: userId
-
-
-        tags: [ "Photos" ]
-        summary: Uploads the profile picture of the user
-        description: |-
-          Changes the profile picture of the user
-
-        operationId: uploadLogo
-        requestBody:
-          description: User logo upload
-          content:
-            image/png:
-              schema:
-                type: string
-                format: binary
-                description: PNG image file
-                minLength: 3
-                maxLength: 160
-
-
-          required: true
-
-
-        responses:
-          '201':
-            description: Logo
-            content:
-              application/json:
-                schema:
+                items:
                   type: object
                   properties:
 
@@ -642,7 +357,7 @@
 
                     likes:
                       type: array
-                      description: An array with the likes of the profile picture
+                      description: An array with the likes of each photo
                       minItems: 0
                       maxItems: 100
                       items:
@@ -650,9 +365,12 @@
                         minLength: 3
                         maxLength: 16
 
+
+
+
                     comments:
                       type: array
-                      description: An array with the comments of the profile picture
+                      description: An array with the comments of each photo
                       minItems: 0
                       maxItems: 100
 
@@ -683,631 +401,1004 @@
                       maxLength: 16
                       format: date-time
 
-          '401':
-            description: Access token is missing or invalid
-          '404':
-            description: Resource not found.
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: -1
-                  description: Non successful operation
+
+              example: ["PhotoId": 100000,
+                "Likes": ["JohnDoe","CarlSagan"],
+                "Comments": [
+                  {"User":"JohnDoe","Comment":"Wow, nice trip!"},
+                  {"User":"CarlSagan", "Comment":"Amazing!"}],
+                "Date":"2021-01-30T08:30:00Z",
+                "Followers": ["JohnDoe","KenFollet"]
+              ]
+
+        '400':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Not sucessful operation
 
 
 
 
 
-    /users/{userId}/commentPhoto/{photoId}:
-      post:
-        parameters:
+  /images/{identifier}:
+    get:
+      parameters:
+        - name: identifier
+          schema:
+            type: string
+            description: User identifier. It is a string because it has the format <userID>.<userImage>.
+            example: "3.3"
+
+          in: path
+          required: true
+          description: Image identifier.
+
+
+      summary: Get an specific image searched by its identifier.
+      operationId: getImage
+
+      tags: ["Photos"]
+
+      description: |
+        Obtains the raw image. If it does not exist, it returns -1.
+
+      responses:
+        "200":
+          description: Requested image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  imagePath:
+                    description: path to the image
+                    type: string
+                    minLength: 3
+                    maxLength: 100
+
+                  photoID:
+                    type: integer
+                    description: ID of the photo
+                    example: 9123
+
+                  likes:
+                    type: array
+                    description: An array with the likes of each photo
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
+
+
+
+
+                  comments:
+                    type: array
+                    description: An array with the comments of each photo
+                    minItems: 0
+                    maxItems: 100
+
+
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          type: string
+                          description: Username
+                          minLength: 3
+                          maxLength: 16
+                          pattern: ^[A-Z][0-9]$
+
+
+                        comment:
+                          type: string
+                          description: Comment
+                          minLength: 3
+                          maxLength: 16
+                          pattern: ^[A-Z][0-9]$
+
+
+                  date:
+                    type: string
+                    description: Date in which the photo was uploaded
+                    minLength: 3
+                    maxLength: 16
+                    format: date-time
+
+
+
+
+        '400':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Not successful operation
+
+
+
+  /users/{userId}/getLogo:
+    get:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
           in: path
           required: true
           description: userId
-          
+
+      tags: ["Photos"]
+      summary: Get logo of a user specified by parameter
+      operationId: getLogo
+      description: |
+        Obtains the raw image. If it does not exist, it returns -1.
+
+      responses:
+        "200":
+          description: Logo identifier
+          content:
+            text/plain:
+              schema:
+                type: integer
+                example: 9013213
+                description: Logo's identifier
+
+
+        '400':
+          description: Access token is missing or invalid
+
+        '404':
+          description: 404 Not found
+
+
+
+
+  /users/{userId}/uploadPhoto:
+    post:
+      parameters:
+        - name: userId
+          schema:
+            type: integer
+            description: User identifier
+
+          in: path
+          required: true
+          description: userId
+
+
+      tags: ["Photos"]
+      summary: Uploads a photo by the user
+      description: |-
+        Uploads a photo by the logged user and it appends to the beginning of the list. 
+
+      operationId: uploadPhoto
+      requestBody:
+        description: User photo upload
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+              description: PNG image file
+              minLength: 3
+              maxLength: 160
+
+
+        required: true
+
+
+      responses:
+        '201':
+          description: Requested image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  imagePath:
+                    description: path to the image
+                    type: string
+                    minLength: 3
+                    maxLength: 100
+
+                  photoID:
+                    type: integer
+                    description: ID of the photo
+                    example: 9123
+
+                  likes:
+                    type: array
+                    description: An array with the likes of each photo
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
+
+                  comments:
+                    type: array
+                    description: An array with the comments of each photo
+                    minItems: 0
+                    maxItems: 100
+
+
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          type: string
+                          description: Username
+                          minLength: 3
+                          maxLength: 16
+                          pattern: ^[A-Z][0-9]$
+
+
+                        comment:
+                          type: string
+                          description: Comment
+                          minLength: 3
+                          maxLength: 16
+                          pattern: ^[A-Z][0-9]$
+
+
+                  date:
+                    type: string
+                    description: Date in which the photo was uploaded
+                    minLength: 3
+                    maxLength: 16
+                    format: date-time
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+  /users/{userId}/uploadLogo:
+    post:
+      parameters:
+        - name: userId
+          schema:
+            type: integer
+            description: User identifier
+
+          in: path
+          required: true
+          description: userId
+
+
+      tags: [ "Photos" ]
+      summary: Uploads the profile picture of the user
+      description: |-
+        Changes the profile picture of the user
+
+      operationId: uploadLogo
+      requestBody:
+        description: User logo upload
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+              description: PNG image file
+              minLength: 3
+              maxLength: 160
+
+
+        required: true
+
+
+      responses:
+        '201':
+          description: Logo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  imagePath:
+                    description: path to the image
+                    type: string
+                    minLength: 3
+                    maxLength: 100
+
+                  photoID:
+                    type: integer
+                    description: ID of the photo
+                    example: 9123
+
+                  likes:
+                    type: array
+                    description: An array with the likes of the profile picture
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
+
+                  comments:
+                    type: array
+                    description: An array with the comments of the profile picture
+                    minItems: 0
+                    maxItems: 100
+
+
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          type: string
+                          description: Username
+                          minLength: 3
+                          maxLength: 16
+                          pattern: ^[A-Z][0-9]$
+
+
+                        comment:
+                          type: string
+                          description: Comment
+                          minLength: 3
+                          maxLength: 16
+                          pattern: ^[A-Z][0-9]$
+
+
+                  date:
+                    type: string
+                    description: Date in which the photo was uploaded
+                    minLength: 3
+                    maxLength: 16
+                    format: date-time
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+
+
+  /users/{userId}/commentPhoto/{photoId}:
+    post:
+      parameters:
+        - name: userId
+          schema:
+            type: integer
+            description: User identifier
+
+          in: path
+          required: true
+          description: userId
+
         - name: photoId
-          schema: 
+          schema:
             type: integer
             description: Photo identifier
 
           in: path
           required: true
           description: ID of the photo to be commented
-          
-          
-        
-        
-        tags: ["Photos"]
-        summary: Comments a photo of a user
-        description: |-
-          The logged user comments a photo of another user. Each photo has a unique identifier, so we won't have to specify the user.
-          
-        operationId: commentPhoto
-        requestBody:
-          description: Comment to be added to the requested photo.
+
+
+
+
+      tags: ["Photos"]
+      summary: Comments a photo of a user
+      description: |-
+        The logged user comments a photo of another user. Each photo has a unique identifier, so we won't have to specify the user.
+
+      operationId: commentPhoto
+      requestBody:
+        description: Comment to be added to the requested photo.
+        content:
+
+          text/plain:
+            schema:
+              type: string
+              description: Photo comment.
+              example: "Wow, such a nice picture!"
+              minLength: 3
+              maxLength: 144
+
+
+        required: true
+
+
+      responses:
+        "200":
+          description: Posted comment
           content:
-            
-            text/plain:
+            application/json:
               schema:
-                type: string
-                description: Photo comment.
-                example: "Wow, such a nice picture!"
-                minLength: 3
-                maxLength: 144
-                                  
-  
-          required: true
+                type: object
+                properties:
 
+                  id:
+                    type: integer
+                    description: ID of the comment
+                    example: 9123
 
-        responses:
-          "200": 
-            description: Posted comment
-            content: 
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    
-                    id: 
-                      type: integer
-                      description: ID of the comment
-                      example: 9123
-                      
-                    content: 
-                      type: string
-                      description: Photo comment.
-                      example: "Wow, such a nice picture!"
-                      minLength: 3
-                      maxLength: 144
+                  content:
+                    type: string
+                    description: Photo comment.
+                    example: "Wow, such a nice picture!"
+                    minLength: 3
+                    maxLength: 144
 
-                    photoId: 
-                      type: integer
-                      description: ID of the photo commented
-                      example: 131
+                  photoId:
+                    type: integer
+                    description: ID of the photo commented
+                    example: 131
 
-                    userId: 
-                      type: integer
-                      description: ID of the user that commented
-                      example: 1
-                        
-                    date: 
-                      type: string
-                      description: Date in which the photo was uploaded
-                      minLength: 3
-                      maxLength: 16  
-                      format: date-time
-                                
+                  userId:
+                    type: integer
+                    description: ID of the user that commented
+                    example: 1
 
-                  
-                  
-          '401':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
+                  date:
+                    type: string
+                    description: Date in which the photo was uploaded
+                    minLength: 3
+                    maxLength: 16
+                    format: date-time
 
 
 
 
-    /users/{userId}/likePhoto/{photoId}:
-      put:
-        parameters:
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+
+  /users/{userId}/likePhoto/{photoId}:
+    put:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
           in: path
           required: true
           description: userId
-          
+
         - name: photoId
-          schema: 
+          schema:
             type: integer
             description: Photo identifier
 
           in: path
           required: true
           description: ID of the photo to be liked
-          
-          
-        
-        
-        tags: ["Photos"]
-        summary: Likes a photo of a user
-        description: |-
-          The logged user likes a photo of another user. Each photo has a unique identifier, so we won't have to specify the user.
-          
-        operationId: likePhoto
+
+
+
+
+      tags: ["Photos"]
+      summary: Likes a photo of a user
+      description: |-
+        The logged user likes a photo of another user. Each photo has a unique identifier, so we won't have to specify the user.
+
+      operationId: likePhoto
       
 
-        responses:
-          '201': 
-            description: Updated image
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-
-                    imagePath:
-                      description: path to the image
-                      type: string
-                      minLength: 3
-                      maxLength: 100
-
-                    photoID:
-                      type: integer
-                      description: ID of the photo
-                      example: 9123
-
-                    likes:
-                      type: array
-                      description: An array with the likes of each photo
-                      minItems: 0
-                      maxItems: 100
-                      items:
-                        type: string
-                        minLength: 3
-                        maxLength: 16
-
-
-
-                    comments:
-                      type: array
-                      description: An array with the comments of each photo
-                      minItems: 0
-                      maxItems: 100
-
-
-                      items:
-                        type: object
-                        properties:
-                          user:
-                            type: string
-                            description: Username
-                            minLength: 3
-                            maxLength: 16
-                            pattern: ^[A-Z][0-9]$
-
-
-                          comment:
-                            type: string
-                            description: Comment
-                            minLength: 3
-                            maxLength: 16
-                            pattern: ^[A-Z][0-9]$
-
-
-                    date:
-                      type: string
-                      description: Date in which the photo was uploaded
-                      minLength: 3
-                      maxLength: 16
-                      format: date-time
-          '401':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
-
-
-                  
-                  
-    /users/{userId}/setMyUserName:
-      put:
-        parameters:
-        - name: userId
-          schema: 
-            type: integer
-            description: User identifier
-
-          in: path
-          required: true
-          description: userId
-          
-        
-        tags: ["User"]
-        summary: Given the user ID, changes username of the user
-        description: |-
-          The logged user changes its username. It returns 0 if it has been correctly updated, or -1 if an error has occurred.
-          
-        operationId: setMyUserName
-        
-        requestBody:
-          description: User name
+      responses:
+        '201':
+          description: Updated image
           content:
             application/json:
               schema:
-                type: string
-                example: "Maria"
-                readOnly: true
-                minLength: 3
-                maxLength: 16
-                description: Username
-                pattern: ^[a-zA-Z0-9]{1,20}$
-          required: true
+                type: object
+                properties:
 
-        responses:
-          '201': 
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
+                  imagePath:
+                    description: path to the image
+                    type: string
+                    minLength: 3
+                    maxLength: 100
 
-          '401':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
+                  photoID:
+                    type: integer
+                    description: ID of the photo
+                    example: 9123
 
-                  
-                  
+                  likes:
+                    type: array
+                    description: An array with the likes of each photo
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
 
-    /users/{userId}/followUser/{userFollowed}:
-      put:
-        parameters:
+
+
+                  comments:
+                    type: array
+                    description: An array with the comments of each photo
+                    minItems: 0
+                    maxItems: 100
+
+
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          type: string
+                          description: Username
+                          minLength: 3
+                          maxLength: 16
+                          pattern: ^[A-Z][0-9]$
+
+
+                        comment:
+                          type: string
+                          description: Comment
+                          minLength: 3
+                          maxLength: 16
+                          pattern: ^[A-Z][0-9]$
+
+
+                  date:
+                    type: string
+                    description: Date in which the photo was uploaded
+                    minLength: 3
+                    maxLength: 16
+                    format: date-time
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+
+  /users/{userId}/setMyUserName:
+    put:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
           in: path
           required: true
           description: userId
-          
-        - name: userFollowed
-          schema: 
+
+
+      tags: ["User"]
+      summary: Given the user ID, changes username of the user
+      description: |-
+        The logged user changes its username. It returns 0 if it has been correctly updated, or -1 if an error has occurred.
+
+      operationId: setMyUserName
+
+      requestBody:
+        description: User name
+        content:
+          application/json:
+            schema:
+              type: string
+              example: "Maria"
+              readOnly: true
+              minLength: 3
+              maxLength: 16
+              description: Username
+              pattern: ^[a-zA-Z0-9]{1,20}$
+        required: true
+
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                description: Successful operation
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+
+  /users/{userId}/followUser/{userFollowed}:
+    put:
+      parameters:
+        - name: userId
+          schema:
             type: integer
             description: User identifier
-        
+
+          in: path
+          required: true
+          description: userId
+
+        - name: userFollowed
+          schema:
+            type: integer
+            description: User identifier
+
           in: path
           required: true
           description: user to be followed
 
-        
-        tags: ["User"]
-        summary: Given a user ID, the logged user follows it.
-        description: |-
-          The logged user follows the user identified by the parameter. It returns 0 if it has been correctly followed, or -1 if an error has occurred (already followed or not found).
-          
-        operationId: followUser
-        
 
-        responses:
-          '201': 
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
+      tags: ["User"]
+      summary: Given a user ID, the logged user follows it.
+      description: |-
+        The logged user follows the user identified by the parameter. It returns 0 if it has been correctly followed, or -1 if an error has occurred (already followed or not found).
 
-          '401':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
+      operationId: followUser
 
 
-                  
-    /users/{userId}/banUser/{userBanned}:
-      put:
-        parameters:
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                description: Successful operation
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+  /users/{userId}/banUser/{userBanned}:
+    put:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
-        
+
           in: path
           required: true
           description: user logged
 
         - name: userBanned
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
           in: path
           required: true
           description: user to be banned
-          
-        
-        tags: ["User"]
-        summary: Given a user ID, the logged user bans it.
-        description: |-
-          The logged user bans the user identified by the parameter. It returns 0 if it has been correctly banned, or -1 if an error has occurred (already banned or not found).
-          
-        operationId: banUser
-        
-
-        responses:
-          '201': 
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
-
-          '401':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
 
 
-    
-    /users/{userId}/unfollowUser/{unfollowedUserId}:
-      delete:
-        parameters:
+      tags: ["User"]
+      summary: Given a user ID, the logged user bans it.
+      description: |-
+        The logged user bans the user identified by the parameter. It returns 0 if it has been correctly banned, or -1 if an error has occurred (already banned or not found).
+
+      operationId: banUser
+
+
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                description: Successful operation
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+  /users/{userId}/unfollowUser/{unfollowedUserId}:
+    delete:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
-      
+
           in: path
           required: true
           description: user logged
-          
+
         - name: unfollowedUserId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
-          in: path 
+          in: path
           required: true
           description: user to be unfollowed
 
-          
-        
-        
-        tags: ["User"]
-        summary: Given a user ID, the logged user unfollows it.
-        description: |-
-          The logged user unfollows the user identified by the parameter. This operation accesses to the user's followers collection and deletes it. It returns 0 if it has been correctly unfollowed, or -1 if an error has occurred (previously not followed or not found).
-          
-        operationId: unfollowUser
-        
-
-        responses:
-          '201': 
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
-
-          '401':            
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
 
 
 
+      tags: ["User"]
+      summary: Given a user ID, the logged user unfollows it.
+      description: |-
+        The logged user unfollows the user identified by the parameter. This operation accesses to the user's followers collection and deletes it. It returns 0 if it has been correctly unfollowed, or -1 if an error has occurred (previously not followed or not found).
 
-    /users/{userId}/unbanUser/{bannedUserId}:
-      delete:
-        parameters:
+      operationId: unfollowUser
+
+
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                description: Successful operation
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+
+  /users/{userId}/unbanUser/{bannedUserId}:
+    delete:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
           in: path
           required: true
           description: user logged
-          
+
         - name: bannedUserId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
-          in: path 
+          in: path
           required: true
           description: user to be unbanned
 
-          
-        
-        
-        tags: ["User"]
-        summary: Given a user ID, the logged user unbans it (it deletes it from the list of banned users)
-        description: |-
-          The logged user unbans the user identified by the parameter. It returns 0 if it has been correctly unbanned, or -1 if an error has occurred (previously not banned or not found).
-          
-        operationId: unbanUser
-        
-
-        responses:
-          '201': 
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
-
-          '401': 
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
 
 
 
-    /users/{userId}/unlikePhoto/{photoId}:
-      delete:
-        parameters:
+      tags: ["User"]
+      summary: Given a user ID, the logged user unbans it (it deletes it from the list of banned users)
+      description: |-
+        The logged user unbans the user identified by the parameter. It returns 0 if it has been correctly unbanned, or -1 if an error has occurred (previously not banned or not found).
+
+      operationId: unbanUser
+
+
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                description: Successful operation
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+  /users/{userId}/unlikePhoto/{photoId}:
+    delete:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
           in: path
           required: true
           description: user logged
-          
+
         - name: photoId
-          schema: 
+          schema:
             type: integer
             description: Photo identifier
-    
-          in: path 
+
+          in: path
           required: true
           description: photo to be unliked
 
-          
-        
-        
-        tags: ["Photos"]
-        summary: Given a user ID and a photo Id, the logged user unlikes it 
-        description: |-
-          The logged user deletes the logged user from the photo's list of users likes. 
-          It returns 0 if it has been correctly unliked, or -1 if an error has occurred (previously not liked, userId or photoId not found).
-          
-        operationId: unlikePhoto
-        
-
-        responses:
-          '201': 
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
-
-          '401': 
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
 
 
 
-    /users/{userId}/uncommentPhoto/{photoId}:
-      delete:
-        parameters:
+      tags: ["Photos"]
+      summary: Given a user ID and a photo Id, the logged user unlikes it
+      description: |-
+        The logged user deletes the logged user from the photo's list of users likes. 
+        It returns 0 if it has been correctly unliked, or -1 if an error has occurred (previously not liked, userId or photoId not found).
+
+      operationId: unlikePhoto
+
+
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                description: Successful operation
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+
+  /users/{userId}/uncommentPhoto/{photoId}:
+    delete:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
 
           in: path
           required: true
           description: user logged
-          
+
         - name: photoId
-          schema: 
+          schema:
             type: integer
             description: Photo identifier
-      
+
           in: path
           required: true
           description: ID of the photo to be uncommented
 
-          
-        
-        
-        tags: ["Photos"]
-        summary: Given a user ID and a photo Id, the logged user uncomments it 
-        description: |-
-          The logged user deletes the comment from the photo's list of comments. 
-          It returns 0 if it has been correctly uncommented, or -1 if an error has occurred (previously not commented, userId or photoId not found).
-          
-        operationId: uncommentPhoto
-        
-
-        responses:
-          '201': 
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: 1
-                  description: Successful operation
-
-          '401': 
-            description: Access token is missing or invalid
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non successful operation
 
 
-    /users/{userId}/deletePhoto/{photoId}:
-      delete:
-        parameters:
+
+      tags: ["Photos"]
+      summary: Given a user ID and a photo Id, the logged user uncomments it
+      description: |-
+        The logged user deletes the comment from the photo's list of comments. 
+        It returns 0 if it has been correctly uncommented, or -1 if an error has occurred (previously not commented, userId or photoId not found).
+
+      operationId: uncommentPhoto
+
+
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                description: Successful operation
+
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non successful operation
+
+
+  /users/{userId}/deletePhoto/{photoId}:
+    delete:
+      parameters:
         - name: userId
-          schema: 
+          schema:
             type: integer
             description: User identifier
           in: path
           required: true
           description: user logged
-          
+
         - name: photoId
-          schema: 
+          schema:
             type: integer
             description: Photo identifier
 
@@ -1315,55 +1406,55 @@
           required: true
           description: ID of the photo to be deleted
 
-          
-        
-        
-        tags: ["Photos"]
-        summary: Given a user ID and a photo Id, the logged user deletes it from its stream 
-        description: |-
-          The logged user deletes the photo from its stream. 
-          It returns 0 if it has been correctly deleted, or -1 if an error has occurred (userId or photoId not found).
-          
-        operationId: deletePhoto
-        
-
-        responses:
-          '201': 
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: integer
-                  example: 1
-                  description: Sucessful operation
-
-          
-          '401': 
-            description: Access token is missing or invalid
-            
-          '404': 
-            description: Resource not found.       
-            content:         
-              application/json:           
-                schema:             
-                  type: integer             
-                  example: -1
-                  description: Non sucessful operation
 
 
 
+      tags: ["Photos"]
+      summary: Given a user ID and a photo Id, the logged user deletes it from its stream
+      description: |-
+        The logged user deletes the photo from its stream. 
+        It returns 0 if it has been correctly deleted, or -1 if an error has occurred (userId or photoId not found).
 
-    
-  components:
-
-    securitySchemes:
-      bearerAuth:
-        type: http
-        scheme: bearer
+      operationId: deletePhoto
 
 
-      
-  security:
-    - bearerAuth: []
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 1
+                description: Sucessful operation
+
+
+        '401':
+          description: Access token is missing or invalid
+
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: -1
+                description: Non sucessful operation
+
+
+
+
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+
+
+security:
+  - bearerAuth: []
         
         
