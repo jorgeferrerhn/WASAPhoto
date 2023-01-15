@@ -11,21 +11,22 @@ export default {
 		load() {
 			return load
 		},
-		async refresh() {
+		/*async refresh() {
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				let response = await this.$axios.get("/fountains/");
+				let response = await this.$axios.post("/session");
 				this.users = response.data;
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
+		},*/
+		async refresh() {
+			this.$router.push("/");
 		},
-		async newItem() {
-			this.$router.push("/session");
-		},
-		async deleteFountain(id) {
+
+    /*async deleteFountain(id) {
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -37,6 +38,8 @@ export default {
 			}
 			this.loading = false;
 		}
+
+     */
 	},
 	mounted() {
 		this.refresh()
@@ -77,13 +80,12 @@ export default {
 
 		<div class="card" v-if="!loading" v-for="u in users">
 			<div class="card-header">
-				Fountain
+				Users
 			</div>
 			<div class="card-body">
 				<p class="card-text">
 					Name: u.name<br />
-					Longitude: {{ u.longitude }}<br />
-					Status: {{ u.status }}
+
 				</p>
 				<a href="javascript:" class="btn btn-danger" @click="deleteFountain(u.id)">Delete</a>
 			</div>

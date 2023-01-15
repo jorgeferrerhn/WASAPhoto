@@ -18,7 +18,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	fmt.Println(r.Body)
 	//err := json.NewDecoder(r.Body).Decode(&user)
-
+	fmt.Println("HERE")
 	//new user name
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)

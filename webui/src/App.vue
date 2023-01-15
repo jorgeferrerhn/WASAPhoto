@@ -31,7 +31,7 @@ export default {}
 						<li class="nav-item">
 							<RouterLink to="/doLogin" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#plus-circle"/></svg>
-								New user
+								Login
 							</RouterLink>
 						</li>
 
