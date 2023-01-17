@@ -32,6 +32,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -44,10 +45,6 @@ type User struct {
 	Followers  string
 	Banned     string
 	Photos     string
-}
-
-type Photos struct {
-	Photos []Photo
 }
 
 type Photo struct {
@@ -70,55 +67,52 @@ type Comment struct {
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 
-	// ShowPhotos is the home page function
-	ShowPhotos(Photos) (Photos, error)
-
-	// DoLogin CreateUser creates a new user in the database. It returns an updated User object (with the ID)
+	// CreateUser creates a new user in the database. It returns an updated User object (with the ID)
 	DoLogin(User) (User, error)
 
-	// GetUserProfile gets the information of a user from its ID.
+	// getUserProfile gets the information of an user from its ID.
 	GetUserProfile(User) (User, error)
 
-	// GetMyStream gets the stream of photos of the user searched from its ID
+	//getMyStream gets the stream of photos of the user searched from its ID
 	GetMyStream(int) (string, error)
 
-	// GetLogo gets the profile picture of a user given its ID
+	//getLogo gets the profile picture of a user given its ID
 	GetLogo(int) (int, error)
 
-	// GetImage getImage gets a picture given its ID
+	//getImage gets a picture given its ID
 	GetImage(Photo) (Photo, error)
 
-	// UploadLogo uploadPhoto gets a path of an image and uploads the photo.
+	//uploadPhoto gets a path of an image and uploads the photo.
 	UploadLogo(Photo, User) (Photo, User, error)
 
-	// UploadPhoto uploadLogo gets a path of an image and uploads the profile picture.
+	//uploadLogo gets a path of an image and uploads the profile picture.
 	UploadPhoto(Photo, User) (Photo, User, error)
 
-	// CommentPhoto inserts a comment on the comments table,
+	//commentPhoto inserts a comment on the comments table,
 	CommentPhoto(Comment, Photo, User) (Comment, Photo, User, error)
 
-	// LikePhoto updates a photo and adds a like from a user,
+	//likePhoto updates a photo and adds a like from a user,
 	LikePhoto(Photo) (Photo, error)
 
-	// SetMyUserName updates a table with  comment on the comments table,
+	//setMyUserName updates a table with  comment on the comments table,
 	SetMyUserName(int, string) (int, error)
 
-	// FollowUser updates the list of followers of the user followed
+	// followUser updates the list of followers of the user followed
 	FollowUser(int, int) (int, error)
 
-	// BanUser updates the list of banned users of the user
+	// banUser updates the list of banned users of the user
 	BanUser(int, int) (int, error)
 
-	// UnfollowUser removes the user followed from the list of followers of the user
+	// unfollowUser removes the user followed from the list of followers of the user
 	UnfollowUser(int, int) (int, error)
 
-	// UnbanUser UnbanUser unbanUser removes the user banned from the list of banned users of the user1
+	// unbanUser removes the user banned from the list of banned users of the user1
 	UnbanUser(int, int) (int, error)
 
-	// UnlikePhoto unlike photo updates a photo and removes a like from a user,
+	// unlike photo updates a photo and removes a like from an user,
 	UnlikePhoto(int) (int, error)
 
-	// UncommentPhoto uncomment photo updates a photo and removes a comment from a user,
+	// uncomment photo updates a photo and removes a comment from an user,
 	UncommentPhoto(Comment) (int, error)
 
 	// deletePhoto removes a photo
@@ -192,4 +186,10 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 func (db *appdbimpl) Ping() error {
 	return db.c.Ping()
+}
+
+func castError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }

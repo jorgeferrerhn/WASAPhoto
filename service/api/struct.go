@@ -19,9 +19,6 @@ type User struct {
 	Photos     string `json:"Photos"`
 }
 
-type Photos struct {
-	Photos []Photo
-}
 type Photo struct {
 	ID       int       `json:"Id"`
 	UserId   int       `json:"userId"`
@@ -109,24 +106,14 @@ func (c *Comment) ToDatabase() database.Comment {
 	}
 }
 
-// FromDatabase populates the struct with data from the database, overwriting all values.
-func (ps *Photos) FromDatabase(p database.Photos) {
-	ps.Photos = p.Photos
-
-}
-
-// ToDatabase returns the comment in a database-compatible representation
-func (ps *Photos) ToDatabase() database.Photos {
-	return database.Photos{
-		Photos: ps.Photos,
-	}
-}
-
 // IsValid checks the validity of the content.
 func (u *User) IsValid() bool {
-	m, err := regexp.MatchString("[a-zA-Z0-9]+", u.Name)
+	m, err := regexp.MatchString("^[a-zA-Z0-9]{1,20}$", u.Name)
 
 	if err != nil {
+		return false
+	}
+	if (len(u.Name) < 3) || (len(u.Name) > 16) {
 		return false
 	}
 	return m
