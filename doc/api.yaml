@@ -163,10 +163,6 @@ paths:
         '400':
           description: Bad Request. Error parsing data or information not valid.
 
-        '404':
-          description: Resource not found.
-
-
 
         '405':
           description: Method not allowed.
@@ -225,16 +221,6 @@ paths:
                     type: integer
                     example: 123912
 
-                  banned:
-                    type: array
-                    description: An array with the bannedUsers.
-                    minItems: 0
-                    maxItems: 100
-                    items:
-                      type: string
-                      minLength: 3
-                      maxLength: 16
-
                   followers:
                     type: array
                     description: An array with the followers. We only store the followers, not the followed.
@@ -245,7 +231,15 @@ paths:
                       minLength: 3
                       maxLength: 16
 
-
+                  banned:
+                    type: array
+                    description: An array with the bannedUsers.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
 
                   photos:
                     type: array
@@ -315,14 +309,13 @@ paths:
             The request was not compliant with the documentation
             (eg. missing fields, etc). 
 
-        '404':
-          description: Resource not found.
+        '405':
+          description: Method not allowed.
           content:
-            application/json:
+            text/plain:
               schema:
-                type: integer
-                example: -1
-                description: Operation not sucessful
+                type: string
+                example: "Method Not Allowed"
 
 
 

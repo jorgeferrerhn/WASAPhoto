@@ -2,45 +2,43 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
-	"net/http"
-	"strconv"
-
+	"errors"
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
+	"net/http"
+	"strconv"
 )
 
-func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-
+func funcName(ps httprouter.Params) (int, error) {
 	i := ps.ByName("id")
-	fmt.Println("ID: ", i)
 
 	if i == "" {
 		//Empty ID
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		return -1, errors.New("Empty ID")
+
 	}
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
 		// id wasn`t properly casted
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		return -1, err
+
 	}
-	fmt.Println(intId)
+	return intId, err
+}
 
-	//Searchs for the user to get the profile and returns the information
+func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	var user User
-	user.ID = intId
-	dbuser, err := rt.db.GetUserProfile(user.ToDatabase())
-
+	intId, err := funcName(ps)
 	if err != nil {
 		//error on database
 		w.WriteHeader(http.StatusBadRequest)
 		return
-
 	}
+	//Searchs for the user to get the profile and returns the information
+	var user User
+	user.ID = intId
+	dbuser, err := rt.db.GetUserProfile(user.ToDatabase())
 
 	user.FromDatabase(dbuser)
 

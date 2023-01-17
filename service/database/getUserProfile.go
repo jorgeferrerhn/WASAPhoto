@@ -2,7 +2,6 @@ package database
 
 import (
 	"errors"
-	"fmt"
 	"log"
 )
 
@@ -23,19 +22,17 @@ func (db *appdbimpl) GetUserProfile(u User) (User, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		//log.Println("this: ", id1, name, profilepic, followers, photos)
+
 	}
 	err = rows.Err()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Name: ", name)
 	if name == "" {
 		return u, errors.New("User not found")
 	}
 
-	//cast to json
 	u.ID = id
 	u.Name = name
 	u.ProfilePic = profilepic
