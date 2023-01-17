@@ -47,12 +47,12 @@ type User struct {
 }
 
 type Photo struct {
-	ID       int       `json:"id"`
-	UserId   int       `json:"userid"`
-	Path     string    `json:"path"`
-	Likes    string    `json:"likes"`
-	Comments string    `json:"comments"`
-	Date     time.Time `json:"date"`
+	ID       int
+	UserId   int
+	Path     string
+	Likes    string
+	Comments string
+	Date     time.Time
 }
 
 type Comment struct {
