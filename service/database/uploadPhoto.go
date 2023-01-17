@@ -1,6 +1,7 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -52,8 +53,6 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 		err := rows.Scan(&photoId)
 
-		fmt.Println("Photo id: ", photoId)
-
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -64,36 +63,63 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 		log.Fatal(err)
 	}
 
-	if userName != "" && photoId == 0 { //photo has not been uploaded before
+	if photoId != 0 {
+		return p, u, errors.New("Photo already uploaded")
+	}
 
-		p.Likes = "[]"
-		p.Comments = "[]"
-		p.Date = time.Now()
+	p.Likes = "[]"
+	p.Comments = "[]"
+	p.Date = time.Now()
 
-		//We upload the photo and insert it to the photo's database
-		res, err := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
-			p.UserId, p.Path, p.Likes, p.Comments, p.Date)
+	//We upload the photo and insert it to the photo's database
+	res, err := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
+		p.UserId, p.Path, p.Likes, p.Comments, p.Date)
+	if err != nil {
+		return p, u, err
+	}
+
+	lastInsertID, err := res.LastInsertId()
+	if err != nil {
+		return p, u, err
+	}
+
+	p.ID = int(lastInsertID)
+
+	// We also have to update the photo's stream of the user
+	u.Name = userName
+	u.Followers = followers
+	u.Banned = banned
+	u.ProfilePic = profilePic
+
+	var resultString string
+
+	if photos == "[]" { //initially empty
+		result := []Photo{p}
+		fmt.Println("Photos: ", result)
+		resultString = fmt.Sprint(result)
+
+	} else {
+		fmt.Println("Photos before: ", photos)
+		in := []byte(photos)
+		castPhotos := []Photo{}
+		err = json.Unmarshal(in, &castPhotos)
 		if err != nil {
-			return p, u, err
+			fmt.Println(err)
 		}
+		fmt.Println("Cast photos: ", castPhotos)
+		resultString = fmt.Sprint(castPhotos)
 
-		lastInsertID, err := res.LastInsertId()
-		if err != nil {
-			return p, u, err
-		}
+	}
 
-		p.ID = int(lastInsertID)
+	u.Photos = resultString
 
-		// We also have to update the photo's stream of the user
-		u.Name = userName
-		u.Followers = followers
-		u.Banned = banned
-		u.ProfilePic = profilePic
+	fmt.Println("User photos: ", u.Photos)
 
-		// We check that the photo hasn't been liked before
+	if err != nil {
+		log.Println(err)
+	}
 
-		var add string
-
+	/*
 		new_list := photos[0 : len(photos)-1]
 		//strDate := fmt.Sprint(p.Date)
 		//strPhoto := "['ID':" + strconv.Itoa(p.ID) + ",'UserID':" + strconv.Itoa(p.UserId) + ",'Path':" + p.Path + ",'Comments':" + p.Comments + ",'Likes':" + p.Likes + ",'Date':" + strDate + "]"
@@ -110,19 +136,15 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 		u.Photos = new_list
 
-		fmt.Println("Lista despues: ", u.Photos)
 
-		res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
-			u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
-		if err != nil {
-			return p, u, err
-		}
+	*/
 
-		fmt.Println(res)
-
-		return p, u, nil
+	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
+	if err != nil {
+		return p, u, err
 	}
 
-	return p, u, errors.New("Photo already uploaded")
+	return p, u, nil
 
 }

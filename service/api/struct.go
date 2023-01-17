@@ -24,8 +24,8 @@ type User struct {
 }
 
 type Photo struct {
-	ID       int       `json:"Id"`
-	UserId   int       `json:"userId"`
+	ID       int       `json:"id"`
+	UserId   int       `json:"userid"`
 	Path     string    `json:"path"`
 	Likes    string    `json:"likes"`
 	Comments string    `json:"comments"`

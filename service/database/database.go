@@ -32,7 +32,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"time"
 )
 
@@ -48,12 +47,12 @@ type User struct {
 }
 
 type Photo struct {
-	ID       int
-	UserId   int
-	Path     string
-	Likes    string
-	Comments string
-	Date     time.Time
+	ID       int       `json:"id"`
+	UserId   int       `json:"userid"`
+	Path     string    `json:"path"`
+	Likes    string    `json:"likes"`
+	Comments string    `json:"comments"`
+	Date     time.Time `json:"date"`
 }
 
 type Comment struct {
@@ -67,7 +66,7 @@ type Comment struct {
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 
-	// CreateUser creates a new user in the database. It returns an updated User object (with the ID)
+	// DoLogin  creates a new user in the database. It returns an updated User object (with the ID)
 	DoLogin(User) (User, error)
 
 	// getUserProfile gets the information of an user from its ID.
@@ -135,9 +134,9 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
-	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='users';`).Scan(&tableName)
+	var err = db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='users';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
-		sqlStmt := `CREATE TABLE users (
+		var sqlStmt = `CREATE TABLE users (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
 	profilepic INTEGER,
@@ -186,10 +185,4 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 func (db *appdbimpl) Ping() error {
 	return db.c.Ping()
-}
-
-func castError(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
 }
