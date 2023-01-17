@@ -2,34 +2,14 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
-	"strconv"
 )
-
-func funcName(ps httprouter.Params) (int, error) {
-	i := ps.ByName("id")
-
-	if i == "" {
-		//Empty ID
-		return -1, errors.New("Empty ID")
-
-	}
-
-	intId, err := strconv.Atoi(i)
-	if err != nil {
-		// id wasn`t properly casted
-		return -1, err
-
-	}
-	return intId, err
-}
 
 func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	intId, err := funcName(ps)
+	intId, err := checkId(ps)
 	if err != nil {
 		//error on database
 		w.WriteHeader(http.StatusBadRequest)

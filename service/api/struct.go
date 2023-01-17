@@ -1,7 +1,10 @@
 package api
 
 import (
+	"errors"
+	"github.com/julienschmidt/httprouter"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/database"
@@ -117,4 +120,23 @@ func (u *User) IsValid() bool {
 		return false
 	}
 	return m
+}
+
+// checkId checks the validity of the ID parameter.
+func checkId(ps httprouter.Params) (int, error) {
+	i := ps.ByName("id")
+
+	if i == "" {
+		//Empty ID
+		return -1, errors.New("Empty ID")
+
+	}
+
+	intId, err := strconv.Atoi(i)
+	if err != nil {
+		// id wasn`t properly casted
+		return -1, err
+
+	}
+	return intId, err
 }

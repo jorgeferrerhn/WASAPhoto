@@ -421,16 +421,18 @@ paths:
                 "Followers": ["JohnDoe","KenFollet"]
               ]
 
-        '400':
-          description: Access token is missing or invalid
-        '404':
-          description: Resource not found.
-          content:
-            application/json:
-              schema:
-                type: integer
-                example: -1
-                description: Not sucessful operation
+        400":
+          description: |
+            The request was not compliant with the documentation
+            (eg. missing fields, etc). 
+
+          '405':
+            description: Method not allowed.
+            content:
+              text/plain:
+                schema:
+                  type: string
+                  example: "Method Not Allowed"
 
 
 
