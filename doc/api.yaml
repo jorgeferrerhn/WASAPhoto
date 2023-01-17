@@ -421,18 +421,18 @@ paths:
                 "Followers": ["JohnDoe","KenFollet"]
               ]
 
-        400":
+        "400":
           description: |
             The request was not compliant with the documentation
             (eg. missing fields, etc). 
 
-          '405':
-            description: Method not allowed.
-            content:
-              text/plain:
-                schema:
-                  type: string
-                  example: "Method Not Allowed"
+        "405":
+          description: Method not allowed.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Method Not Allowed"
 
 
 

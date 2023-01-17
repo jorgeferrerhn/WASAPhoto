@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -17,18 +18,23 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	//Searchs for the user to get the stream of photos
+	//Search for the user to get the stream of photos
+	var user User
+	user.ID = intId
 
-	stringJson, err := rt.db.GetMyStream(intId)
+	dbuser, err := rt.db.GetMyStream(user.ToDatabase())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
 	}
 
-	defer r.Body.Close()
+	user.FromDatabase(dbuser)
 
-	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte(stringJson))
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(user.Photos)
+	castError(err)
+
+	defer r.Body.Close()
 
 }

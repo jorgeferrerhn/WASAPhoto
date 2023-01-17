@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"github.com/julienschmidt/httprouter"
+	"log"
 	"regexp"
 	"strconv"
 	"time"
@@ -109,6 +110,8 @@ func (c *Comment) ToDatabase() database.Comment {
 	}
 }
 
+//We have to extract this methods to another folder
+
 // IsValid checks the validity of the content.
 func (u *User) IsValid() bool {
 	m, err := regexp.MatchString("^[a-zA-Z0-9]{1,20}$", u.Name)
@@ -139,4 +142,10 @@ func checkId(ps httprouter.Params) (int, error) {
 
 	}
 	return intId, err
+}
+
+func castError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }

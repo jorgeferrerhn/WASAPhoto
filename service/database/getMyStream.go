@@ -1,39 +1,31 @@
 package database
 
-import (
-	"fmt"
-	"log"
-)
+import "errors"
 
-var (
-	searchedPhotos string
-)
+func (db *appdbimpl) GetMyStream(u User) (User, error) {
 
-func (db *appdbimpl) GetMyStream(id int) (string, error) {
+	var searchedPhotos, username string
 
-	rows, err := db.c.Query(`select photos from users where id=?`, id) //Here photos will be a string, then casted to json
+	rows, err := db.c.Query(`select name,photos from users where id=?`, u.ID) //Here photos will be a string, then casted to json
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	castError(err)
 
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&searchedPhotos)
+		err := rows.Scan(&username, &searchedPhotos)
 
-		if err != nil {
-			log.Fatal(err)
-		}
-		//log.Println("this: ", id1, name, profilepic, followers, photos)
+		castError(err)
 
 	}
 	err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
+	castError(err)
+
+	if username == "" {
+		return u, errors.New("User not found")
 	}
 
-	fmt.Println("Searched photos: ", searchedPhotos)
+	u.Photos = searchedPhotos
 
-	return searchedPhotos, err
+	return u, err
 }
