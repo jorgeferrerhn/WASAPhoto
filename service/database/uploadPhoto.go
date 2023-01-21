@@ -67,6 +67,10 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, errors.New("Photo already uploaded")
 	}
 
+	if p.Path == "" {
+		return p, u, errors.New("Request body Empty")
+	}
+
 	p.Likes = "[]"
 	p.Comments = "[]"
 	p.Date = time.Now()
@@ -93,51 +97,29 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	var resultString string
 
+	newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `, "userid": ` + fmt.Sprint(p.UserId) + `, "path": "` + p.Path + `", "likes": "` + p.Likes + `", "comments": "` + p.Comments + `", "date": "` + p.Date.Format(time.RFC3339) + `"}`
+	var p2 Photo
+
+	err = json.Unmarshal([]byte(newPhoto), &p2)
+	if err != nil {
+		return p, u, err
+	}
+
 	if photos == "[]" { //initially empty
-		result := []Photo{p}
-		fmt.Println("Photos: ", result)
-		resultString = fmt.Sprint(result)
+
+		resultString = "[" + newPhoto + "]"
 
 	} else {
-		fmt.Println("Photos before: ", photos)
-		in := []byte(photos)
-		castPhotos := []Photo{}
-		err = json.Unmarshal(in, &castPhotos)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println("Cast photos: ", castPhotos)
-		resultString = fmt.Sprint(castPhotos)
 
+		fmt.Println("Add a photo again :", photos)
+		resultString = photos[:len(photos)-1] + "," + newPhoto + "]"
 	}
 
 	u.Photos = resultString
 
-	fmt.Println("User photos: ", u.Photos)
-
 	if err != nil {
 		log.Println(err)
 	}
-
-	/*
-		new_list := photos[0 : len(photos)-1]
-		//strDate := fmt.Sprint(p.Date)
-		//strPhoto := "['ID':" + strconv.Itoa(p.ID) + ",'UserID':" + strconv.Itoa(p.UserId) + ",'Path':" + p.Path + ",'Comments':" + p.Comments + ",'Likes':" + p.Likes + ",'Date':" + strDate + "]"
-		strPhoto := fmt.Sprint(p)
-
-		if photos == "{}" {
-			add = strPhoto + "}"
-
-		} else {
-			add = "," + strPhoto + "}"
-
-		}
-		new_list += add
-
-		u.Photos = new_list
-
-
-	*/
 
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)

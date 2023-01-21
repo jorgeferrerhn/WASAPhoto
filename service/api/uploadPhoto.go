@@ -13,6 +13,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	//Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
 
 	intId, err := checkId(ps)
+
 	if err != nil {
 		//error on database
 		w.WriteHeader(http.StatusBadRequest)
@@ -23,14 +24,24 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	buf.ReadFrom(r.Body)
 	newStr := buf.String()
 
-	//create a Photo Struct
+	//Here we have to cast the input content to a Struct
+	//jsonPhoto := `{"id": 0, "userid": 0, "path": "", "likes": "", "comments": "", "date": ""}`
 	var p Photo
+	//err = json.Unmarshal([]byte(jsonPhoto), &p)
+
 	p.UserId = intId
 	p.Path = newStr
 
+	/*
+		p.UserId = intId
+		p.Path = newStr
+
+
+		u.ID = intId
+	*/
+
 	var u User
 	u.ID = intId
-
 	//update info from database
 	dbphoto, dbuser, err := rt.db.UploadPhoto(p.ToDatabase(), u.ToDatabase())
 
@@ -38,7 +49,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't upload the photo")
-		w.WriteHeader(http.StatusInternalServerError) //500
+		w.WriteHeader(http.StatusBadRequest) //500
 		return
 	}
 	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.

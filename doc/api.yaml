@@ -677,16 +677,17 @@ paths:
                     maxLength: 16
                     format: date-time
 
-        '401':
-          description: Access token is missing or invalid
-        '404':
-          description: Resource not found.
+        '400':
+          description: Bad Request. Error parsing data or information not valid.
+
+
+        '405':
+          description: Method not allowed.
           content:
-            application/json:
+            text/plain:
               schema:
-                type: integer
-                example: -1
-                description: Non successful operation
+                type: string
+                example: "Method Not Allowed"
 
 
   /users/{userId}/uploadLogo:

@@ -1,6 +1,9 @@
 package database
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 func (db *appdbimpl) GetMyStream(u User) (User, error) {
 
@@ -31,6 +34,7 @@ func (db *appdbimpl) GetMyStream(u User) (User, error) {
 		return u, errors.New("User not found")
 	}
 
+	fmt.Println("Searched photos: ", searchedPhotos)
 	u.Photos = searchedPhotos
 
 	return u, err
