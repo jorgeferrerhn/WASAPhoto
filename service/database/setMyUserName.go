@@ -1,18 +1,19 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 	"log"
 )
 
-func (db *appdbimpl) SetMyUserName(id int, name string) (int, error) {
+func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 
-	fmt.Println(id)
-	fmt.Println(name)
+	// we get all the information from the user
+	var profilePic int
+	var userNameTarget, followers, banned, photos string
 
-	var tname string
 	//first we search the user. It should have a unique username, so we'll search for it
-	rows, err := db.c.Query(`select name from users where id=?`, id)
+	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, u.ID)
 
 	if err != nil {
 		log.Fatal(err)
@@ -22,23 +23,36 @@ func (db *appdbimpl) SetMyUserName(id int, name string) (int, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&tname)
+		err := rows.Scan(&userNameTarget, &profilePic, &followers, &banned, &photos)
 
 		if err != nil {
 			log.Fatal(err)
 		}
-	}
 
+	}
 	err = rows.Err()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if tname == "" { //invalid user id
-		return -1, nil
+	fmt.Println("User name target: ", userNameTarget)
+
+	if userNameTarget == "" { //invalid user id
+		return u, errors.New("This user doesn't exist!")
 	}
 
-	//falta actualizar la tabla de usuarios
+	// update the information
+	u.ProfilePic = profilePic
+	u.Followers = followers
+	u.Banned = banned
+	u.Photos = photos
 
-	return 1, nil
+	res, err := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
+
+	if err != nil {
+		return u, errors.New("Error in " + fmt.Sprint(res))
+	}
+
+	return u, nil
 }

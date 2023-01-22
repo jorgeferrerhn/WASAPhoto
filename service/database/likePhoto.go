@@ -79,8 +79,8 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	var liked bool
 
 	// We check that the photo hasn't been liked before
-	liked = strings.ContainsAny(likes, userName)
-	fmt.Println("Likes : ", likes, " of ", userName, ": ", liked)
+	liked = strings.ContainsAny(likes, fmt.Sprint(u.ID))
+	fmt.Println("Likes : ", likes, " of ", u.ID, ": ", liked)
 
 	if !liked {
 		var add string
@@ -88,10 +88,10 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		new_list := likes[0 : len(likes)-1]
 
 		if likes == "[]" {
-			add = userName + "]"
+			add = fmt.Sprint(u.ID) + "]"
 
 		} else {
-			add = "," + userName + "]"
+			add = "," + fmt.Sprint(u.ID) + "]"
 
 		}
 		new_list += add

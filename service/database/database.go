@@ -94,7 +94,7 @@ type AppDatabase interface {
 	LikePhoto(Photo, User) (Photo, User, error)
 
 	//setMyUserName updates a table with  comment on the comments table,
-	SetMyUserName(int, string) (int, error)
+	SetMyUserName(User) (User, error)
 
 	// followUser updates the list of followers of the user followed
 	FollowUser(int, int) (int, error)

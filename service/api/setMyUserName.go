@@ -34,27 +34,43 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	//new user name
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(r.Body)
+	n, err := buf.ReadFrom(r.Body)
+	if err != nil || n == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	name := buf.String()
 
 	fmt.Println("New user name: ", name)
 
-	//update info from database
-	ret, err := rt.db.SetMyUserName(intId, name)
-	fmt.Println(ret)
-	if err != nil {
-		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the photo")
-		w.WriteHeader(http.StatusInternalServerError) //500
+	// create user
+	var user User
+	user.ID = intId
+	user.Name = name // updating the name here
+
+	if !user.IsValid() {
+		// Here we validated the user structure content (correct name), and we discovered that the user data is not valid
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	a := `{"Result":`
-	a += strconv.Itoa(ret)
-	a += "}"
-	_ = json.NewEncoder(w).Encode(a)
+	//update info from database
+	dbuser, err := rt.db.SetMyUserName(user.ToDatabase())
+
+	if err != nil {
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
+		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
+		ctx.Logger.WithError(err).Error("can't update the username")
+		w.WriteHeader(http.StatusBadRequest) //400
+		return
+	}
+
+	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
+	user.FromDatabase(dbuser)
+
+	// Send the output to the user.
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(user)
 
 	defer r.Body.Close()
-
 }
