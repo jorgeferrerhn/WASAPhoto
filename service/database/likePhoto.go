@@ -117,6 +117,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	//We update the user's photos and the photos' stream
 
 	// We cast the photos to a Photo's array, then we change the one who gets commented
+	fmt.Println("Photos: ", photos)
 	in := []byte(photos)
 	var castPhotos []Photo
 	err = json.Unmarshal(in, &castPhotos)

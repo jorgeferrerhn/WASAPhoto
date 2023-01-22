@@ -133,7 +133,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		var add string
 
 		new_list := photosComments[0 : len(photosComments)-1]
-		newComment := `{"User":"` + u.Name + `", "Comment":"` + c.Content + `"}`
+		newComment := `["User":"` + u.Name + `", "Comment":"` + c.Content + `"]`
 		if photosComments == "[]" {
 			add = newComment + "]"
 
