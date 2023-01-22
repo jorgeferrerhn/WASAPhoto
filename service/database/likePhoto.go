@@ -1,6 +1,8 @@
 package database
 
 import (
+	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -8,15 +10,15 @@ import (
 	"time"
 )
 
-func (db *appdbimpl) LikePhoto(p Photo) (Photo, error) {
+func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 
-	var likes, path, comments string
-	var userId int
+	var likes, path, comments, followers, banned, photos string
+	var userId, profilePic int
 	var date time.Time
 	var userName string
 
 	//search for the user
-	rows, err := db.c.Query(`select name from users where id=?`, p.UserId)
+	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
 	if err != nil {
 
@@ -27,16 +29,16 @@ func (db *appdbimpl) LikePhoto(p Photo) (Photo, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&userName)
+		err := rows.Scan(&userName, &profilePic, &followers, &banned, &photos)
 
 		if err != nil {
-			return p, err
+			return p, u, err
 		}
 	}
 
 	if userName == "" {
 		//el usuario no existía
-		return p, errors.New("User not found")
+		return p, u, errors.New("User not found")
 	}
 	err = rows.Err()
 	if err != nil {
@@ -71,60 +73,89 @@ func (db *appdbimpl) LikePhoto(p Photo) (Photo, error) {
 
 	if path == "" {
 		//el usuario no existía
-		return p, errors.New("Photo not found")
+		return p, u, errors.New("Photo not found")
 	}
 
-	if userName != "" { //user exists
+	var liked bool
 
-		var liked bool
+	// We check that the photo hasn't been liked before
+	strId := fmt.Sprint(p.UserId)
+	liked = strings.ContainsAny(likes, strId)
+	fmt.Println("Likes : ", likes, " of ", p.UserId, ": ", liked)
 
-		// We check that the photo hasn't been liked before
-		strId := fmt.Sprint(p.UserId)
-		liked = strings.ContainsAny(likes, strId)
-		fmt.Println("Likes : ", likes, " of ", p.UserId, ": ", liked)
+	fmt.Println("Liked: ", liked)
 
-		fmt.Println("Liked: ", liked)
+	if !liked {
+		var add string
 
-		if !liked {
-			var add string
+		new_list := likes[0 : len(likes)-1]
 
-			new_list := likes[0 : len(likes)-1]
-			strUID := fmt.Sprint(p.UserId)
-
-			if likes == "[]" {
-				add = strUID + "]"
-
-			} else {
-				add = "," + strUID + "]"
-
-			}
-			new_list += add
-
-			p.Likes = new_list
-
-			fmt.Println("Lista despues: ", p.Likes)
+		if likes == "[]" {
+			add = userName + "]"
 
 		} else {
-			p.Likes = likes // remains the same
+			add = "," + userName + "]"
 
 		}
+		new_list += add
 
-		// We don't change the rest of the attributes
-		p.Path = path
-		p.Comments = comments
-		p.Date = date
-		p.UserId = userId
+		p.Likes = new_list
 
-		res, err := db.c.Exec(`UPDATE photos SET path=?,comments=?,date=?,userid=?,likes=? WHERE id=?`,
-			p.Path, p.Comments, p.Date, p.UserId, p.Likes, p.ID)
-		if err != nil {
-			return p, err
-		}
+		fmt.Println("Lista despues: ", p.Likes)
 
-		fmt.Println(res)
+	} else {
+		p.Likes = likes // remains the same
 
 	}
 
-	return p, nil
+	// We don't change the rest of the attributes
+	p.Path = path
+	p.Comments = comments
+	p.Date = date
+	p.UserId = userId
+
+	//We update the user's photos and the photos' stream
+
+	// We cast the photos to a Photo's array, then we change the one who gets commented
+	in := []byte(photos)
+	var castPhotos []Photo
+	err = json.Unmarshal(in, &castPhotos)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("Cast photos: ", castPhotos)
+	newPhotos := "["
+	for i := 0; i < len(castPhotos); i++ {
+		if castPhotos[i].ID == p.ID { //this is the one who gets commented
+			fmt.Println("HERE")
+			castPhotos[i].Likes = p.Likes
+		}
+		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `, "userid": ` + fmt.Sprint(castPhotos[i].UserId) + `, "path": "` + castPhotos[i].Path + `", "likes": "` + castPhotos[i].Likes + `", "comments": "` + castPhotos[i].Comments + `", "date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+		if i == len(castPhotos)-1 {
+			newPhotos += newPhoto + "]"
+		} else {
+			newPhotos += newPhoto + ","
+		}
+	}
+	fmt.Println("New photos: ", newPhotos)
+	u.Photos = newPhotos
+
+	var res sql.Result
+	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
+	if err != nil {
+		return p, u, err
+	}
+
+	res, err = db.c.Exec(`UPDATE photos SET path=?,comments=?,date=?,userid=?,likes=? WHERE id=?`,
+		p.Path, p.Comments, p.Date, p.UserId, p.Likes, p.ID)
+	if err != nil {
+		return p, u, err
+	}
+
+	fmt.Println(res)
+
+	return p, u, nil
 
 }

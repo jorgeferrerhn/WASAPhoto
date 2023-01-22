@@ -91,7 +91,7 @@ type AppDatabase interface {
 	CommentPhoto(Comment, Photo, User) (Comment, Photo, User, error)
 
 	//likePhoto updates a photo and adds a like from a user,
-	LikePhoto(Photo) (Photo, error)
+	LikePhoto(Photo, User) (Photo, User, error)
 
 	//setMyUserName updates a table with  comment on the comments table,
 	SetMyUserName(int, string) (int, error)

@@ -50,22 +50,26 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	fmt.Println(intPhoto)
 
 	var p Photo
+	var u User
 
 	p.ID = intPhoto
 	p.UserId = intId // only for sending it to the database function
+	u.ID = intId
 
 	//update info from database
-	dbphoto, err := rt.db.LikePhoto(p.ToDatabase())
+	dbphoto, dbuser, err := rt.db.LikePhoto(p.ToDatabase(), u.ToDatabase())
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't upload the like to the photo")
-		w.WriteHeader(http.StatusInternalServerError) //500
+		w.WriteHeader(http.StatusBadRequest) //400
 		return
 	}
 
 	// Here we can re-use `photo ` as FromDatabase is overwriting every variabile in the structure.
 	p.FromDatabase(dbphoto)
+	u.FromDatabase(dbuser)
+
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 

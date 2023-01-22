@@ -1001,17 +1001,17 @@ paths:
                     minLength: 3
                     maxLength: 16
                     format: date-time
-        '401':
-          description: Access token is missing or invalid
-        '404':
-          description: Resource not found.
-          content:
-            application/json:
-              schema:
-                type: integer
-                example: -1
-                description: Non successful operation
+        '400':
+          description: Bad Request. Error parsing data or information not valid.
 
+
+        '405':
+          description: Method not allowed.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Method Not Allowed"
 
 
 
