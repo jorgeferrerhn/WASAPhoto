@@ -79,11 +79,8 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	var liked bool
 
 	// We check that the photo hasn't been liked before
-	strId := fmt.Sprint(p.UserId)
-	liked = strings.ContainsAny(likes, strId)
-	fmt.Println("Likes : ", likes, " of ", p.UserId, ": ", liked)
-
-	fmt.Println("Liked: ", liked)
+	liked = strings.ContainsAny(likes, userName)
+	fmt.Println("Likes : ", likes, " of ", userName, ": ", liked)
 
 	if !liked {
 		var add string
@@ -139,8 +136,14 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 			newPhotos += newPhoto + ","
 		}
 	}
-	fmt.Println("New photos: ", newPhotos)
+
+	u.Name = userName
+	u.ID = p.UserId //this is important: the id of the user we need to update is not the one who likes, but the one who gets the like on the photo
+	u.Followers = followers
+	u.Banned = banned
+	u.ProfilePic = profilePic
 	u.Photos = newPhotos
+	fmt.Println("New photos: ", u.Photos)
 
 	var res sql.Result
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,

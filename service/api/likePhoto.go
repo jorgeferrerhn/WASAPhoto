@@ -25,15 +25,13 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		// id wasn`t properly casted
+		// id wasn`t properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fmt.Println(intId)
 
 	// photo id
 	photoId := ps.ByName("photoId")
-	fmt.Println("Photo ID: ", photoId)
 
 	if photoId == "" {
 		//Empty Photo ID
@@ -43,7 +41,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 
 	intPhoto, err := strconv.Atoi(photoId)
 	if err != nil {
-		// id wasn`t properly casted
+		// id wasn`t properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
