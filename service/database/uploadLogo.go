@@ -8,6 +8,7 @@ import (
 )
 
 func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
+
 	var photoId, profilePic int
 	var userName, followers, banned, photos string
 
@@ -34,9 +35,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 		log.Fatal(err)
 	}
 
-	//comprobamos si existía
 	if userName == "" {
-		//el usuario no existía
 		return p, u, errors.New("User not found")
 	}
 
@@ -62,41 +61,50 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(photoId)
+	if photoId == profilePic && photoId != 0 {
+		return p, u, errors.New("This is the current profile picture!")
+	}
 
-	if userName != "" && photoId == 0 { //photo has not been uploaded before
-		p.Likes = "[]"
-		p.Comments = "[]"
-		p.Date = time.Now()
+	if p.Path == "" {
+		return p, u, errors.New("Request body Empty")
+	}
 
-		//We insert the new photo to the database collection
-		res, err := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
-			p.UserId, p.Path, p.Likes, p.Comments, p.Date)
-		if err != nil {
-			return p, u, err
-		}
-		fmt.Println("Followers: ", u.Followers)
+	p.Likes = "[]"
+	p.Comments = "[]"
+	p.Date = time.Now()
 
-		lastInsertID, err := res.LastInsertId()
-		if err != nil {
-			return p, u, err
-		}
+	//We upload the photo and insert it to the photo's database
+	res, err := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
+		p.UserId, p.Path, p.Likes, p.Comments, p.Date)
+	if err != nil {
+		return p, u, err
+	}
 
-		p.ID = int(lastInsertID)
+	lastInsertID, err := res.LastInsertId()
+	if err != nil {
+		return p, u, err
+	}
 
-		//We update the user
-		u.Name = userName
-		u.ProfilePic = p.ID // we update the profile picture ID
-		u.Followers = followers
-		u.Banned = banned
-		u.Photos = photos
-		res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`, u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
-		if err != nil {
-			return p, u, err
-		}
+	p.ID = int(lastInsertID)
 
-	} else {
-		p.ID = photoId
+	// We also have to update the photo's stream of the user
+	u.Name = userName
+	u.Followers = followers
+	u.Banned = banned
+	u.ProfilePic = p.ID
+
+	// The difference with uploadPhoto is here: we don't update the photo's stream (the profile picture is not included)
+	if err != nil {
+		log.Println(err)
+	}
+
+	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
+	if err != nil {
+		return p, u, err
 	}
 
 	return p, u, nil
+
 }

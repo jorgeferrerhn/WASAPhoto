@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -31,8 +32,15 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 
 	user.FromDatabase(dbuser)
 
+	in := []byte(user.Photos)
+	var castPhotos []Photo
+	err = json.Unmarshal(in, &castPhotos)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(user.Photos)
+	err = json.NewEncoder(w).Encode(castPhotos)
 	castError(err)
 
 	defer r.Body.Close()

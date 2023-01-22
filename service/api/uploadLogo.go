@@ -44,8 +44,6 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 	buf.ReadFrom(r.Body)
 	newStr := buf.String()
 
-	fmt.Println("Path: ", newStr)
-
 	//create a Photo Struct
 	var p Photo
 	p.UserId = intId2
@@ -61,8 +59,8 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the photo")
-		w.WriteHeader(http.StatusInternalServerError) //500
+		ctx.Logger.WithError(err).Error("can't upload the logo")
+		w.WriteHeader(http.StatusBadRequest) //500
 		return
 	}
 	// Here we can re-use `user` as FromDatabase is overwriting every variable in the structure.

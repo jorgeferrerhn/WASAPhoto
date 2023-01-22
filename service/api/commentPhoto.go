@@ -65,6 +65,12 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	c.Content = comment
 	c.PhotoId = intPhoto
 
+	if c.Content == "" || !c.RightComment() { // empty comment or not valid (len not in range (3,144) )
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
+
 	var p Photo
 	p.ID = intPhoto
 
@@ -77,7 +83,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't upload the photo")
-		w.WriteHeader(http.StatusInternalServerError) //500
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

@@ -125,6 +125,15 @@ func (u *User) IsValid() bool {
 	return m
 }
 
+// RightComment checks the validity of the comment.
+func (c *Comment) RightComment() bool {
+
+	if (len(c.Content) < 3) || (len(c.Content) > 144) {
+		return false
+	}
+	return true
+}
+
 // checkId checks the validity of the ID parameter.
 func checkId(ps httprouter.Params) (int, error) {
 	i := ps.ByName("id")

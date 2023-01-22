@@ -443,9 +443,9 @@ paths:
       parameters:
         - name: identifier
           schema:
-            type: string
-            description: User identifier. It is a string because it has the format <userID>.<userImage>.
-            example: "3.3"
+            type: integer
+            description: Image identifier
+            example: 37
 
           in: path
           required: true
@@ -530,15 +530,16 @@ paths:
 
 
         '400':
-          description: Access token is missing or invalid
-        '404':
-          description: Resource not found.
+          description: Bad Request. Error parsing data or information not valid.
+
+
+        '405':
+          description: Method not allowed.
           content:
-            application/json:
+            text/plain:
               schema:
-                type: integer
-                example: -1
-                description: Not successful operation
+                type: string
+                example: "Method Not Allowed"
 
 
 
@@ -787,17 +788,17 @@ paths:
                     maxLength: 16
                     format: date-time
 
-        '401':
-          description: Access token is missing or invalid
-        '404':
-          description: Resource not found.
-          content:
-            application/json:
-              schema:
-                type: integer
-                example: -1
-                description: Non successful operation
+        '400':
+          description: Bad Request. Error parsing data or information not valid.
 
+
+        '405':
+          description: Method not allowed.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Method Not Allowed"
 
 
 
@@ -889,16 +890,17 @@ paths:
 
 
 
-        '401':
-          description: Access token is missing or invalid
-        '404':
-          description: Resource not found.
+        '400':
+          description: Bad Request. Error parsing data or information not valid.
+
+
+        '405':
+          description: Method not allowed.
           content:
-            application/json:
+            text/plain:
               schema:
-                type: integer
-                example: -1
-                description: Non successful operation
+                type: string
+                example: "Method Not Allowed"
 
 
 

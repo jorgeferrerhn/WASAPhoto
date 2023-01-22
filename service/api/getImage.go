@@ -45,14 +45,13 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 	dbphoto, err := rt.db.GetImage(p.ToDatabase())
 
 	if err != nil {
-		fmt.Println("Aquí hay un error")
 
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
 	}
 
-	// Here we can re-use `photo` as FromDatabase is overwriting every variabile in the structure.
+	// Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
 	p.FromDatabase(dbphoto)
 
 	// Send the output to the user.

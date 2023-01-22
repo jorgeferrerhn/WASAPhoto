@@ -1,42 +1,13 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"time"
 )
 
-/*
-	func searchComments(splitted_list []string, id int) {
-		strIdSearched := strconv.Itoa(id)
-
-		for i := 0; i < len(splitted_list); i++ {
-			fmt.Println("Photo: ", splitted_list[i])
-			splitted_photo := strings.Split(splitted_list[i][1:len(splitted_list[i])-1], ",")
-
-			photo_id := splitted_photo[0]        //this is the id
-			last := strings.Split(photo_id, ":") //for getting the second part: the id
-
-			if last[1] == strIdSearched {
-				comments := strings.Split(splitted_photo[3], ":") //for getting the second part: the id
-
-				fmt.Println("Here we are:", comments[1])
-
-				if comments[1] == "[]" {
-					add = newComment + "]"
-
-				} else {
-					add = "," + newComment + "]"
-
-				}
-
-			}
-
-		}
-
-}
-*/
 func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, User, error) {
 
 	var photoId, profilePic, photoUserId int
@@ -145,9 +116,9 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		c.ID = int(lastInsertID)
 
 		// We also have to update the comments's stream of the COMMENTED user
+		u.Name = userNameTarget
 		u.ID = p.UserId //this is important: the id of the user we need to update is not the one who comments, but the one who gets the comment on the photo
 		u.Followers = followers
-		u.Photos = photos
 		u.Banned = banned
 		u.ProfilePic = profilePic
 
@@ -162,7 +133,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		var add string
 
 		new_list := photosComments[0 : len(photosComments)-1]
-		newComment := "{'User':" + u.Name + " Comment:" + c.Content + "}"
+		newComment := `{"User":"` + u.Name + `", "Comment":"` + c.Content + `"}`
 		if photosComments == "[]" {
 			add = newComment + "]"
 
@@ -174,43 +145,38 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 		p.Comments = new_list
 
-		//fmt.Println("Lista despues: ", p.Comments)
-		fmt.Println("Photos here: ", photos)
+		// UPDATING the photo's
 
-		/*
-			data := Photos{}
+		// We cast the photos to a Photo's array, then we change the one who gets commented
+		in := []byte(photos)
+		var castPhotos []Photo
+		err = json.Unmarshal(in, &castPhotos)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-			_ = json.Unmarshal([]byte(photos), &data)
-			for i := 0; i < len(data.photos); i++ {
-				fmt.Println("ID: ", data.photos[i].id)
+		fmt.Println("Cast photos: ", castPhotos)
+		newPhotos := "["
+		for i := 0; i < len(castPhotos); i++ {
+			if castPhotos[i].ID == p.ID { //this is the one who gets commented
+				fmt.Println("HERE")
+				castPhotos[i].Comments = p.Comments
 			}
-
-			//splitted_list := strings.Split(photos[1:len(photos)-1], ";")
-			//fmt.Println(splitted_list)
-
-			//searchComments(splitted_list, p.ID)
-
-			res, err = db.c.Exec(`UPDATE photos SET userid=?,path=?,likes=?,comments=?,date=? WHERE id=?`,
-				p.UserId, p.Path, p.Likes, p.Comments, p.Date, p.ID)
-			if err != nil {
-				return c, p, u, err
+			newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `, "userid": ` + fmt.Sprint(castPhotos[i].UserId) + `, "path": "` + castPhotos[i].Path + `", "likes": "` + castPhotos[i].Likes + `", "comments": "` + castPhotos[i].Comments + `", "date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+			if i == len(castPhotos)-1 {
+				newPhotos += newPhoto + "]"
+			} else {
+				newPhotos += newPhoto + ","
 			}
+		}
+		fmt.Println("New photos: ", newPhotos)
+		u.Photos = newPhotos
 
-			fmt.Println(res)
-
-			// UPDATING the user's stream
-
-			//get the photo from the stream of photos of the user
-
-			//fmt.Println("Photos of the user:", photos)
-
-			//get to the comments of the photo
-
-			//update the user
-
-			//res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
-			//	u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
-		*/
+		res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+			u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
+		if err != nil {
+			return c, p, u, err
+		}
 
 		return c, p, u, nil
 	}
