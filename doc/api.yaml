@@ -91,9 +91,8 @@ paths:
                     minItems: 0
                     maxItems: 100
                     items:
-                      type: string
-                      minLength: 3
-                      maxLength: 16
+                      type: integer
+                      description: ID of the user that follows
 
 
 
@@ -224,9 +223,8 @@ paths:
                     minItems: 0
                     maxItems: 100
                     items:
-                      type: string
-                      minLength: 3
-                      maxLength: 16
+                      type: integer
+                      description: ID of the user that follows
 
                   banned:
                     type: array
@@ -1082,9 +1080,8 @@ paths:
                     minItems: 0
                     maxItems: 100
                     items:
-                      type: string
-                      minLength: 3
-                      maxLength: 16
+                      type: integer
+                      description: ID of the user that follows
 
 
 
@@ -1193,25 +1190,124 @@ paths:
 
 
       responses:
-        '201':
-          description: Successful operation
+        '200':
+          description: Information related to the user
           content:
             application/json:
               schema:
-                type: integer
-                example: 1
-                description: Successful operation
+                description: Information of the user; username, profile pic, followers,photos
+                type: object
+                properties:
 
-        '401':
-          description: Access token is missing or invalid
-        '404':
-          description: Resource not found.
+                  id:
+                    description: User identifier
+                    type: integer
+                    example: 9013213
+
+                  name:
+                    type: string
+                    example: "Maria"
+                    minLength: 3
+                    maxLength: 16
+                    pattern: ^[a-zA-Z0-9]{1,20}$
+                    description: Username
+
+                  profilePictureID:
+                    description: Profile picture identifier
+                    type: integer
+                    example: 123912
+
+                  banned:
+                    type: array
+                    description: An array with the bannedUsers.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
+
+                  followers:
+                    type: array
+                    description: An array with the followers. We only store the followers, not the followed.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: integer
+                      description: ID of the user that follows
+
+
+
+                  photos:
+                    type: array
+                    description: An array with the stream of photos.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: object
+                      properties:
+
+                        imagePath:
+                          description: path to the image
+                          type: string
+                          minLength: 3
+                          maxLength: 100
+
+
+                        photoID:
+                          description: ID of the photo
+                          type: integer
+
+                        likes:
+                          type: array
+                          description: A sub-array with the likes of each photo.
+                          minItems: 0
+                          maxItems: 100
+                          items:
+                            type: integer
+                            description: ID of the user that liked the photo
+
+
+                        comments:
+                          type: array
+                          description: A sub-array with the comments of each photo.
+                          minItems: 0
+                          maxItems: 100
+                          items:
+                            type: object
+                            properties:
+
+                              user:
+                                type: integer
+                                description: User ID
+
+
+                              comment:
+                                type: string
+                                minLength: 3
+                                maxLength: 16
+                                description: comment
+
+
+                        date:
+                          type: string
+                          minLength: 3
+                          maxLength: 16
+                          format: date-time
+                          description: Creation date and time
+
+
+        '400':
+          description: Bad Request. Error parsing data or information not valid.
+
+
+        '405':
+          description: Method not allowed.
           content:
-            application/json:
+            text/plain:
               schema:
-                type: integer
-                example: -1
-                description: Non successful operation
+                type: string
+                example: "Method Not Allowed"
 
 
 

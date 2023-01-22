@@ -97,7 +97,7 @@ type AppDatabase interface {
 	SetMyUserName(User) (User, error)
 
 	// followUser updates the list of followers of the user followed
-	FollowUser(int, int) (int, error)
+	FollowUser(User, User) (User, error)
 
 	// banUser updates the list of banned users of the user
 	BanUser(int, int) (int, error)

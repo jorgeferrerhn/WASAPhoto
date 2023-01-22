@@ -49,23 +49,28 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 	fmt.Println(intFollowed)
 
+	var u1, u2 User
+	u1.ID = intId
+	u2.ID = intFollowed
+
 	//update info from database
-	ret, err := rt.db.FollowUser(intId, intFollowed)
+	dbuser2, err := rt.db.FollowUser(u1.ToDatabase(), u2.ToDatabase())
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't upload the photo")
-		w.WriteHeader(http.StatusInternalServerError) //500
+		w.WriteHeader(http.StatusBadRequest) //400
 		return
 	}
+
+	u2.FromDatabase(dbuser2)
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 
-	a := `{"Result":`
-	a += strconv.Itoa(ret)
-	a += "}"
-	_ = json.NewEncoder(w).Encode(a)
+	// Send the output to the user.
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(u2)
 
 	defer r.Body.Close()
 
