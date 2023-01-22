@@ -1,47 +1,31 @@
 package database
 
-import (
-	"fmt"
-	"log"
-	"strings"
-)
-
 func (db *appdbimpl) UnbanUser(id1 int, id2 int) (int, error) {
 
 	var followers, banned string
 	//search the photo
-	rows, err := db.c.Query(`select banned from users where id=?`, id2)
+	rows, err := db.c.Query(`select banned,followers from users where id=?`, id2)
 
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	defer rows.Close()
 
 	for rows.Next() {
 
-		err := rows.Scan(&followers)
+		err := rows.Scan(&banned, &followers)
 
 		if err != nil {
 
-			log.Fatal(err)
+			return 0, err
 		}
 
-		fmt.Println(followers)
 	}
 
 	lista := make([]int, 0)
 
-	fmt.Println("Banned: ", banned)
-
-	if followers != "[]" {
-		output := banned[1 : len(banned)-1]
-		res := strings.Split(output, ",")
-		fmt.Println(res)
-	}
-
 	lista = append(lista, id1)
-	fmt.Println(lista)
 
 	//actualizar base de datos de usuarios (delete)
 
@@ -49,7 +33,7 @@ func (db *appdbimpl) UnbanUser(id1 int, id2 int) (int, error) {
 
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	//update list of followers

@@ -2,7 +2,6 @@ package database
 
 import (
 	"errors"
-	"log"
 )
 
 func (db *appdbimpl) GetUserProfile(u User) (User, error) {
@@ -11,7 +10,7 @@ func (db *appdbimpl) GetUserProfile(u User) (User, error) {
 	rows, err := db.c.Query(`select id, name,profilepic,followers,banned, photos from users where id=?`, u.ID) //Here followers will be a string, then casted to string array
 
 	if err != nil {
-		log.Fatal(err)
+		return u, err
 	}
 
 	defer rows.Close()
@@ -20,13 +19,13 @@ func (db *appdbimpl) GetUserProfile(u User) (User, error) {
 		err := rows.Scan(&id, &name, &profilepic, &followers, &banned, &photos)
 
 		if err != nil {
-			log.Fatal(err)
+			return u, err
 		}
 
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return u, err
 	}
 
 	if name == "" {

@@ -10,12 +10,12 @@ import (
 
 func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	//this function receives a user id and returns the stream of photos of that user
+	// this function receives a user id and returns the stream of photos of that user
 
 	id := ps.ByName("id")
 
 	if id == "" {
-		//ID not found
+		// ID not found
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -27,7 +27,7 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	//Searchs for the user to get its logo
+	// Searchs for the user to get its logo
 
 	logo, err := rt.db.GetLogo(i)
 	if err != nil {
@@ -35,7 +35,7 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 
 	}
-	// Send the output to the user.
+	//  Send the output to the user.
 
 	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte(strconv.Itoa(logo)))

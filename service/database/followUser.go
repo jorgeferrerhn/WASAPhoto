@@ -5,7 +5,6 @@ import (
 
 	"errors"
 	"fmt"
-	"log"
 	"strings"
 )
 
@@ -19,7 +18,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
 
 	if err != nil {
-		log.Fatal(err)
+		return user2, err
 	}
 
 	defer rows.Close()
@@ -29,13 +28,13 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		err := rows.Scan(&name1)
 
 		if err != nil {
-			log.Fatal(err)
+			return user2, err
 		}
 	}
 
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return user2, err
 	}
 
 	if name1 == "" {
@@ -46,7 +45,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 	rows, err = db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user2.ID)
 
 	if err != nil {
-		log.Fatal(err)
+		return user2, err
 	}
 
 	defer rows.Close()
@@ -56,13 +55,13 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		err := rows.Scan(&name2, &profilePic2, &followers2, &banned2, &photos2)
 
 		if err != nil {
-			log.Fatal(err)
+			return user2, err
 		}
 	}
 
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return user2, err
 	}
 
 	if name2 == "" {
@@ -91,8 +90,6 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		user2.Followers = followers2 // remains the same
 
 	}
-
-	fmt.Println("Followers of user2 after: ", user2.Followers)
 
 	user2.Name = name2
 	user2.Banned = banned2

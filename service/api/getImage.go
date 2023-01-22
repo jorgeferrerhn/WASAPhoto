@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -14,15 +13,15 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 
 	var imageId int
 
-	//This function receives an image ID and returns the image.
-	//Due to the complexity of the search of an image ID through a SQL Text (Photos), we will suppose that the image ID is a string with the format <userID>.<imageID>
-	//For example, to get the third image posted from the user ID 3, we will get the image ID "3.3", then the image ID will have string type.
+	// This function receives an image ID and returns the image.
+	// Due to the complexity of the search of an image ID through a SQL Text (Photos), we will suppose that the image ID is a string with the format <userID>.<imageID>
+	// For example, to get the third image posted from the user ID 3, we will get the image ID "3.3", then the image ID will have string type.
 	r.Close = true
 
 	i := ps.ByName("id")
 
 	if i == "" {
-		//Empty ID
+		// Empty ID
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -35,9 +34,7 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 
 	}
 
-	fmt.Println(imageId)
-
-	//Searchs for the user to get its logo
+	// Searchs for the user to get its logo
 
 	var p Photo
 
@@ -51,10 +48,10 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 
 	}
 
-	// Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
+	//  Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
 	p.FromDatabase(dbphoto)
 
-	// Send the output to the user.
+	//  Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(p)
 

@@ -1,8 +1,8 @@
 package database
 
 import (
+	"errors"
 	"fmt"
-	"log"
 )
 
 func (db *appdbimpl) DeletePhoto(p Photo) (int, error) {
@@ -12,7 +12,7 @@ func (db *appdbimpl) DeletePhoto(p Photo) (int, error) {
 	rows, err := db.c.Query(`select id from photos where id=?`, p.ID)
 
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	defer rows.Close()
@@ -22,21 +22,20 @@ func (db *appdbimpl) DeletePhoto(p Photo) (int, error) {
 		err := rows.Scan(&photoId)
 
 		if err != nil {
-			log.Fatal(err)
+			return 0, err
 		}
 	}
 
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	res, err := db.c.Exec(`DELETE FROM photos WHERE id=?`,
 		photoId)
 
-	fmt.Println(res)
 	if err != nil {
-		return -1, err
+		return -1, errors.New("Error in " + fmt.Sprint(res))
 	}
 
 	return 1, nil

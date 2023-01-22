@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -13,26 +12,25 @@ import (
 
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	//Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
+	// Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
 
-	//user id
+	// user id
 	i := ps.ByName("id")
-	fmt.Println("ID: ", i)
 
 	if i == "" {
-		//Empty ID
+		// Empty ID
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		// id wasn`t properly casted
+		//  id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	//new user name
+	// new user name
 	buf := new(bytes.Buffer)
 	n, err := buf.ReadFrom(r.Body)
 	if err != nil || n == 0 {
@@ -41,34 +39,32 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 	name := buf.String()
 
-	fmt.Println("New user name: ", name)
-
-	// create user
+	//  create user
 	var user User
 	user.ID = intId
-	user.Name = name // updating the name here
+	user.Name = name //  updating the name here
 
 	if !user.IsValid() {
-		// Here we validated the user structure content (correct name), and we discovered that the user data is not valid
+		//  Here we validated the user structure content (correct name), and we discovered that the user data is not valid
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	//update info from database
+	// update info from database
 	dbuser, err := rt.db.SetMyUserName(user.ToDatabase())
 
 	if err != nil {
-		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
+		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
+		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't update the username")
-		w.WriteHeader(http.StatusBadRequest) //400
+		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
 
-	// Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
+	//  Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
 	user.FromDatabase(dbuser)
 
-	// Send the output to the user.
+	//  Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(user)
 

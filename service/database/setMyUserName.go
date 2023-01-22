@@ -3,7 +3,6 @@ package database
 import (
 	"errors"
 	"fmt"
-	"log"
 )
 
 func (db *appdbimpl) SetMyUserName(u User) (User, error) {
@@ -16,7 +15,7 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, u.ID)
 
 	if err != nil {
-		log.Fatal(err)
+		return u, err
 	}
 
 	defer rows.Close()
@@ -26,16 +25,14 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 		err := rows.Scan(&userNameTarget, &profilePic, &followers, &banned, &photos)
 
 		if err != nil {
-			log.Fatal(err)
+			return u, err
 		}
 
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return u, err
 	}
-
-	fmt.Println("User name target: ", userNameTarget)
 
 	if userNameTarget == "" { //invalid user id
 		return u, errors.New("This user doesn't exist!")

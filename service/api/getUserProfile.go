@@ -11,11 +11,11 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	intId, err := checkId(ps)
 	if err != nil {
-		//error on database
+		// error on database
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	//Searchs for the user to get the profile and returns the information
+	// Searchs for the user to get the profile and returns the information
 	var user User
 	user.ID = intId
 	dbuser, err := rt.db.GetUserProfile(user.ToDatabase())

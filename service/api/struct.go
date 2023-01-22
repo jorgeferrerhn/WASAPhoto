@@ -3,7 +3,6 @@ package api
 import (
 	"errors"
 	"github.com/julienschmidt/httprouter"
-	"log"
 	"regexp"
 	"strconv"
 	"time"
@@ -40,7 +39,7 @@ type Comment struct {
 	Date    time.Time `json:"date"`
 }
 
-// FromDatabase populates the struct with data from the database, overwriting all values.
+//  FromDatabase populates the struct with data from the database, overwriting all values.
 
 func (u *User) FromDatabase(user database.User) {
 	u.ID = user.ID
@@ -64,7 +63,7 @@ func (u *User) ToDatabase() database.User {
 	}
 }
 
-// FromDatabase populates the struct with data from the database, overwriting all values.
+//  FromDatabase populates the struct with data from the database, overwriting all values.
 
 func (p *Photo) FromDatabase(photo database.Photo) {
 	p.ID = photo.ID
@@ -88,7 +87,7 @@ func (p *Photo) ToDatabase() database.Photo {
 	}
 }
 
-// FromDatabase populates the struct with data from the database, overwriting all values.
+//  FromDatabase populates the struct with data from the database, overwriting all values.
 
 func (c *Comment) FromDatabase(comment database.Comment) {
 	c.ID = comment.ID
@@ -110,7 +109,7 @@ func (c *Comment) ToDatabase() database.Comment {
 	}
 }
 
-//We have to extract this methods to another folder
+// We have to extract this methods to another folder
 
 // IsValid checks the validity of the content.
 func (u *User) IsValid() bool {
@@ -139,22 +138,16 @@ func checkId(ps httprouter.Params) (int, error) {
 	i := ps.ByName("id")
 
 	if i == "" {
-		//Empty ID
+		// Empty ID
 		return -1, errors.New("Empty ID")
 
 	}
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		// id wasn`t properly casted
+		//  id wasn`t properly casted
 		return -1, err
 
 	}
 	return intId, err
-}
-
-func castError(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
 }

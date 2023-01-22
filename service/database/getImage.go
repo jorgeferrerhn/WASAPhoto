@@ -2,8 +2,6 @@ package database
 
 import (
 	"errors"
-	"fmt"
-	"log"
 	"time"
 )
 
@@ -17,7 +15,7 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 
 	if err != nil {
 
-		log.Fatal(err)
+		return p, err
 	}
 
 	defer rows.Close()
@@ -33,15 +31,14 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 		p.Date = date
 
 		if err != nil {
-			log.Fatal(err)
+			return p, err
 		}
-		fmt.Println("this: ", p.UserId, p.Path, p.Likes, p.Comments, p.Date)
 
 	}
 
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return p, err
 	}
 
 	if path == "" {

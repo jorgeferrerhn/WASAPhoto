@@ -1,11 +1,5 @@
 package database
 
-import (
-	"fmt"
-	"log"
-	"strings"
-)
-
 func (db *appdbimpl) UnlikePhoto(photoId int) (int, error) {
 
 	var uID int
@@ -15,7 +9,7 @@ func (db *appdbimpl) UnlikePhoto(photoId int) (int, error) {
 	rows, err := db.c.Query(`select userid,likes from photos where id=?`, photoId)
 
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	defer rows.Close()
@@ -26,30 +20,20 @@ func (db *appdbimpl) UnlikePhoto(photoId int) (int, error) {
 
 		if err != nil {
 
-			log.Fatal(err)
+			return 0, err
 		}
 
-		fmt.Println(likes)
 	}
 
 	lista := make([]int, 0)
 
-	fmt.Println("likes: ", likes)
-
-	if likes != "[]" {
-		output := likes[1 : len(likes)-1]
-		res := strings.Split(output, ",")
-		fmt.Println(res)
-	}
-
 	lista = append(lista, uID)
-	fmt.Println(lista)
 
 	//actualizar base de datos de fotos
 
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	//update number of likes

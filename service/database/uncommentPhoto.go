@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"log"
 )
 
 func (db *appdbimpl) UncommentPhoto(c Comment) (int, error) {
@@ -15,7 +14,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment) (int, error) {
 			rows3, err := db.c.Query(`select id from users where id=?`, c.UserId)
 
 			if err != nil {
-				log.Fatal(err)
+				return 0,err
 			}
 
 			defer rows3.Close()
@@ -24,17 +23,17 @@ func (db *appdbimpl) UncommentPhoto(c Comment) (int, error) {
 				err := rows.Scan(&userId)
 
 				if err != nil {
-					fmt.Println("El error")
 
-					log.Fatal(err)
+
+					return 0,err
 				}
 
-				fmt.Println("User id: ", userId)
+
 			}
 
 			err = rows3.Err()
 			if err != nil {
-				log.Fatal(err)
+				return 0,err
 			}
 	*/
 
@@ -42,7 +41,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment) (int, error) {
 	rows, err := db.c.Query(`select commentid from comments where commentid=?`, c.ID)
 
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	defer rows.Close()
@@ -53,13 +52,13 @@ func (db *appdbimpl) UncommentPhoto(c Comment) (int, error) {
 
 		if err != nil {
 
-			log.Fatal(err)
+			return 0, err
 		}
 	}
 
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	//then we search the photo id. If it doesn't exist, we cannot comment on the photo
@@ -67,19 +66,14 @@ func (db *appdbimpl) UncommentPhoto(c Comment) (int, error) {
 	rows2, err := db.c.Query(`select * from photos where id=?`, c.PhotoId)
 
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	defer rows2.Close()
 
-	for rows2.Next() {
-
-		fmt.Println("Photo id: ", rows2)
-	}
-
 	err = rows2.Err()
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	//esto es lo que tenemos que cambiar

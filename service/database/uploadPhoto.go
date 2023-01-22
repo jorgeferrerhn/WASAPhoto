@@ -17,7 +17,7 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 	rows2, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
 	if err != nil {
-		log.Fatal(err)
+		return p, u, err
 	}
 
 	defer rows2.Close()
@@ -27,13 +27,13 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 		err := rows2.Scan(&userName, &profilePic, &followers, &banned, &photos)
 
 		if err != nil {
-			log.Fatal(err)
+			return p, u, err
 		}
 	}
 
 	err = rows2.Err()
 	if err != nil {
-		log.Fatal(err)
+		return p, u, err
 	}
 
 	if userName == "" {
@@ -44,7 +44,7 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 	rows, err := db.c.Query(`select id from photos where path=? and userid=?`, p.Path, p.UserId)
 
 	if err != nil {
-		log.Fatal(err)
+		return p, u, err
 	}
 
 	defer rows.Close()
@@ -54,13 +54,13 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 		err := rows.Scan(&photoId)
 
 		if err != nil {
-			log.Fatal(err)
+			return p, u, err
 		}
 	}
 
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return p, u, err
 	}
 
 	if photoId != 0 {
@@ -111,7 +111,6 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	} else {
 
-		fmt.Println("Add a photo again :", photos)
 		resultString = photos[:len(photos)-1] + "," + newPhoto + "]"
 	}
 

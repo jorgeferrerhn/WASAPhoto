@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -13,59 +12,57 @@ import (
 
 func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	//Takes the userId and the comment, and uploads it (updates the comments table)
+	// Takes the userId and the comment, and uploads it (updates the comments table)
 
-	// user id
+	//  user id
 	i := ps.ByName("id")
-	fmt.Println("ID: ", i)
 
 	if i == "" {
-		//Empty ID
+		// Empty ID
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		// id wasn`t properly casted
+		//  id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fmt.Println(intId)
 
-	// user id
+	//  user id
 	photoId := ps.ByName("photoId")
-	fmt.Println("Photo ID: ", photoId)
 
 	if photoId == "" {
-		//Empty Photo ID
+		// Empty Photo ID
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	intPhoto, err := strconv.Atoi(photoId)
 	if err != nil {
-		// id wasn`t properly casted
+		//  id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fmt.Println(intPhoto)
 
-	//Comment
+	// Comment
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(r.Body)
+	n, err := buf.ReadFrom(r.Body)
+	if err != nil || n == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	comment := buf.String()
 
-	fmt.Println("Comment: ", comment)
-
-	//create a Photo Struct
+	// create a Photo Struct
 	var c Comment
 
 	c.UserId = intId
 	c.Content = comment
 	c.PhotoId = intPhoto
 
-	if c.Content == "" || !c.RightComment() { // empty comment or not valid (len not in range (3,144) )
+	if c.Content == "" || !c.RightComment() { //  empty comment or not valid (len not in range (3,144) )
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
@@ -77,28 +74,28 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	var u User
 	u.ID = intId
 
-	//update info from database
+	// update info from database
 	dbcomment, dbphoto, dbuser, err := rt.db.CommentPhoto(c.ToDatabase(), p.ToDatabase(), u.ToDatabase())
 	if err != nil {
-		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
+		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
+		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't upload the photo")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// Here we can re-use `comment` as FromDatabase is overwriting every variabile in the structure.
+	//  Here we can re-use `comment` as FromDatabase is overwriting every variabile in the structure.
 	c.FromDatabase(dbcomment)
 	p.FromDatabase(dbphoto)
 	u.FromDatabase(dbuser)
 
-	if c.ID == 0 { //user not found
+	if c.ID == 0 { // user not found
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
 	}
 
-	// Send the output to the user.
+	//  Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(c)
 
