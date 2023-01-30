@@ -109,7 +109,7 @@ type AppDatabase interface {
 	UnbanUser(User, User) (User, error)
 
 	// unlike photo updates a photo and removes a like from an user,
-	UnlikePhoto(int) (int, error)
+	UnlikePhoto(Photo, User) (Photo, User, error)
 
 	// uncomment photo updates a photo and removes a comment from an user,
 	UncommentPhoto(Comment) (int, error)

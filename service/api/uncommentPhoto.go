@@ -1,18 +1,15 @@
 package api
 
 import (
-	"bytes"
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
+	"net/http"
+	"strconv"
 )
 
 func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	// Takes the userId and the comment of a photo, and deletes it
+	// Takes the userId and the comment, and uploads it (updates the comments table)
 
 	//  user id
 	i := ps.ByName("id")
@@ -30,7 +27,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	//  user id
+	//  comment id
 	commentId := ps.ByName("commentId")
 
 	if commentId == "" {
@@ -46,22 +43,10 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	// Comment
-	buf := new(bytes.Buffer)
-	n, err := buf.ReadFrom(r.Body)
-	if err != nil || n == 0 {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	comment := buf.String()
-
 	// create a Photo Struct
 	var c Comment
-	c.ID = 0 // default
+	c.ID = intComment // default
 	c.UserId = intId
-	c.Content = comment
-	c.PhotoId = intComment
-	c.Date = time.Now()
 
 	// update info from database
 	res, err := rt.db.UncommentPhoto(c.ToDatabase())

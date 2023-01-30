@@ -21,406 +21,12 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	/*
-		intId, err := strconv.Atoi(i)
-		if err != nil {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			//  id wasn`t properly casted
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-	*/
+	intId, err := strconv.Atoi(i)
+	if err != nil {
+		//  id wasn`t properly cast
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	//  photo id
 	photoId := ps.ByName("photoId")
@@ -433,28 +39,45 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	intPhoto, err := strconv.Atoi(photoId)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id wasn`t properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	var p Photo
+	var u User
+
+	p.ID = intPhoto
+	p.UserId = intId //  only for sending it to the database function
+	u.ID = intId
+
 	// update info from database
-	ret, err := rt.db.UnlikePhoto(intPhoto)
+	dbphoto, dbuser, err := rt.db.UnlikePhoto(p.ToDatabase(), u.ToDatabase())
 	if err != nil {
 		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the photo")
-		w.WriteHeader(http.StatusInternalServerError) // 500
+		ctx.Logger.WithError(err).Error("can't unlike the photo")
+		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
+
+	//  Here we can re-use `photo ` as FromDatabase is overwriting every variabile in the structure.
+	p.FromDatabase(dbphoto)
+	u.FromDatabase(dbuser)
 
 	//  Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 
-	a := `{"Likes":`
-	a += strconv.Itoa(ret)
-	a += "}"
-	_ = json.NewEncoder(w).Encode(a)
+	if p.ID == 0 { // user not found
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
+
+	//  Send the output to the user.
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(p)
 
 	defer r.Body.Close()
 

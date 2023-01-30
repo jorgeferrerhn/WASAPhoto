@@ -30,7 +30,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	//  user id
+	//  photo id
 	photoId := ps.ByName("photoId")
 
 	if photoId == "" {
