@@ -103,7 +103,7 @@ type AppDatabase interface {
 	BanUser(User, User) (User, error)
 
 	// unfollowUser removes the user followed from the list of followers of the user
-	UnfollowUser(int, int) (int, error)
+	UnfollowUser(User, User) (User, error)
 
 	// unbanUser removes the user banned from the list of banned users of the user1
 	UnbanUser(int, int) (int, error)

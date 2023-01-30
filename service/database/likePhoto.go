@@ -77,7 +77,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	var liked bool
 
 	// We check that the photo hasn't been liked before
-	liked = strings.ContainsAny(likes, fmt.Sprint(u.ID))
+	liked = strings.Contains(likes, fmt.Sprint(u.ID))
 
 	if !liked {
 		var add string

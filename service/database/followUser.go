@@ -68,7 +68,9 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("Followed not found")
 	}
 
-	followed := strings.ContainsAny(followers2, fmt.Sprint(user1.ID))
+	fmt.Println("Followers2: ", followers2)
+	followed := strings.Contains(followers2, fmt.Sprint(user1.ID))
+	fmt.Println(fmt.Sprint(user1.ID), " follows ", fmt.Sprint(user2.ID), ":", followed)
 
 	if !followed {
 		var add string

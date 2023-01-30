@@ -68,7 +68,7 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 		return user1, errors.New("User 2 not found")
 	}
 
-	banned := strings.ContainsAny(banned1, fmt.Sprint(user2.ID))
+	banned := strings.Contains(banned1, fmt.Sprint(user2.ID))
 
 	if !banned {
 		var add string
