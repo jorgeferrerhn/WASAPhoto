@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
@@ -11,8 +12,11 @@ import (
 
 func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	//  función que recibe username. Busca en la base de datos, si no existe lo crea.
+	// extract authorization token
+	reqToken := r.Header.Get("Authorization")
+	fmt.Println("Authorization: ", reqToken)
 
+	//  función que recibe username. Busca en la base de datos, si no existe lo crea.
 	var user User
 
 	buf := new(bytes.Buffer)
@@ -48,5 +52,4 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	_ = json.NewEncoder(w).Encode(user)
 
 	defer r.Body.Close()
-
 }

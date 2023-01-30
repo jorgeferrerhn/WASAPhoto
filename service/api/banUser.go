@@ -44,23 +44,29 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
+	// User 1
+	var u1 User
+	u1.ID = intId
+
+	// User 2
+	var u2 User
+	u2.ID = intFollowed
+
 	// update info from database
-	ret, err := rt.db.BanUser(intId, intFollowed)
+	dbuser1, err := rt.db.BanUser(u1.ToDatabase(), u2.ToDatabase())
 	if err != nil {
 		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the photo")
-		w.WriteHeader(http.StatusInternalServerError) // 500
+		ctx.Logger.WithError(err).Error("can't update the banned list")
+		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
 
-	//  Send the output to the user.
+	u1.FromDatabase(dbuser1)
+	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 
-	a := `{"Result":`
-	a += strconv.Itoa(ret)
-	a += "}"
-	_ = json.NewEncoder(w).Encode(a)
+	_ = json.NewEncoder(w).Encode(u1)
 
 	defer r.Body.Close()
 
