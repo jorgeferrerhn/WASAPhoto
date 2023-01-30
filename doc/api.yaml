@@ -48,7 +48,7 @@ paths:
 
 
       responses:
-        '201':
+        '200':
           description: Information related to the user
           content:
             application/json:
@@ -848,7 +848,7 @@ paths:
 
 
       responses:
-        "200":
+        "201":
           description: Posted comment
           content:
             application/json:

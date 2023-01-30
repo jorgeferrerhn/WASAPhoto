@@ -70,6 +70,7 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 	p.FromDatabase(dbphoto)
 
 	//  Send the output to the user.
+	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(u)
 
