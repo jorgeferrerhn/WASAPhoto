@@ -609,7 +609,7 @@ paths:
               format: binary
               description: PNG image file
               minLength: 3
-              maxLength: 160
+              maxLength: 144
 
 
         required: true
@@ -844,6 +844,7 @@ paths:
               type: string
               description: Photo comment.
               example: "Wow, such a nice picture!"
+              pattern: ^[A-Z][0-9]$
               minLength: 3
               maxLength: 144
 
