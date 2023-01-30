@@ -165,6 +165,7 @@ paths:
           content:
             text/plain:
               schema:
+                description: Error description
                 type: string
                 example: "Method Not Allowed"
 
@@ -311,6 +312,8 @@ paths:
               schema:
                 type: string
                 example: "Method Not Allowed"
+                description: Error description
+
 
 
 
@@ -428,6 +431,8 @@ paths:
               schema:
                 type: string
                 example: "Method Not Allowed"
+                description: Error description
+
 
 
 
@@ -461,6 +466,7 @@ paths:
           content:
             application/json:
               schema:
+                description: Requested image JSON object
                 type: object
                 properties:
 
@@ -532,6 +538,7 @@ paths:
             text/plain:
               schema:
                 type: string
+                description: Error description
                 example: "Method Not Allowed"
 
 
@@ -614,6 +621,7 @@ paths:
           content:
             application/json:
               schema:
+                description: Requested image JSON Object
                 type: object
                 properties:
 
@@ -680,6 +688,8 @@ paths:
               schema:
                 type: string
                 example: "Method Not Allowed"
+                description: Error description
+
 
 
   /users/{userId}/uploadLogo:
@@ -722,6 +732,7 @@ paths:
           content:
             application/json:
               schema:
+                description: Logo JSON Object
                 type: object
                 properties:
 
@@ -788,6 +799,8 @@ paths:
               schema:
                 type: string
                 example: "Method Not Allowed"
+                description: Error description
+
 
 
 
@@ -844,6 +857,7 @@ paths:
           content:
             application/json:
               schema:
+                description: Posted comment JSON Object
                 type: object
                 properties:
 
@@ -890,6 +904,8 @@ paths:
               schema:
                 type: string
                 example: "Method Not Allowed"
+                description: Error description
+
 
 
 
@@ -932,6 +948,7 @@ paths:
           content:
             application/json:
               schema:
+                description: Updated image JSON Object
                 type: object
                 properties:
 
@@ -999,6 +1016,8 @@ paths:
               schema:
                 type: string
                 example: "Method Not Allowed"
+                description: Error description
+
 
 
 
@@ -1155,6 +1174,8 @@ paths:
               schema:
                 type: string
                 example: "Method Not Allowed"
+                description: Error description
+
 
 
 
@@ -1308,6 +1329,8 @@ paths:
               schema:
                 type: string
                 example: "Method Not Allowed"
+                description: Error description
+
 
 
 
@@ -1626,7 +1649,7 @@ paths:
               schema:
                 type: integer
                 example: 1
-                description: Sucessful operation
+                description: Successful operation
 
 
         '401':
@@ -1639,7 +1662,7 @@ paths:
               schema:
                 type: integer
                 example: -1
-                description: Non sucessful operation
+                description: Non successful operation
 
 
 
