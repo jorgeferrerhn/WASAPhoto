@@ -48,7 +48,7 @@ paths:
 
 
       responses:
-        '200':
+        '201':
           description: Information related to the user
           content:
             application/json:
@@ -408,8 +408,8 @@ paths:
               example: ["PhotoId": 100000,
                 "Likes": ["JohnDoe","CarlSagan"],
                 "Comments": [
-                  {"User":"JohnDoe","Comment":"Wow, nice trip!"},
-                  {"User":"CarlSagan", "Comment":"Amazing!"}],
+                  {"User":"JohnDoe","Comment":"Wow, nice trip"},
+                  {"User":"CarlSagan", "Comment":"Amazing"}],
                 "Date":"2021-01-30T08:30:00Z",
                 "Followers": ["JohnDoe","KenFollet"]
               ]
@@ -461,7 +461,7 @@ paths:
           content:
             application/json:
               schema:
-                description: Requested image JSON object
+                description: Requested image schema
                 type: object
                 properties:
 
@@ -616,7 +616,7 @@ paths:
           content:
             application/json:
               schema:
-                description: Requested image JSON Object
+                description: Requested image schema
                 type: object
                 properties:
 
@@ -727,7 +727,7 @@ paths:
           content:
             application/json:
               schema:
-                description: Logo JSON Object
+                description: Logo schema
                 type: object
                 properties:
 
@@ -838,7 +838,7 @@ paths:
             schema:
               type: string
               description: Photo comment.
-              example: "Wow, such a nice picture!"
+              example: "Wow, such a nice picture"
               pattern: ^[A-Z][0-9]$
               minLength: 3
               maxLength: 144
@@ -853,7 +853,7 @@ paths:
           content:
             application/json:
               schema:
-                description: Posted comment JSON Object
+                description: Posted comment schema
                 type: object
                 properties:
 
@@ -944,7 +944,7 @@ paths:
           content:
             application/json:
               schema:
-                description: Updated image JSON Object
+                description: Updated image schema
                 type: object
                 properties:
 
