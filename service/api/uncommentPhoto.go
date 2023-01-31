@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -48,8 +49,14 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	c.ID = intComment // default
 	c.UserId = intId
 
+	// We pass this photo because we will have to update its comments in the database
+	var p Photo
+
+	var u User
+	u.ID = intId
+
 	// update info from database
-	res, err := rt.db.UncommentPhoto(c.ToDatabase())
+	dbcomment, dbphoto, dbuser, err := rt.db.UncommentPhoto(c.ToDatabase(), p.ToDatabase(), u.ToDatabase())
 	if err != nil {
 		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
@@ -57,11 +64,15 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		w.WriteHeader(http.StatusInternalServerError) // 500
 		return
 	}
+	//  Here we can re-use `comment` as FromDatabase is overwriting every variabile in the structure.
+	c.FromDatabase(dbcomment)
+	p.FromDatabase(dbphoto)
+	u.FromDatabase(dbuser)
 
 	//  Send the output to the user.
-
-	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte(strconv.Itoa(res)))
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(p) // Return the photo
 
 	defer r.Body.Close()
 

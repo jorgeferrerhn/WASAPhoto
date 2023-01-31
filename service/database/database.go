@@ -112,7 +112,7 @@ type AppDatabase interface {
 	UnlikePhoto(Photo, User) (Photo, User, error)
 
 	// uncomment photo updates a photo and removes a comment from an user,
-	UncommentPhoto(Comment) (int, error)
+	UncommentPhoto(Comment, Photo, User) (Comment, Photo, User, error)
 
 	// deletePhoto removes a photo
 	DeletePhoto(Photo) (int, error)
