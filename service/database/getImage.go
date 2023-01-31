@@ -23,13 +23,6 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 	for rows.Next() {
 		err := rows.Scan(&userId, &path, &likes, &comments, &date)
 
-		//we update the information of our struct
-		p.UserId = userId
-		p.Path = path
-		p.Likes = likes
-		p.Comments = comments
-		p.Date = date
-
 		if err != nil {
 			return p, err
 		}
@@ -44,6 +37,13 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 	if path == "" {
 		return p, errors.New("Photo not found")
 	}
+
+	//we update the information of our struct
+	p.UserId = userId
+	p.Path = path
+	p.Likes = likes
+	p.Comments = comments
+	p.Date = date
 
 	return p, nil
 }
