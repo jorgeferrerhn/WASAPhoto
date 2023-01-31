@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -12,7 +11,6 @@ import (
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	reqToken := r.Header.Get("Authorization")
-	fmt.Println("Authorization: ", reqToken)
 
 	// Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
 

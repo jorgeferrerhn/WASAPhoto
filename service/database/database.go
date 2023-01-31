@@ -12,7 +12,7 @@ main.WebAPIConfiguration structure):
 
 This is an example on how to migrate the DB and connect to it:
 
-	// Start Database
+	//  Start Database
 	logger.Println("initializing database support")
 	db, err := sql.Open("sqlite3", "./foo.db")
 	if err != nil {
@@ -35,7 +35,8 @@ import (
 	"time"
 )
 
-// User struct represent a fountain in every API call between this package and the outside world.
+//	User struct represent a fountain in every API call between this package and the outside world.
+//
 // Note that the internal representation of fountain in the database might be different.
 type User struct {
 	ID         int

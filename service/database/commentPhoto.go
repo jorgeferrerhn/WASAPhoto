@@ -141,9 +141,6 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	}
 	new_list += add
 
-	fmt.Println(photosComments)
-	fmt.Println(new_list)
-
 	p.Comments = new_list
 
 	// UPDATING the photo's
