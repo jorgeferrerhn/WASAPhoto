@@ -12,7 +12,7 @@ main.WebAPIConfiguration structure):
 
 This is an example on how to migrate the DB and connect to it:
 
-	//   Start Database
+	//  Start Database
 	logger.Println("initializing database support")
 	db, err := sql.Open("sqlite3", "./foo.db")
 	if err != nil {
@@ -67,10 +67,10 @@ type Comment struct {
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 
-	//  DoLogin  creates a new user in the database. It returns an updated User object (with the ID)
+	// DoLogin  creates a new user in the database. It returns an updated User object (with the ID)
 	DoLogin(User) (User, error)
 
-	//  getUserProfile gets the information of an user from its ID.
+	// getUserProfile gets the information of an user from its ID.
 	GetUserProfile(User) (User, error)
 
 	// getMyStream gets the stream of photos of the user searched from its ID
