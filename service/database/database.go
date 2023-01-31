@@ -12,7 +12,7 @@ main.WebAPIConfiguration structure):
 
 This is an example on how to migrate the DB and connect to it:
 
-	//  Start Database
+	//   Start Database
 	logger.Println("initializing database support")
 	db, err := sql.Open("sqlite3", "./foo.db")
 	if err != nil {
@@ -35,9 +35,9 @@ import (
 	"time"
 )
 
-//	User struct represent a fountain in every API call between this package and the outside world.
+//		User struct represent a fountain in every API call between this package and the outside world.
 //
-// Note that the internal representation of fountain in the database might be different.
+//	 Note that the internal representation of fountain in the database might be different.
 type User struct {
 	ID         int
 	Name       string
@@ -67,34 +67,34 @@ type Comment struct {
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 
-	// DoLogin  creates a new user in the database. It returns an updated User object (with the ID)
+	//  DoLogin  creates a new user in the database. It returns an updated User object (with the ID)
 	DoLogin(User) (User, error)
 
-	// getUserProfile gets the information of an user from its ID.
+	//  getUserProfile gets the information of an user from its ID.
 	GetUserProfile(User) (User, error)
 
-	//getMyStream gets the stream of photos of the user searched from its ID
+	// getMyStream gets the stream of photos of the user searched from its ID
 	GetMyStream(User) (User, error)
 
-	//getLogo gets the profile picture of a user given its ID
+	// getLogo gets the profile picture of a user given its ID
 	GetLogo(int) (int, error)
 
-	//getImage gets a picture given its ID
+	// getImage gets a picture given its ID
 	GetImage(Photo) (Photo, error)
 
-	//uploadPhoto gets a path of an image and uploads the photo.
+	// uploadPhoto gets a path of an image and uploads the photo.
 	UploadLogo(Photo, User) (Photo, User, error)
 
-	//uploadLogo gets a path of an image and uploads the profile picture.
+	// uploadLogo gets a path of an image and uploads the profile picture.
 	UploadPhoto(Photo, User) (Photo, User, error)
 
-	//commentPhoto inserts a comment on the comments table,
+	// commentPhoto inserts a comment on the comments table,
 	CommentPhoto(Comment, Photo, User) (Comment, Photo, User, error)
 
-	//likePhoto updates a photo and adds a like from a user,
+	// likePhoto updates a photo and adds a like from a user,
 	LikePhoto(Photo, User) (Photo, User, error)
 
-	//setMyUserName updates a table with  comment on the comments table,
+	// setMyUserName updates a table with  comment on the comments table,
 	SetMyUserName(User) (User, error)
 
 	// followUser updates the list of followers of the user followed

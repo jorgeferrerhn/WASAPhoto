@@ -7,7 +7,7 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 		nameSearch, photos, banned, followers string
 	)
 
-	//first we search the user. It should have a unique username, so we'll search for it
+	// first we search the user. It should have a unique username, so we'll search for it
 	rows, err := db.c.Query(`select id, name from users where name=?`, u.Name)
 
 	if err != nil {
@@ -29,7 +29,7 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 		return u, err
 	}
 
-	if nameSearch == "" || nameSearch != u.Name { //this user has not been created before
+	if nameSearch == "" || nameSearch != u.Name { // this user has not been created before
 
 		u.ProfilePic = 0
 		u.Followers = "[]"
@@ -48,7 +48,7 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 			return u, err
 		}
 
-		u.ID = int(lastInsertID) //gets the ID
+		u.ID = int(lastInsertID) // gets the ID
 
 	} else {
 		u.ID = id

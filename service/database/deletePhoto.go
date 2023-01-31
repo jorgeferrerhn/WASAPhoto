@@ -8,7 +8,7 @@ import (
 func (db *appdbimpl) DeletePhoto(p Photo) (int, error) {
 
 	var photoId int
-	//first we search the user. It should have a unique username, so we'll search for it
+	// first we search the user. It should have a unique username, so we'll search for it
 	rows, err := db.c.Query(`select id from photos where id=?`, p.ID)
 
 	if err != nil {

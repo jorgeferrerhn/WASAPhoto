@@ -38,7 +38,7 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 		return p, errors.New("Photo not found")
 	}
 
-	//we update the information of our struct
+	// we update the information of our struct
 	p.UserId = userId
 	p.Path = path
 	p.Likes = likes

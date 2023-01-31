@@ -8,7 +8,7 @@ func (db *appdbimpl) GetMyStream(u User) (User, error) {
 
 	var searchedPhotos, username string
 
-	rows, err := db.c.Query(`select name,photos from users where id=?`, u.ID) //Here photos will be a string, then casted to json
+	rows, err := db.c.Query(`select name,photos from users where id=?`, u.ID) // Here photos will be a string, then casted to json
 
 	if err != nil {
 		return u, err

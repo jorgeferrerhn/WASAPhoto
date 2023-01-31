@@ -7,11 +7,11 @@ import (
 
 func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 
-	// we get all the information from the user
+	//  we get all the information from the user
 	var profilePic, searchId int
 	var userNameTarget, followers, banned, photos string
 
-	//first we search the user. It should have a unique username, so we'll search for it
+	// first we search the user. It should have a unique username, so we'll search for it
 	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, u.ID)
 
 	if err != nil {
@@ -34,10 +34,10 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 		return u, err
 	}
 
-	if userNameTarget == "" { //invalid user id
+	if userNameTarget == "" { // invalid user id
 		return u, errors.New("This user doesn't exist!")
 	}
-	// Then, we have to check if the username has been already taken by everyone else
+	//  Then, we have to check if the username has been already taken by everyone else
 	rows2, err := db.c.Query(`select id from users where name=?`, u.Name)
 
 	for rows2.Next() {
@@ -54,11 +54,11 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 		return u, err
 	}
 
-	if searchId != 0 { // There's someone with that username already
+	if searchId != 0 { //  There's someone with that username already
 		return u, errors.New("This username is already picked!")
 	}
 
-	// update the information
+	//  update the information
 	u.ProfilePic = profilePic
 	u.Followers = followers
 	u.Banned = banned

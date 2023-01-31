@@ -11,7 +11,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	var photoId, profilePic int
 	var userName, followers, banned, photos string
 
-	//search for the user
+	// search for the user
 	rows2, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
 	if err != nil {
@@ -38,7 +38,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 		return p, u, errors.New("User not found")
 	}
 
-	//search for the photo id (check if it existed)
+	// search for the photo id (check if it existed)
 	rows, err := db.c.Query(`select id from photos where path=? and userid=?`, p.Path, p.UserId)
 
 	if err != nil {
@@ -73,7 +73,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	p.Comments = "[]"
 	p.Date = time.Now()
 
-	//We upload the photo and insert it to the photo's database
+	//  We upload the photo and insert it to the photo's database
 	res, err := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
 		p.UserId, p.Path, p.Likes, p.Comments, p.Date)
 	if err != nil {
@@ -87,13 +87,13 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 
 	p.ID = int(lastInsertID)
 
-	// We also have to update the photo's stream of the user
+	//  We also have to update the photo's stream of the user
 	u.Name = userName
 	u.Followers = followers
 	u.Banned = banned
 	u.ProfilePic = p.ID
 
-	// The difference with uploadPhoto is here: we don't update the photo's stream (the profile picture is not included)
+	//  The difference with uploadPhoto is here: we don't update the photo's stream (the profile picture is not included)
 	if err != nil {
 		log.Println(err)
 	}

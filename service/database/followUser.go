@@ -12,9 +12,9 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 	var name2, followers2, banned2, photos2, name1 string
 	var profilePic2 int
 
-	// We have to check if both users exist
+	//  We have to check if both users exist
 
-	// search for the user that follows
+	//  search for the user that follows
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
 
 	if err != nil {
@@ -41,7 +41,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("Follower not found")
 	}
 
-	// search for the user that get followed
+	//  search for the user that get followed
 	rows, err = db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user2.ID)
 
 	if err != nil {
@@ -87,7 +87,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		user2.Followers = new_list
 
 	} else {
-		user2.Followers = followers2 // remains the same
+		user2.Followers = followers2 //  remains the same
 
 	}
 
@@ -103,7 +103,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("Error in " + fmt.Sprint(res))
 	}
 
-	//update list of followers
+	// update list of followers
 
 	return user2, nil
 

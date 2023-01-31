@@ -20,7 +20,7 @@ func (db *appdbimpl) GetLogo(id int) (int, error) {
 		if err != nil {
 			return 0, err
 		}
-		//log.Println("this: ", id1, name, profilepic, followers, photos)
+		// log.Println("this: ", id1, name, profilepic, followers, photos)
 
 	}
 	err = rows.Err()

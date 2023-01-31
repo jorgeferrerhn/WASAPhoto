@@ -11,9 +11,9 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 	var name2, followers2, banned2, photos2, name1 string
 	var profilePic2 int
 
-	// We have to check if both users exist
+	//  We have to check if both users exist
 
-	// search for the user that follows
+	//  search for the user that follows
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
 
 	if err != nil {
@@ -40,7 +40,7 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("Follower not found")
 	}
 
-	// search for the user that get followed
+	//  search for the user that get followed
 	rows, err = db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user2.ID)
 
 	if err != nil {
@@ -73,18 +73,18 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("User2 wasn't previously followed by user1")
 	}
 
-	//We cast to list the string
+	// We cast to list the string
 
 	newList := "["
 	counter := 1
 
-	// Updating the followers' list
+	//  Updating the followers' list
 	for i := 1; i < len(followers2)-1; i++ {
 
-		c := string(followers2[i]) // rune to string
+		c := string(followers2[i]) //  rune to string
 
 		if c == "," {
-			number := followers2[counter:i] // takes up to that position
+			number := followers2[counter:i] //  takes up to that position
 			if number != fmt.Sprint(user1.ID) {
 				newList += number + ","
 			}

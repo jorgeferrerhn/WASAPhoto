@@ -16,7 +16,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	var date time.Time
 	var userName string
 
-	//search for the user
+	// search for the user
 	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	}
 
 	if userName == "" {
-		//el usuario no existía
+		// el usuario no existía
 		return p, u, errors.New("User not found")
 	}
 	err = rows.Err()
@@ -44,7 +44,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	//search the photo
+	// search the photo
 	rows2, err := db.c.Query(`select userId,path,likes,comments,date from photos where id=?`, p.ID)
 
 	if err != nil {
@@ -70,13 +70,13 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	}
 
 	if path == "" {
-		//el usuario no existía
+		// el usuario no existía
 		return p, u, errors.New("Photo not found")
 	}
 
 	var liked bool
 
-	// We check that the photo hasn't been liked before
+	//  We check that the photo hasn't been liked before
 	liked = strings.Contains(likes, fmt.Sprint(u.ID))
 
 	if !liked {
@@ -96,19 +96,19 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		p.Likes = new_list
 
 	} else {
-		p.Likes = likes // remains the same
+		p.Likes = likes //  remains the same
 
 	}
 
-	// We don't change the rest of the attributes
+	//  We don't change the rest of the attributes
 	p.Path = path
 	p.Comments = comments
 	p.Date = date
 	p.UserId = userId
 
-	//We update the user's photos and the photos' stream
+	// We update the user's photos and the photos' stream
 
-	// We cast the photos to a Photo's array, then we change the one who gets commented
+	//  We cast the photos to a Photo's array, then we change the one who gets commented
 
 	in := []byte(photos)
 	var castPhotos []Photo
@@ -119,7 +119,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 
 	newPhotos := "["
 	for i := 0; i < len(castPhotos); i++ {
-		if castPhotos[i].ID == p.ID { //this is the one who gets commented
+		if castPhotos[i].ID == p.ID { // this is the one who gets commented
 
 			castPhotos[i].Likes = p.Likes
 		}

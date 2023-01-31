@@ -13,9 +13,9 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 	var userName, userNameTarget, followers, banned, photos, likes, photosComments, path string
 	var content, dateComment string
 	var date time.Time
-	// var userId int
+	//  var userId int
 
-	//search for the user that comments
+	// search for the user that comments
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, c.UserId)
 
 	if err != nil {
@@ -42,7 +42,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 		return c, p, u, errors.New("User not found")
 	}
 
-	//then we search the comment ID. If it doesn't exist, we cannot uncomment the photo
+	// then we search the comment ID. If it doesn't exist, we cannot uncomment the photo
 
 	rows2, err := db.c.Query(`select content,photoid,userid,date from comments where commentid=?`, c.ID)
 
@@ -71,9 +71,9 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 		return c, p, u, errors.New("Comment not found")
 	}
 
-	p.ID = pcId // We update the photoId
+	p.ID = pcId //  We update the photoId
 
-	//lastly, we need to check if the photo previously existed
+	// lastly, we need to check if the photo previously existed
 	rows3, err := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
 
 	if err != nil {

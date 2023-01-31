@@ -16,7 +16,7 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 	var date time.Time
 	var userName string
 
-	//search for the user
+	// search for the user
 	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 	}
 
 	if userName == "" {
-		//el usuario no existía
+		// el usuario no existía
 		return p, u, errors.New("User not found")
 	}
 	err = rows.Err()
@@ -44,7 +44,7 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	//search the photo
+	// search the photo
 	rows2, err := db.c.Query(`select userId,path,likes,comments,date from photos where id=?`, p.ID)
 
 	if err != nil {
@@ -70,7 +70,7 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 	}
 
 	if path == "" {
-		//el usuario no existía
+		// el usuario no existía
 		return p, u, errors.New("Photo not found")
 	}
 
@@ -80,27 +80,27 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, errors.New("Photo wasn't previously liked!")
 	}
 
-	//We cast to list the string
+	// We cast to list the string
 
 	newList := "["
 	counter := 1
 
-	// Updating the followers' list
+	//  Updating the followers' list
 	for i := 1; i < len(likes)-1; i++ {
 
-		c := string(likes[i]) // rune to string
+		c := string(likes[i]) //  rune to string
 
 		if c == "," {
-			number := likes[counter:i] // takes up to that position
+			number := likes[counter:i] //  takes up to that position
 			if number != fmt.Sprint(u.ID) {
 				newList += number + ","
 			}
 		}
 	}
 
-	newList = newList[:len(newList)-1] + "]" // extract the last comma and add the last bracket
+	newList = newList[:len(newList)-1] + "]" //  extract the last comma and add the last bracket
 	if newList == "]" {
-		// It was empty
+		//  It was empty
 		newList = "[]"
 	}
 

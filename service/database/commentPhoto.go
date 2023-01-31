@@ -12,9 +12,9 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	var photoId, profilePic, photoUserId int
 	var userName, userNameTarget, followers, banned, photos, likes, photosComments, path string
 	var date time.Time
-	// var userId int
+	//  var userId int
 
-	//search for the user that comments
+	// search for the user that comments
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, c.UserId)
 
 	if err != nil {
@@ -41,7 +41,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		return c, p, u, errors.New("User not found")
 	}
 
-	//then we search the photo id. If it doesn't exist, we cannot comment on the photo
+	// then we search the photo id. If it doesn't exist, we cannot comment on the photo
 
 	rows2, err := db.c.Query(`select id,userid,path,likes,comments,date from photos where id=?`, c.PhotoId)
 
@@ -68,8 +68,8 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	if photoId == 0 {
 		return c, p, u, errors.New("Photo not found")
 	}
-	//lastly, we need to check up the user that gets commented
-	p.UserId = photoUserId //to check for the target id
+	// lastly, we need to check up the user that gets commented
+	p.UserId = photoUserId // to check for the target id
 
 	rows3, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
@@ -113,20 +113,20 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	c.ID = int(lastInsertID)
 
-	// We also have to update the comments's stream of the COMMENTED user
+	//  We also have to update the comments's stream of the COMMENTED user
 	u.Name = userNameTarget
-	u.ID = p.UserId //this is important: the id of the user we need to update is not the one who comments, but the one who gets the comment on the photo
+	u.ID = p.UserId // this is important: the id of the user we need to update is not the one who comments, but the one who gets the comment on the photo
 	u.Followers = followers
 	u.Banned = banned
 	u.ProfilePic = profilePic
 
-	//and the photos' comment
+	// and the photos' comment
 	p.UserId = photoUserId
 	p.Likes = likes
 	p.Date = date
 	p.Path = path
 
-	// UPDATING the photo
+	//  UPDATING the photo
 
 	var add string
 
