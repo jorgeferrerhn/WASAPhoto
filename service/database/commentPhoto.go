@@ -100,8 +100,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	c.Date = time.Now()
 
-	res, err := db.c.Exec(`INSERT INTO comments (commentid,content,photoid,userid,date) VALUES (NULL,?,?,?,?)`,
-		c.ID, c.Content, c.PhotoId, c.UserId, c.Date)
+	res, err := db.c.Exec(`INSERT INTO comments (commentid,content,photoid,userid,date) VALUES (NULL,?,?,?,?)`, c.Content, c.PhotoId, c.UserId, c.Date)
 	if err != nil {
 		return c, p, u, err
 	}
@@ -131,7 +130,8 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	var add string
 
 	new_list := photosComments[0 : len(photosComments)-1]
-	newComment := `['User':'` + fmt.Sprint(u.ID) + `', 'Comment':'` + c.Content + `']`
+	newComment := `{"Id": ` + fmt.Sprint(c.ID) + `, "content": "` + c.Content + `, "PhotoId": "` + fmt.Sprint(c.PhotoId) + `, "userId": "` + fmt.Sprint(c.UserId) + `, "date": "` + c.Date.Format(time.RFC3339) + `"}`
+
 	if photosComments == "[]" {
 		add = newComment + "]"
 

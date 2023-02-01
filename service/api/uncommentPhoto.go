@@ -60,7 +60,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	if err != nil {
 		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the photo")
+		ctx.Logger.WithError(err).Error("can't delete the comment")
 		w.WriteHeader(http.StatusInternalServerError) // 500
 		return
 	}

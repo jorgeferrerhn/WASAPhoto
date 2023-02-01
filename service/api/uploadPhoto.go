@@ -10,7 +10,7 @@ import (
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	reqToken := r.Header.Get("Authorization")
+	// reqToken := r.Header.Get("Authorization")
 
 	// Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
 
