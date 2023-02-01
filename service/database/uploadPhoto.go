@@ -1,6 +1,7 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -94,30 +95,27 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 	u.Banned = banned
 	u.ProfilePic = profilePic
 
-	var resultString string
+	// var resultString string
 
 	// newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `, "userid": ` + fmt.Sprint(p.UserId) + `, "path": "` + p.Path + `", "likes": "` + p.Likes + `", "comments": "` + p.Comments + `", "date": "` + p.Date.Format(time.RFC3339) + `"}`
-	newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `,"userid": ` + fmt.Sprint(p.UserId) + `,"path": "` + p.Path + `","likes": "` + p.Likes + `","comments": "` + p.Comments + `","date": "` + p.Date.Format(time.RFC3339) + `"}`
+	// newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `,"userid": ` + fmt.Sprint(p.UserId) + `,"path": "` + p.Path + `","likes": "` + p.Likes + `","comments": "` + p.Comments + `","date": "` + p.Date.Format(time.RFC3339) + `"}`
 
 	// newPhoto := fmt.Sprint(p)
 
 	// var p2 Photo
 
 	// err = json.Unmarshal([]byte(newPhoto), &p2)
+
+	var photoList []Photo
+
+	in := []byte(photos)
+	err = json.Unmarshal(in, &photoList)
 	if err != nil {
 		return p, u, err
 	}
+	photoList = append(photoList, p)
 
-	if photos == "[]" { // initially empty
-
-		resultString = "[" + newPhoto + "]"
-
-	} else {
-
-		resultString = photos[:len(photos)-1] + "," + newPhoto + "]"
-	}
-
-	u.Photos = resultString
+	u.Photos = fmt.Sprint(photoList)
 
 	if err != nil {
 		log.Println(err)

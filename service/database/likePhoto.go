@@ -114,22 +114,14 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	var castPhotos []Photo
 	err = json.Unmarshal(in, &castPhotos)
 	if err != nil {
-
+		return p, u, err
 	}
 
 	// fmt.println(castPhotos)
-	newPhotos := "["
+
 	for i := 0; i < len(castPhotos); i++ {
 		if castPhotos[i].ID == p.ID { // this is the one who gets commented
-
 			castPhotos[i].Likes = p.Likes
-		}
-		newPhoto := fmt.Sprint(castPhotos[i])
-
-		if i == len(castPhotos)-1 {
-			newPhotos += newPhoto + "]"
-		} else {
-			newPhotos += newPhoto + ","
 		}
 	}
 
@@ -138,7 +130,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	u.Followers = followers
 	u.Banned = banned
 	u.ProfilePic = profilePic
-	u.Photos = newPhotos
+	u.Photos = fmt.Sprint(castPhotos)
 
 	var res sql.Result
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
