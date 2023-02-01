@@ -1,7 +1,6 @@
 package database
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -97,10 +96,14 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	var resultString string
 
-	newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `, "userid": ` + fmt.Sprint(p.UserId) + `, "path": "` + p.Path + `", "likes": "` + p.Likes + `", "comments": "` + p.Comments + `", "date": "` + p.Date.Format(time.RFC3339) + `"}`
-	var p2 Photo
+	// newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `, "userid": ` + fmt.Sprint(p.UserId) + `, "path": "` + p.Path + `", "likes": "` + p.Likes + `", "comments": "` + p.Comments + `", "date": "` + p.Date.Format(time.RFC3339) + `"}`
+	newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `,"userid": ` + fmt.Sprint(p.UserId) + `,"path": "` + p.Path + `","likes": "` + p.Likes + `","comments": "` + p.Comments + `","date": "` + p.Date.Format(time.RFC3339) + `"}`
 
-	err = json.Unmarshal([]byte(newPhoto), &p2)
+	// newPhoto := fmt.Sprint(p)
+
+	// var p2 Photo
+
+	// err = json.Unmarshal([]byte(newPhoto), &p2)
 	if err != nil {
 		return p, u, err
 	}

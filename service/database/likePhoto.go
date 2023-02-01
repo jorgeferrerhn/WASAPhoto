@@ -117,13 +117,15 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 
 	}
 
+	// fmt.println(castPhotos)
 	newPhotos := "["
 	for i := 0; i < len(castPhotos); i++ {
 		if castPhotos[i].ID == p.ID { // this is the one who gets commented
 
 			castPhotos[i].Likes = p.Likes
 		}
-		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `, "userid": ` + fmt.Sprint(castPhotos[i].UserId) + `, "path": "` + castPhotos[i].Path + `", "likes": "` + castPhotos[i].Likes + `", "comments": "` + castPhotos[i].Comments + `", "date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+		newPhoto := fmt.Sprint(castPhotos[i])
+
 		if i == len(castPhotos)-1 {
 			newPhotos += newPhoto + "]"
 		} else {

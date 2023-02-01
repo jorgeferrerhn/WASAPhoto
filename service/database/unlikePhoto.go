@@ -128,7 +128,9 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 
 			castPhotos[i].Likes = p.Likes
 		}
-		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `, "userid": ` + fmt.Sprint(castPhotos[i].UserId) + `, "path": "` + castPhotos[i].Path + `", "likes": "` + castPhotos[i].Likes + `", "comments": "` + castPhotos[i].Comments + `", "date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `,"userid": ` + fmt.Sprint(castPhotos[i].UserId) + `,"path": "` + castPhotos[i].Path + `","likes": "` + castPhotos[i].Likes + `","comments": "` + castPhotos[i].Comments + `","date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+		//newPhoto := fmt.Sprint(p)
+
 		if i == len(castPhotos)-1 {
 			newPhotos += newPhoto + "]"
 		} else {

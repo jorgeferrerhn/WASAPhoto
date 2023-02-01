@@ -44,7 +44,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	// then we search the comment ID. If it doesn't exist, we cannot uncomment the photo
 
-	fmt.Println("Hasta aqui llega")
+	// fmt.println("Hasta aqui llega")
 
 	rows2, err := db.c.Query(`select content,photoid,userid,date from comments where commentid=?`, c.ID)
 
@@ -135,14 +135,22 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 	in := []byte(photosComments)
 	var castComments []Comment
 	err = json.Unmarshal(in, &castComments)
+	if err != nil {
+		return c, p, u, err
+	}
+
+	// fmt.println("Cast comments: ", castComments)
+	// fmt.println(" comments: ", photosComments)
 
 	// And we add all the comments except the one that is deleted
 	newComments := "["
 	for i := 0; i < len(castComments); i++ {
 		var newComment string
+		// fmt.println("Cast comments ID: ", castComments[i].ID, " And the comment ID is: ", c.ID)
 		if castComments[i].ID != c.ID { // we add everything except the comments
 
-			newComment = `{"Id": ` + fmt.Sprint(castComments[i].ID) + `, "content": "` + castComments[i].Content + `, "PhotoId": "` + fmt.Sprint(castComments[i].PhotoId) + `, "userId": "` + fmt.Sprint(castComments[i].UserId) + `, "date": "` + castComments[i].Date.Format(time.RFC3339) + `"}`
+			newComment = `{'Id': ` + fmt.Sprint(castComments[i].ID) + `,'content': '` + castComments[i].Content + `','PhotoId': ` + fmt.Sprint(castComments[i].PhotoId) + `,'userId': ` + fmt.Sprint(castComments[i].UserId) + `,'date': '` + castComments[i].Date.Format(time.RFC3339) + `'}`
+			// newComment = fmt.Sprint(castComments[i])
 		}
 		if i == len(castComments)-1 {
 			newComments += newComment + "]"
@@ -158,7 +166,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 	p.Comments = newComments
 
 	// UPDATING the photo
-	fmt.Println("El error está aquí", photos)
+	// fmt.println("El error está aquí", photos)
 
 	// We cast the photos to a Photo's array, then we change the one who gets commented
 	in2 := []byte(photos)
@@ -173,7 +181,8 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 		if castPhotos[i].ID == p.ID { //this is the one who gets commented
 			castPhotos[i].Comments = p.Comments
 		}
-		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `, "userid": ` + fmt.Sprint(castPhotos[i].UserId) + `, "path": "` + castPhotos[i].Path + `", "likes": "` + castPhotos[i].Likes + `", "comments": "` + castPhotos[i].Comments + `", "date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `,"userid": ` + fmt.Sprint(castPhotos[i].UserId) + `,"path": "` + castPhotos[i].Path + `","likes": "` + castPhotos[i].Likes + `","comments": '` + castPhotos[i].Comments + `',"date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+		// newPhoto := fmt.Sprint(castPhotos[i])
 		if i == len(castPhotos)-1 {
 			newPhotos += newPhoto + "]"
 		} else {
@@ -183,7 +192,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	u.Photos = newPhotos
 
-	fmt.Println(u)
+	// fmt.println(u)
 
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)

@@ -130,7 +130,8 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	var add string
 
 	new_list := photosComments[0 : len(photosComments)-1]
-	newComment := `{"Id": ` + fmt.Sprint(c.ID) + `, "content": "` + c.Content + `, "PhotoId": "` + fmt.Sprint(c.PhotoId) + `, "userId": "` + fmt.Sprint(c.UserId) + `, "date": "` + c.Date.Format(time.RFC3339) + `"}`
+	newComment := `{'Id': ` + fmt.Sprint(c.ID) + `,'content': '` + c.Content + `','PhotoId': ` + fmt.Sprint(c.PhotoId) + `,'userId': ` + fmt.Sprint(c.UserId) + `,'date': '` + c.Date.Format(time.RFC3339) + `'}`
+	// newComment := fmt.Sprint(c)
 
 	if photosComments == "[]" {
 		add = newComment + "]"
@@ -167,7 +168,8 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 			castPhotos[i].Comments = p.Comments
 		}
-		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `, "userid": ` + fmt.Sprint(castPhotos[i].UserId) + `, "path": "` + castPhotos[i].Path + `", "likes": "` + castPhotos[i].Likes + `", "comments": "` + castPhotos[i].Comments + `", "date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `,"userid": ` + fmt.Sprint(castPhotos[i].UserId) + `,"path": "` + castPhotos[i].Path + `","likes": "` + castPhotos[i].Likes + `","comments": '` + castPhotos[i].Comments + `',"date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
+		// newPhoto := fmt.Sprint(p)
 		if i == len(castPhotos)-1 {
 			newPhotos += newPhoto + "]"
 		} else {
