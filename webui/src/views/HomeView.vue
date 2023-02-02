@@ -5,6 +5,7 @@ export default {
       errormsg: null,
       loading: false,
       users: [],
+      token: 0,
     }
   },
   methods: {
@@ -20,7 +21,7 @@ export default {
       this.errormsg = null;
       try {
         const response = await this.$axios.post("/session", this.message);
-        console.log(response);
+        this.token = response.data["Id"];
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -92,7 +93,7 @@ export default {
         <h3 class="h3">Introduce your username: </h3>
 
         <input v-model="message" placeholder=" Username">
-        <p>Your token is: 1 </p> <!--Aquí hay que meter una variable global para el incremento del ID, o recuperarla del backend-->
+        <p>Your token is: {{ token }} </p> <!--Aquí hay que meter una variable global para el incremento del ID, o recuperarla del backend-->
 
         <a href="javascript:" class="btn btn-primary" @click="newItem">Create a new user</a>
       </div>
