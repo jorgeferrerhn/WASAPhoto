@@ -145,7 +145,7 @@ func checkId(ps httprouter.Params) (int, error) {
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		return -1, err
 
 	}

@@ -23,7 +23,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -39,7 +39,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	intPhotoId, err := strconv.Atoi(p)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

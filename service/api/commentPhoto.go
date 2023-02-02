@@ -25,7 +25,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -41,7 +41,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	intPhoto, err := strconv.Atoi(photoId)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

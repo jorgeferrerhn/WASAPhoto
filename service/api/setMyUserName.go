@@ -25,7 +25,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

@@ -25,14 +25,14 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	intId2, err := strconv.Atoi(i)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

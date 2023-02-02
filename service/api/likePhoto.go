@@ -23,7 +23,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id wasn`t properly cast
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -39,7 +39,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 
 	intPhoto, err := strconv.Atoi(photoId)
 	if err != nil {
-		//  id wasn`t properly cast
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

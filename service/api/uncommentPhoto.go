@@ -23,7 +23,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -39,7 +39,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 
 	intComment, err := strconv.Atoi(commentId)
 	if err != nil {
-		//  id wasn`t properly casted
+		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -64,7 +64,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	//  Here we can re-use `comment` as FromDatabase is overwriting every variabile in the structure.
+	//  Here we can re-use `comment` as FromDatabase is overwriting every variable in the structure.
 	c.FromDatabase(dbcomment)
 	p.FromDatabase(dbphoto)
 	u.FromDatabase(dbuser)
