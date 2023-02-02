@@ -5,7 +5,7 @@ export default {
       errormsg: null,
       loading: false,
       token: 0,
-      user: {},
+      userStream: {},
     }
   },
   methods: {
@@ -13,14 +13,16 @@ export default {
       return load
     },
 
-    getUser: async function() {
+    getUserStream: async function() {
 
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.userSearch+"/getUserProfile";
+        let url = "/users/"+this.userSearchStream+"/getMyStream";
         const response = await this.$axios.get(url);
-        this.user = response.data;
+        console.log(response)
+
+        this.userStream = response.data;
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -61,12 +63,12 @@ export default {
     <div class="card">
       <div class="card-body">
 
-        <h3 class="h3">Introduce user ID to search: </h3>
+        <h3 class="h3">Introduce user ID to search for its stream...: </h3>
 
-        <input v-model="userSearch" placeholder=" Search for a user...">
-        <p>The user is: {{ user }} </p>
+        <input v-model="userSearchStream" placeholder=" Search for a user...">
+        <p>The stream of the user is: {{ userStream }} </p>
 
-        <a href="javascript:" class="btn btn-primary" @click="getUser">Search for user</a>
+        <a href="javascript:" class="btn btn-primary" @click="getUserStream">Search for user stream</a>
       </div>
     </div>
 
