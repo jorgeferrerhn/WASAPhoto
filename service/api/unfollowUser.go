@@ -29,15 +29,15 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	//  followedUser
-	id_followed := ps.ByName("id2")
+	idFollowed := ps.ByName("id2")
 
-	if id_followed == "" {
+	if idFollowed == "" {
 		// Empty Followed ID
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	intFollowed, err := strconv.Atoi(id_followed)
+	intFollowed, err := strconv.Atoi(idFollowed)
 	if err != nil {
 		//  id wasn`t properly casted
 		w.WriteHeader(http.StatusBadRequest)
