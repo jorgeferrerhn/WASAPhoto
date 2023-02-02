@@ -13,13 +13,13 @@ export default {
       return load
     },
 
-    followUser: async function() {
+    unfollowUser: async function() {
 
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.follower+"/followUser/"+this.followed;
-        const response = await this.$axios.put(url, "");
+        let url = "/users/"+this.unfollower+"/unfollowUser/"+this.unfollowed;
+        const response = await this.$axios.delete(url);
         this.user = response.data;
 
       } catch (e) {
@@ -62,16 +62,16 @@ export default {
       <div class="card-body">
 
         <h3 class="h3">Introduce your user ID...: </h3>
-        <input v-model="follower" placeholder="1">
+        <input v-model="unfollower" placeholder="1">
 
-        <h3 class="h3">Introduce the ID of the user you want to follow...: </h3>
-        <input v-model="followed" placeholder="3">
+        <h3 class="h3">Introduce the ID of the user you want to unfollow...: </h3>
+        <input v-model="unfollowed" placeholder="3">
 
 
 
-        <p>Followed user updated:  {{ user }} </p>
+        <p>Unfollowed user updated:  {{ user }} </p>
 
-        <a href="javascript:" class="btn btn-primary" @click="followUser">Follow</a>
+        <a href="javascript:" class="btn btn-primary" @click="unfollowUser">Unfollow</a>
       </div>
     </div>
 
