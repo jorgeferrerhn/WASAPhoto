@@ -9,10 +9,6 @@ import (
 )
 
 func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
-	var name2, followers2, banned2, photos2, name1 string
-	var profilePic2 int
-
-	//  We have to check if both users exist
 
 	//  search for the user that follows
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
@@ -25,7 +21,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&name1)
+		err := rows.Scan(&user1.Name)
 
 		if err != nil {
 			return user2, err
@@ -37,7 +33,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		return user2, err
 	}
 
-	if name1 == "" {
+	if user1.Name == "" {
 		return user2, errors.New("Follower not found")
 	}
 
@@ -52,7 +48,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&name2, &profilePic2, &followers2, &banned2, &photos2)
+		err := rows.Scan(&user2.Name, &user2.ProfilePic, &user2.Followers, &user2.Banned, &user2.Photos)
 
 		if err != nil {
 			return user2, err
@@ -64,37 +60,24 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		return user2, err
 	}
 
-	if name2 == "" {
+	if user2.Name == "" {
 		return user2, errors.New("Followed not found")
 	}
 
-	followed := strings.Contains(followers2, fmt.Sprint(user1.ID))
+	followed := strings.Contains(user2.Followers, fmt.Sprint(user1.ID))
 
-	if !followed {
+	if !followed { // Chapuza: esto hay que cambiarlo
 		var add string
-
-		new_list := followers2[0 : len(followers2)-1]
-
-		if followers2 == "[]" {
+		newList := user2.Followers[0 : len(user2.Followers)-1]
+		if user2.Followers == "[]" {
 			add = fmt.Sprint(user1.ID) + "]"
-
 		} else {
 			add = "," + fmt.Sprint(user1.ID) + "]"
-
 		}
-		new_list += add
-
-		user2.Followers = new_list
-
-	} else {
-		user2.Followers = followers2 //  remains the same
+		newList += add
+		user2.Followers = newList
 
 	}
-
-	user2.Name = name2
-	user2.Banned = banned2
-	user2.ProfilePic = profilePic2
-	user2.Photos = photos2
 
 	var res sql.Result
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
@@ -102,8 +85,6 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 	if err != nil {
 		return user2, errors.New("Error in " + fmt.Sprint(res))
 	}
-
-	// update list of followers
 
 	return user2, nil
 

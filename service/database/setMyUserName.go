@@ -7,9 +7,8 @@ import (
 
 func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 
-	//  we get all the information from the user
-	var profilePic, searchId int
-	var userNameTarget, followers, banned, photos string
+	var searchId int
+	var userNameTarget string
 
 	// first we search the user. It should have a unique username, so we'll search for it
 	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, u.ID)
@@ -22,7 +21,7 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&userNameTarget, &profilePic, &followers, &banned, &photos)
+		err := rows.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return u, err
@@ -57,12 +56,6 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 	if searchId != 0 { //  There's someone with that username already
 		return u, errors.New("This username is already picked!")
 	}
-
-	//  update the information
-	u.ProfilePic = profilePic
-	u.Followers = followers
-	u.Banned = banned
-	u.Photos = photos
 
 	res, err := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
