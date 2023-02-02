@@ -4,16 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 )
 
 func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo, User, error) {
 
-	var profilePic, photoUserId, pcId, ucId int
-	var userName, userNameTarget, followers, banned, photos, likes, photosComments, path string
-	var content, dateComment string
-	var date time.Time
-	//  var userId int
+	var castComments, newComments []Comment
+	var castPhotos []Photo
 
 	// search for the user that comments
 	rows, err := db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, c.UserId)
@@ -26,7 +22,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	for rows.Next() {
 
-		err := rows.Scan(&userName, &profilePic, &followers, &banned, &photos)
+		err := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return c, p, u, err
@@ -38,13 +34,11 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 		return c, p, u, err
 	}
 
-	if userName == "" {
+	if u.Name == "" {
 		return c, p, u, errors.New("User not found")
 	}
 
 	// then we search the comment ID. If it doesn't exist, we cannot uncomment the photo
-
-	// fmt.println("Hasta aqui llega")
 
 	rows2, err := db.c.Query(`select content,photoid,userid,date from comments where commentid=?`, c.ID)
 
@@ -56,7 +50,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&content, &pcId, &ucId, &dateComment)
+		err := rows2.Scan(&c.Content, &c.PhotoId, &c.UserId, &c.Date)
 
 		if err != nil {
 			return c, p, u, err
@@ -64,16 +58,16 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	}
 
+	p.ID = c.PhotoId // After searching
+
 	err = rows2.Err()
 	if err != nil {
 		return c, p, u, err
 	}
 
-	if content == "" || pcId == 0 || ucId == 0 {
+	if c.Content == "" || c.PhotoId == 0 || c.UserId == 0 {
 		return c, p, u, errors.New("Comment not found")
 	}
-
-	p.ID = pcId //  We update the photoId
 
 	// lastly, we need to check if the photo previously existed
 	rows3, err := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
@@ -86,7 +80,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	for rows3.Next() {
 
-		err := rows3.Scan(&photoUserId, &path, &likes, &photosComments, &date)
+		err := rows3.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
 		if err != nil {
 			return c, p, u, err
@@ -99,14 +93,9 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 		return c, p, u, err
 	}
 
-	if path == "" {
+	if p.Path == "" {
 		return c, p, u, errors.New("Photo didn't exist")
 	}
-
-	p.UserId = photoUserId
-	p.Path = path
-	p.Likes = likes
-	p.Date = date
 
 	// Delete comment from comments' table
 
@@ -115,39 +104,18 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 		return c, p, u, errors.New("Error in: " + fmt.Sprint(res))
 	}
 
-	// We also have to update the comments's stream of the COMMENTED user
-	u.Name = userNameTarget
-	u.ID = p.UserId //this is important: the id of the user we need to update is not the one who comments, but the one who gets the comment on the photo
-	u.Followers = followers
-	u.Banned = banned
-	u.ProfilePic = profilePic
-
-	//and the photos' comment
-	p.UserId = photoUserId
-	p.Likes = likes
-	p.Date = date
-	p.Path = path
-
-	// UPDATING the photo
-
 	// Here we cast the comments to "raw format" { 1 Content ...} --> json.Unmarshal
 
-	in := []byte(photosComments)
-	var castComments []Comment
+	in := []byte(p.Comments)
 	err = json.Unmarshal(in, &castComments)
 	if err != nil {
 		return c, p, u, err
 	}
 
-	// We create a new comments array, so we only save the wanted comments
-	var newComments []Comment
-
 	for i := 0; i < len(castComments); i++ {
-
 		if castComments[i].ID != c.ID { // we add everything except the comments
 			newComments = append(newComments, castComments[i])
 		}
-
 	}
 
 	// Now, in newComments we have only the comments we want. We have to store them as {"ID": 1, "Content": ...} --> json.Marshal
@@ -161,8 +129,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 	}
 
 	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
-	in2 := []byte(photos)
-	var castPhotos []Photo
+	in2 := []byte(u.Photos)
 	err = json.Unmarshal(in2, &castPhotos)
 	if err != nil {
 		return c, p, u, err

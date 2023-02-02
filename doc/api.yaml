@@ -1584,7 +1584,7 @@ paths:
 
 
       responses:
-        '201':
+        '200':
           description: Successful operation
           content:
             application/json:
@@ -1593,7 +1593,7 @@ paths:
                 example: 1
                 description: Successful operation
 
-        '401':
+        '400':
           description: Access token is missing or invalid
         '404':
           description: Resource not found.
