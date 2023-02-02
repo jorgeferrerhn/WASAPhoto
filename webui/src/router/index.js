@@ -6,6 +6,7 @@ import uploadPhoto from '../views/uploadPhoto.vue'
 import uploadLogo from '../views/uploadLogo.vue'
 import getImage from '../views/getImage.vue'
 import commentPhoto from '../views/commentPhoto.vue'
+import likePhoto from '../views/likePhoto.vue'
 
 
 const router = createRouter({
@@ -18,6 +19,7 @@ const router = createRouter({
 		{path: '/uploadLogo', component: uploadLogo},
 		{path: '/getImage', component: getImage},
 		{path: '/commentPhoto', component: commentPhoto},
+		{path: '/likePhoto', component: likePhoto},
 
 	]
 })
