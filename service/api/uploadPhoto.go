@@ -47,7 +47,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		w.WriteHeader(http.StatusBadRequest) // 500
 		return
 	}
-	//  Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
+	//  Here we can re-use `user` as FromDatabase is overwriting every variable in the structure.
 	p.FromDatabase(dbphoto)
 	u.FromDatabase(dbuser)
 

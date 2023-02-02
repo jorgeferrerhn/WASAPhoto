@@ -84,7 +84,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	//  Here we can re-use `comment` as FromDatabase is overwriting every variabile in the structure.
+	//  Here we can re-use `comment` as FromDatabase is overwriting every variable in the structure.
 	c.FromDatabase(dbcomment)
 	p.FromDatabase(dbphoto)
 	u.FromDatabase(dbuser)

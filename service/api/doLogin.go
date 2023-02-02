@@ -41,7 +41,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	//   Here we can re-use `user` as FromDatabase is overwriting every variabile in the structure.
+	//   Here we can re-use `user` as FromDatabase is overwriting every variable in the structure.
 	user.FromDatabase(dbuser)
 
 	//   Send the output to the user.

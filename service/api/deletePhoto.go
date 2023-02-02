@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -10,9 +11,8 @@ import (
 
 func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	// Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
-
-	// user id
+	//  Takes the photo Id and updates its like in the photos table
+	//  user id
 	i := ps.ByName("id")
 
 	if i == "" {
@@ -28,39 +28,56 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	// photo id
-	p := ps.ByName("photoId")
+	//  photo id
+	photoId := ps.ByName("photoId")
 
-	if p == "" {
-		// Empty ID
+	if photoId == "" {
+		// Empty Photo ID
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	intPhotoId, err := strconv.Atoi(p)
+	intPhoto, err := strconv.Atoi(photoId)
 	if err != nil {
 		//  id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// create a Photo Struct
-	var p2 Photo
-	p2.ID = intPhotoId // default
-	p2.UserId = intId
+	var p Photo
+	var u User
+
+	p.ID = intPhoto
+	p.UserId = intId //  only for sending it to the database function
+	u.ID = intId
 
 	// update info from database
-	res, err := rt.db.DeletePhoto(p2.ToDatabase())
+	dbphoto, dbuser, err := rt.db.DeletePhoto(p.ToDatabase(), u.ToDatabase())
 	if err != nil {
 		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the photo")
-		w.WriteHeader(http.StatusInternalServerError) // 500
+		ctx.Logger.WithError(err).Error("can't unlike the photo")
+		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte(strconv.Itoa(res)))
+	//  Here we can re-use `photo ` as FromDatabase is overwriting every variable in the structure.
+	u.FromDatabase(dbuser)
+	p.FromDatabase(dbphoto)
+
+	//  Send the output to the user.
+	w.Header().Set("Content-Type", "application/json")
+
+	if p.ID == 0 { // user not found
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
+
+	//  Send the output to the user.
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(u)
 
 	defer r.Body.Close()
 

@@ -61,7 +61,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	//  Here we can re-use `photo ` as FromDatabase is overwriting every variabile in the structure.
+	//  Here we can re-use `photo ` as FromDatabase is overwriting every variable in the structure.
 	p.FromDatabase(dbphoto)
 	u.FromDatabase(dbuser)
 

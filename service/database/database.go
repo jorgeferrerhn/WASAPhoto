@@ -116,7 +116,7 @@ type AppDatabase interface {
 	UncommentPhoto(Comment, Photo, User) (Comment, Photo, User, error)
 
 	// deletePhoto removes a photo
-	DeletePhoto(Photo) (int, error)
+	DeletePhoto(Photo, User) (Photo, User, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned)
 	Ping() error
