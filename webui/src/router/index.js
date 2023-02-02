@@ -11,6 +11,8 @@ import setMyUserName from '../views/setMyUserName.vue'
 import followUser from '../views/followUser.vue'
 import banUser from '../views/banUser.vue'
 import unfollowUser from '../views/unfollowUser.vue'
+import unbanUser from '../views/unbanUser.vue'
+
 
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -27,6 +29,7 @@ const router = createRouter({
 		{path: '/followUser', component: followUser},
 		{path: '/unfollowUser', component: unfollowUser},
 		{path: '/banUser', component: banUser},
+		{path: '/unbanUser', component: unbanUser},
 	]
 })
 
