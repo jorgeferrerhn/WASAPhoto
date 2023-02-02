@@ -2,14 +2,12 @@ package database
 
 import (
 	"errors"
-	"log"
 	"time"
 )
 
 func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 
-	var photoId, profilePic int
-	var userName, followers, banned, photos string
+	var photoId int
 
 	// search for the user
 	rows2, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
@@ -22,7 +20,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&userName, &profilePic, &followers, &banned, &photos)
+		err := rows2.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return p, u, err
@@ -34,7 +32,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	if userName == "" {
+	if u.Name == "" {
 		return p, u, errors.New("User not found")
 	}
 
@@ -61,7 +59,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	if photoId == profilePic && photoId != 0 {
+	if photoId == u.ProfilePic && photoId != 0 {
 		return p, u, errors.New("This is the current profile picture!")
 	}
 
@@ -87,15 +85,11 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 
 	p.ID = int(lastInsertID)
 
-	//  We also have to update the photo's stream of the user
-	u.Name = userName
-	u.Followers = followers
-	u.Banned = banned
+	//  We also have to update the profile picture ID
 	u.ProfilePic = p.ID
 
-	//  The difference with uploadPhoto is here: we don't update the photo's stream (the profile picture is not included)
 	if err != nil {
-		log.Println(err)
+		return p, u, err
 	}
 
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
