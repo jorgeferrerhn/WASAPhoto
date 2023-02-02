@@ -6,15 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"time"
 )
 
 func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
-
-	var likes, path, comments, followers, banned, photos string
-	var userId, profilePic int
-	var date time.Time
-	var userName string
+	var castPhotos []Photo
 
 	// search for the user
 	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
@@ -28,14 +23,14 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&userName, &profilePic, &followers, &banned, &photos)
+		err := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return p, u, err
 		}
 	}
 
-	if userName == "" {
+	if u.Name == "" {
 		// el usuario no existía
 		return p, u, errors.New("User not found")
 	}
@@ -55,7 +50,7 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&userId, &path, &likes, &comments, &date)
+		err := rows2.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
 		if err != nil {
 
@@ -69,35 +64,29 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	if path == "" {
+	if p.Path == "" {
 		// el usuario no existía
 		return p, u, errors.New("Photo not found")
 	}
 
-	liked := strings.Contains(likes, fmt.Sprint(u.ID))
+	liked := strings.Contains(p.Likes, fmt.Sprint(u.ID))
 
 	if !liked {
 		return p, u, errors.New("Photo wasn't previously liked!")
 	}
 
-	// We cast to list the string
-
 	newList := "["
 	counter := 1
-
 	//  Updating the followers' list
-	for i := 1; i < len(likes)-1; i++ {
-
-		c := string(likes[i]) //  rune to string
-
+	for i := 1; i < len(p.Likes)-1; i++ { // Chapuza: esto hay que cambiarlo
+		c := string(p.Likes[i]) //  rune to string
 		if c == "," {
-			number := likes[counter:i] //  takes up to that position
+			number := p.Likes[counter:i] //  takes up to that position
 			if number != fmt.Sprint(u.ID) {
 				newList += number + ","
 			}
 		}
 	}
-
 	newList = newList[:len(newList)-1] + "]" //  extract the last comma and add the last bracket
 	if newList == "]" {
 		//  It was empty
@@ -105,45 +94,23 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 	}
 
 	p.Likes = newList // update the likes list
-	// We don't change the rest of the attributes
-	p.Path = path
-	p.Comments = comments
-	p.Date = date
-	p.UserId = userId
 
-	//We update the user's photos and the photos' stream
+	in := []byte(u.Photos)
 
-	// We cast the photos to a Photo's array, then we change the one who gets commented
-
-	in := []byte(photos)
-	var castPhotos []Photo
+	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
 	err = json.Unmarshal(in, &castPhotos)
 	if err != nil {
-
+		return p, u, err
 	}
 
-	newPhotos := "["
 	for i := 0; i < len(castPhotos); i++ {
-		if castPhotos[i].ID == p.ID { //this is the one who gets liked
-
+		if castPhotos[i].ID == p.ID { //this is the one who gets commented
 			castPhotos[i].Likes = p.Likes
 		}
-		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `,"userid": ` + fmt.Sprint(castPhotos[i].UserId) + `,"path": "` + castPhotos[i].Path + `","likes": "` + castPhotos[i].Likes + `","comments": "` + castPhotos[i].Comments + `","date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
-		//newPhoto := fmt.Sprint(p)
-
-		if i == len(castPhotos)-1 {
-			newPhotos += newPhoto + "]"
-		} else {
-			newPhotos += newPhoto + ","
-		}
 	}
-
-	u.Name = userName
+	savePhotos, err := json.Marshal(castPhotos)
+	u.Photos = string(savePhotos)
 	u.ID = p.UserId //this is important: the id of the user we need to update is not the one who likes, but the one who gets the like on the photo
-	u.Followers = followers
-	u.Banned = banned
-	u.ProfilePic = profilePic
-	u.Photos = newPhotos
 
 	var res sql.Result
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
