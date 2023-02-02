@@ -6,15 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"time"
 )
 
 func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
-
-	var likes, path, comments, followers, banned, photos string
-	var userId, profilePic int
-	var date time.Time
-	var userName string
+	var castPhotos []Photo
 
 	// search for the user
 	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
@@ -28,14 +23,14 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&userName, &profilePic, &followers, &banned, &photos)
+		err := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return p, u, err
 		}
 	}
 
-	if userName == "" {
+	if u.Name == "" {
 		// el usuario no existía
 		return p, u, errors.New("User not found")
 	}
@@ -54,14 +49,10 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	defer rows2.Close()
 
 	for rows2.Next() {
-
-		err := rows2.Scan(&userId, &path, &likes, &comments, &date)
-
+		err := rows2.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 		if err != nil {
-
 			return p, u, err
 		}
-
 	}
 
 	err = rows2.Err()
@@ -69,7 +60,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	if path == "" {
+	if p.Path == "" {
 		// el usuario no existía
 		return p, u, errors.New("Photo not found")
 	}
@@ -77,47 +68,28 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	var liked bool
 
 	//  We check that the photo hasn't been liked before
-	liked = strings.Contains(likes, fmt.Sprint(u.ID))
+	liked = strings.Contains(p.Likes, fmt.Sprint(u.ID))
 
-	if !liked {
+	if !liked { // Chapucero: a ver si puedo cambiarlo
 		var add string
-
-		new_list := likes[0 : len(likes)-1]
-
-		if likes == "[]" {
+		new_list := p.Likes[0 : len(p.Likes)-1]
+		if p.Likes == "[]" {
 			add = fmt.Sprint(u.ID) + "]"
-
 		} else {
 			add = "," + fmt.Sprint(u.ID) + "]"
-
 		}
 		new_list += add
-
 		p.Likes = new_list
-
-	} else {
-		p.Likes = likes //  remains the same
-
 	}
-
-	//  We don't change the rest of the attributes
-	p.Path = path
-	p.Comments = comments
-	p.Date = date
-	p.UserId = userId
 
 	// We update the user's photos and the photos' stream
 
-	//  We cast the photos to a Photo's array, then we change the one who gets commented
-
-	in := []byte(photos)
-	var castPhotos []Photo
-	err = json.Unmarshal(in, &castPhotos)
+	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
+	in2 := []byte(u.Photos)
+	err = json.Unmarshal(in2, &castPhotos)
 	if err != nil {
 		return p, u, err
 	}
-
-	// fmt.println(castPhotos)
 
 	for i := 0; i < len(castPhotos); i++ {
 		if castPhotos[i].ID == p.ID { // this is the one who gets commented
@@ -125,13 +97,16 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		}
 	}
 
-	u.Name = userName
 	u.ID = p.UserId //this is important: the id of the user we need to update is not the one who likes, but the one who gets the like on the photo
-	u.Followers = followers
-	u.Banned = banned
-	u.ProfilePic = profilePic
-	u.Photos = fmt.Sprint(json.Marshal(castPhotos))
 
+	// Now, we have to store castPhotos as {"ID": 1, "Content": ...} --> json.Marshal
+	savePhotos, err := json.Marshal(castPhotos)
+	if err != nil {
+		return p, u, err
+	}
+	u.Photos = string(savePhotos)
+
+	// SQL Statements
 	var res sql.Result
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)

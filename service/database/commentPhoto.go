@@ -151,6 +151,9 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		}
 	}
 	savePhotos, err := json.Marshal(castPhotos)
+	if err != nil {
+		return c, p, u, err
+	}
 	u.Photos = string(savePhotos)
 
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
