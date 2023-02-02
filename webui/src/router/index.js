@@ -14,7 +14,7 @@ import unfollowUser from '../views/unfollowUser.vue'
 import unbanUser from '../views/unbanUser.vue'
 import unlikePhoto from '../views/unlikePhoto.vue'
 import uncommentPhoto from '../views/uncommentPhoto.vue'
-
+import deletePhoto from '../views/deletePhoto.vue'
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes: [
@@ -33,6 +33,8 @@ const router = createRouter({
 		{path: '/unbanUser', component: unbanUser},
 		{path: '/unlikePhoto', component: unlikePhoto},
 		{path: '/uncommentPhoto', component: uncommentPhoto},
+		{path: '/deletePhoto', component: deletePhoto},
+
 
 	]
 })
