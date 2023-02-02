@@ -3,17 +3,17 @@ package database
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 )
 
 func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
-	var photoId, profilePic int
-	var userName, followers, banned, photos string
+	var id int
+	var userName string
+	var castPhotos []Photo
 
 	// search for the user
-	rows2, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
+	rows2, err := db.c.Query(`select id,name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
 	if err != nil {
 		return p, u, err
@@ -23,7 +23,7 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&userName, &profilePic, &followers, &banned, &photos)
+		err := rows2.Scan(&id, &userName, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return p, u, err
@@ -35,7 +35,7 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	if userName == "" {
+	if userName == "" || id == 0 {
 		return p, u, errors.New("User not found")
 	}
 
@@ -50,7 +50,7 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&photoId)
+		err := rows.Scan(&p.ID)
 
 		if err != nil {
 			return p, u, err
@@ -62,7 +62,7 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	if photoId != 0 {
+	if p.ID != 0 {
 		return p, u, errors.New("Photo already uploaded")
 	}
 
@@ -90,13 +90,9 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	//  We also have to update the photo's stream of the user
 	u.Name = userName
-	u.Followers = followers
-	u.Banned = banned
-	u.ProfilePic = profilePic
 
 	// Here, we have to take the photos and cast them to {1, 1, ... } --> json.Unmarshal
-	in2 := []byte(photos)
-	var castPhotos []Photo
+	in2 := []byte(u.Photos)
 	err = json.Unmarshal(in2, &castPhotos)
 	if err != nil {
 		return p, u, err
@@ -104,15 +100,11 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	castPhotos = append(castPhotos, p)
 
-	fmt.Println(castPhotos)
-
 	// Here, we have to store the photo as {"ID": 1, "UserID": ...} -->json.Marshal
 	savePhotos, err := json.Marshal(castPhotos)
 	if err != nil {
 		return p, u, err
 	}
-
-	fmt.Println("Saved photos: ", string(savePhotos))
 	u.Photos = string(savePhotos)
 
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
