@@ -6,6 +6,7 @@ export default {
       loading: false,
       users: [],
       token: 0,
+      user: {}
     }
   },
   methods: {
@@ -13,46 +14,29 @@ export default {
       return load
     },
 
-    newItem: async function() {
+    doLogin: async function() {
 
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/session"
+        const response = await this.$axios.post(url, this.name);
+        this.user = response.data;
+        this.token = response.data["Id"];
 
-      getImage
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+      this.loading = false;
     },
-    /*
-        async refresh() {
-          this.loading = true;
-          this.errormsg = null;
-          try {
-            await this.$axios.post("/session", {
 
-            });
-            this.$router.push("/");
-          } catch (e) {
-            this.errormsg = e.toString();
-          }
-          this.loading = false;
-        },
-
-        async deleteFountain(id) {
-          this.loading = true;
-          this.errormsg = null;
-          try {
-            await this.$axios.delete("/fountains/" + id);
-
-            await this.refresh();
-          } catch (e) {
-            this.errormsg = e.toString();
-          }
-          this.loading = false;
-        }
-
-         */
   },
   /*
   mounted() {
     this.refresh()
   }*/
 }
+
 </script>
 
 <template>
@@ -82,10 +66,11 @@ export default {
 
         <h3 class="h3">Introduce your username: </h3>
 
-        <input v-model="message" placeholder=" Username">
+        <input v-model="name" placeholder=" Username">
+        <p>You have created the user: {{ user }} </p>
         <p>Your token is: {{ token }} </p>
 
-        <a href="javascript:" class="btn btn-primary" @click="newItem">Create a new user</a>
+        <a href="javascript:" class="btn btn-primary" @click="doLogin">Create a new user</a>
       </div>
     </div>
 

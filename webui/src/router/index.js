@@ -1,5 +1,5 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import doLogin from '../views/doLogin.vue'
 import getUserProfile from '../views/getUserProfile.vue'
 import getMyStream from '../views/getMyStream.vue'
 import uploadPhoto from '../views/uploadPhoto.vue'
@@ -9,11 +9,12 @@ import commentPhoto from '../views/commentPhoto.vue'
 import likePhoto from '../views/likePhoto.vue'
 import setMyUserName from '../views/setMyUserName.vue'
 import followUser from '../views/followUser.vue'
+import banUser from '../views/banUser.vue'
 
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes: [
-		{path: '/', component: HomeView},
+		{path: '/doLogin', component: doLogin},
 		{path: '/searchUser', component: getUserProfile},
 		{path: '/getUserStream', component: getMyStream},
 		{path: '/uploadPhoto', component: uploadPhoto},
@@ -23,7 +24,7 @@ const router = createRouter({
 		{path: '/likePhoto', component: likePhoto},
 		{path: '/setMyUserName', component: setMyUserName},
 		{path: '/followUser', component: followUser},
-
+		{path: '/banUser', component: banUser},
 	]
 })
 
