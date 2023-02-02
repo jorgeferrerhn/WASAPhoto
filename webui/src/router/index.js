@@ -12,6 +12,7 @@ import followUser from '../views/followUser.vue'
 import banUser from '../views/banUser.vue'
 import unfollowUser from '../views/unfollowUser.vue'
 import unbanUser from '../views/unbanUser.vue'
+import unlikePhoto from '../views/unlikePhoto.vue'
 
 
 const router = createRouter({
@@ -30,6 +31,8 @@ const router = createRouter({
 		{path: '/unfollowUser', component: unfollowUser},
 		{path: '/banUser', component: banUser},
 		{path: '/unbanUser', component: unbanUser},
+		{path: '/unlikePhoto', component: unlikePhoto},
+
 	]
 })
 
