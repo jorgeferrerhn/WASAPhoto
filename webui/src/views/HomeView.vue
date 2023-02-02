@@ -1,94 +1,109 @@
 <script>
 export default {
-	data: function() {
-		return {
-			errormsg: null,
-			loading: false,
-			users: [],
-		}
-	},
-	methods: {
-		load() {
-			return load
-		},
+  data: function() {
+    return {
+      errormsg: null,
+      loading: false,
+      users: [],
+    }
+  },
+  methods: {
+    load() {
+      return load
+    },
 
-    async refresh() {
+    newItem: async function() {
+      console.log("Hola");
+
+
       this.loading = true;
       this.errormsg = null;
       try {
-        let response = await this.$axios.get("/");
-        this.fountains = response.data;
+        const response = await this.$axios.post("/session", this.message);
+        console.log(response);
+
       } catch (e) {
         this.errormsg = e.toString();
       }
       this.loading = false;
     },
+    /*
+        async refresh() {
+          this.loading = true;
+          this.errormsg = null;
+          try {
+            await this.$axios.post("/session", {
 
-    /*async deleteFountain(id) {
-			this.loading = true;
-			this.errormsg = null;
-			try {
-				await this.$axios.delete("/fountains/" + id);
+            });
+            this.$router.push("/");
+          } catch (e) {
+            this.errormsg = e.toString();
+          }
+          this.loading = false;
+        },
 
-				await this.refresh();
-			} catch (e) {
-				this.errormsg = e.toString();
-			}
-			this.loading = false;
-		}
+        async deleteFountain(id) {
+          this.loading = true;
+          this.errormsg = null;
+          try {
+            await this.$axios.delete("/fountains/" + id);
 
-     */
-	},
-	mounted() {
-		this.refresh()
-	}
+            await this.refresh();
+          } catch (e) {
+            this.errormsg = e.toString();
+          }
+          this.loading = false;
+        }
+
+         */
+  },
+  /*
+  mounted() {
+    this.refresh()
+  }*/
 }
 </script>
 
 <template>
-	<div>
-		<div
-			class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-			<h1 class="h2">Users list</h1>
-			<div class="btn-toolbar mb-2 mb-md-0">
-				<div class="btn-group me-2">
-					<button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
-						Refresh
-					</button>
-				</div>
+  <div>
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">LOGIN PAGE</h1>
 
-			</div>
-		</div>
+      <div class="btn-toolbar mb-2 mb-md-0">
 
-		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+        <div class="btn-group me-2">
+          <button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
+            Refresh
+          </button>
+        </div>
 
-		<LoadingSpinner v-if="loading"></LoadingSpinner>
+      </div>
+    </div>
 
-		<div class="card" v-if="users.length === 0">
-			<div class="card-body">
-				<p>No users in the database.</p>
+    <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+    <LoadingSpinner v-if="loading"></LoadingSpinner>
 
-				<a href="javascript:" class="btn btn-primary" @click="newItem">Create a new user</a>
-			</div>
-		</div>
 
-		<div class="card" v-if="!loading" v-for="u in users">
-			<div class="card-header">
-				Users
-			</div>
-			<div class="card-body">
-				<p class="card-text">
-					Name: u.name<br />
 
-				</p>
-				<a href="javascript:" class="btn btn-danger" @click="deleteFountain(u.id)">Delete</a>
-			</div>
-		</div>
-	</div>
+    <div class="card">
+      <div class="card-body">
+
+        <h3 class="h3">Introduce your username: </h3>
+
+        <input v-model="message" placeholder=" Username">
+        <p>Your token is: 1 </p> <!--Aquí hay que meter una variable global para el incremento del ID, o recuperarla del backend-->
+
+        <a href="javascript:" class="btn btn-primary" @click="newItem">Create a new user</a>
+      </div>
+    </div>
+
+
+  </div>
 </template>
 
 <style scoped>
 .card {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 </style>
