@@ -23,7 +23,7 @@ func (db *appdbimpl) DeletePhoto(p Photo, u User) (Photo, User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err = rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return p, u, err
@@ -40,17 +40,17 @@ func (db *appdbimpl) DeletePhoto(p Photo, u User) (Photo, User, error) {
 	}
 
 	// search the photo
-	rows2, err := db.c.Query(`select userId,path,likes,comments,date from photos where id=?`, p.ID)
+	rows2, err2 := db.c.Query(`select userId,path,likes,comments,date from photos where id=?`, p.ID)
 
-	if err != nil {
-		return p, u, err
+	if err2 != nil {
+		return p, u, err2
 	}
 
 	defer rows2.Close()
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
+		err = rows2.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
 		if err != nil {
 

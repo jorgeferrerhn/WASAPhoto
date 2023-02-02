@@ -19,7 +19,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&user1.Name)
+		err = rows.Scan(&user1.Name)
 
 		if err != nil {
 			return user2, err
@@ -46,7 +46,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&user2.Name, &user2.ProfilePic, &user2.Followers, &user2.Banned, &user2.Photos)
+		err = rows.Scan(&user2.Name, &user2.ProfilePic, &user2.Followers, &user2.Banned, &user2.Photos)
 
 		if err != nil {
 			return user2, err

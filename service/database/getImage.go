@@ -16,7 +16,7 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
+		err = rows.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
 		if err != nil {
 			return p, err

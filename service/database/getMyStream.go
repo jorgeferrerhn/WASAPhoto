@@ -18,7 +18,7 @@ func (db *appdbimpl) GetMyStream(u User) (User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&id, &username, &u.Photos)
+		err = rows.Scan(&id, &username, &u.Photos)
 
 		if err != nil {
 			return u, err

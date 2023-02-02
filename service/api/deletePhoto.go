@@ -11,8 +11,8 @@ import (
 
 func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	//  Takes the photo Id and updates its like in the photos table
-	//  user id
+	// Takes the photo Id and updates its like in the photos table
+	// user id
 	i := ps.ByName("id")
 
 	if i == "" {
@@ -23,12 +23,12 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id was not properly cast
+		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	//  photo id
+	// photo id
 	photoId := ps.ByName("photoId")
 
 	if photoId == "" {
@@ -39,7 +39,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	intPhoto, err := strconv.Atoi(photoId)
 	if err != nil {
-		//  id was not properly cast
+		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -48,20 +48,20 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	var u User
 
 	p.ID = intPhoto
-	p.UserId = intId //  only for sending it to the database function
+	p.UserId = intId // only for sending it to the database function
 	u.ID = intId
 
 	// update info from database
 	dbphoto, dbuser, err := rt.db.DeletePhoto(p.ToDatabase(), u.ToDatabase())
 	if err != nil {
-		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
+		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't unlike the photo")
 		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
 
-	//  Here we can re-use `photo ` as FromDatabase is overwriting every variable in the structure.
+	// Here we can re-use `photo ` as FromDatabase is overwriting every variable in the structure.
 	u.FromDatabase(dbuser)
 	p.FromDatabase(dbphoto)
 

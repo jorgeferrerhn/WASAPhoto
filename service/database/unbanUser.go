@@ -20,7 +20,7 @@ func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&user1.Name, &user1.ProfilePic, &user1.Followers, &user1.Banned, &user1.Photos)
+		err = rows.Scan(&user1.Name, &user1.ProfilePic, &user1.Followers, &user1.Banned, &user1.Photos)
 
 		if err != nil {
 			return user1, err
@@ -47,7 +47,7 @@ func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&user2.Name)
+		err = rows.Scan(&user2.Name)
 
 		if err != nil {
 			return user1, err

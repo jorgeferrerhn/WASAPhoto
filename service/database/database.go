@@ -77,7 +77,7 @@ type AppDatabase interface {
 	GetMyStream(User) (User, error)
 
 	// getLogo gets the profile picture of a user given its ID
-	GetLogo(int) (int, error)
+	GetLogo(Photo, User) (Photo, User, error)
 
 	// getImage gets a picture given its ID
 	GetImage(Photo) (Photo, error)

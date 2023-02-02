@@ -21,7 +21,7 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err = rows.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return u, err
@@ -37,11 +37,15 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 		return u, errors.New("This user doesn't exist!")
 	}
 	//  Then, we have to check if the username has been already taken by everyone else
-	rows2, err := db.c.Query(`select id from users where name=?`, u.Name)
+	rows2, err2 := db.c.Query(`select id from users where name=?`, u.Name)
+
+	if err2 != nil {
+		return u, err2
+	}
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&searchId)
+		err = rows2.Scan(&searchId)
 
 		if err != nil {
 			return u, err
@@ -57,10 +61,10 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 		return u, errors.New("This username is already picked!")
 	}
 
-	res, err := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+	res, e := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
 
-	if err != nil {
+	if e != nil {
 		return u, errors.New("Error in " + fmt.Sprint(res))
 	}
 

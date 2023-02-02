@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -28,17 +29,25 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	// Searchs for the user to get its logo
+	var p Photo
+	p.ID = i
 
-	logo, err := rt.db.GetLogo(i)
+	var u User
+	u.ProfilePic = i
+	dbphoto, dbuser, err := rt.db.GetLogo(p.ToDatabase(), u.ToDatabase())
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
 	}
-	//  Send the output to the user.
+	//  Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
+	p.FromDatabase(dbphoto)
+	u.FromDatabase(dbuser)
 
-	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte(strconv.Itoa(logo)))
+	//  Send the output to the user.
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(p)
 
 	defer r.Body.Close()
 

@@ -75,7 +75,7 @@ the extension module like below.
 
 Then, you can use this extension.
 
-	rows, err := db.Query("select text from mytable where name regexp '^golang'")
+	rows, err =db.Query("select text from mytable where name regexp '^golang'")
 
 Connection Hook
 

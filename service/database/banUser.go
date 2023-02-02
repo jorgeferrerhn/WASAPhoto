@@ -9,7 +9,7 @@ import (
 
 func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 
-	//  search for the user that follows
+	// search for the user that follows
 	rows, err := db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user1.ID)
 
 	if err != nil {
@@ -20,7 +20,7 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&user1.Name, &user1.ProfilePic, &user1.Followers, &user1.Banned, &user1.Photos)
+		err = rows.Scan(&user1.Name, &user1.ProfilePic, &user1.Followers, &user1.Banned, &user1.Photos)
 
 		if err != nil {
 			return user1, err
@@ -47,7 +47,7 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&user2.Name)
+		err = rows.Scan(&user2.Name)
 
 		if err != nil {
 			return user1, err

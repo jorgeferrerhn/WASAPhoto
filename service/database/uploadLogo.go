@@ -10,26 +10,26 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	var photoId int
 
 	// search for the user
-	rows2, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
+	rows2, err2 := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
-	if err != nil {
-		return p, u, err
+	if err2 != nil {
+		return p, u, err2
 	}
 
 	defer rows2.Close()
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err2 = rows2.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
-		if err != nil {
-			return p, u, err
+		if err2 != nil {
+			return p, u, err2
 		}
 	}
 
-	err = rows2.Err()
-	if err != nil {
-		return p, u, err
+	err2 = rows2.Err()
+	if err2 != nil {
+		return p, u, err2
 	}
 
 	if u.Name == "" {
@@ -47,7 +47,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 
 	for rows.Next() {
 
-		err := rows.Scan(&photoId)
+		err = rows.Scan(&photoId)
 
 		if err != nil {
 			return p, u, err
@@ -72,10 +72,10 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	p.Date = time.Now()
 
 	//  We upload the photo and insert it to the photo's database
-	res, err := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
+	res, e := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
 		p.UserId, p.Path, p.Likes, p.Comments, p.Date)
-	if err != nil {
-		return p, u, err
+	if e != nil {
+		return p, u, e
 	}
 
 	lastInsertID, err := res.LastInsertId()

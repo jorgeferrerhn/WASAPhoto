@@ -24,7 +24,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	for rows.Next() {
 
-		err := rows.Scan(&u.Name)
+		err = rows.Scan(&u.Name)
 
 		if err != nil {
 			return c, p, u, err
@@ -42,17 +42,17 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	// then we search the photo id. If it doesn't exist, we cannot comment on the photo
 
-	rows2, err := db.c.Query(`select id,userid,path,likes,comments,date from photos where id=?`, c.PhotoId)
+	rows2, err2 := db.c.Query(`select id,userid,path,likes,comments,date from photos where id=?`, c.PhotoId)
 
-	if err != nil {
-		return c, p, u, err
+	if err2 != nil {
+		return c, p, u, err2
 	}
 
 	defer rows2.Close()
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&p.ID, &p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
+		err = rows2.Scan(&p.ID, &p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
 		if err != nil {
 			return c, p, u, err
@@ -70,26 +70,26 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	// lastly, we need to check up the user that gets commented
 
-	rows3, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
+	rows3, err3 := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
-	if err != nil {
-		return c, p, u, err
+	if err3 != nil {
+		return c, p, u, err3
 	}
 
 	defer rows3.Close()
 
 	for rows3.Next() {
 
-		err := rows3.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err3 = rows3.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
-		if err != nil {
+		if err3 != nil {
 			return c, p, u, err
 		}
 
 	}
 
-	err = rows3.Err()
-	if err != nil {
+	err3 = rows3.Err()
+	if err3 != nil {
 		return c, p, u, err
 	}
 
@@ -99,9 +99,9 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	c.Date = time.Now()
 
-	res, err := db.c.Exec(`INSERT INTO comments (commentid,content,photoid,userid,date) VALUES (NULL,?,?,?,?)`, c.Content, c.PhotoId, c.UserId, c.Date)
-	if err != nil {
-		return c, p, u, err
+	res, e := db.c.Exec(`INSERT INTO comments (commentid,content,photoid,userid,date) VALUES (NULL,?,?,?,?)`, c.Content, c.PhotoId, c.UserId, c.Date)
+	if e != nil {
+		return c, p, u, e
 	}
 
 	lastInsertID, err := res.LastInsertId()

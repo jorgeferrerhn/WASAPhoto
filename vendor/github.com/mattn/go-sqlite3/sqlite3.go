@@ -937,7 +937,7 @@ func (c *SQLiteConn) query(ctx context.Context, query string, args []namedValue)
 		for i := range stmtArgs {
 			stmtArgs[i].Ordinal = i + 1
 		}
-		rows, err := s.(*SQLiteStmt).query(ctx, stmtArgs)
+		rows, err :=s.(*SQLiteStmt).query(ctx, stmtArgs)
 		if err != nil && err != driver.ErrSkip {
 			s.Close()
 			return rows, err

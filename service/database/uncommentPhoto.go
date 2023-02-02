@@ -22,7 +22,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	for rows.Next() {
 
-		err := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err = rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return c, p, u, err
@@ -40,17 +40,17 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	// then we search the comment ID. If it doesn't exist, we cannot uncomment the photo
 
-	rows2, err := db.c.Query(`select content,photoid,userid,date from comments where commentid=?`, c.ID)
+	rows2, err2 := db.c.Query(`select content,photoid,userid,date from comments where commentid=?`, c.ID)
 
-	if err != nil {
-		return c, p, u, err
+	if err2 != nil {
+		return c, p, u, err2
 	}
 
 	defer rows2.Close()
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&c.Content, &c.PhotoId, &c.UserId, &c.Date)
+		err = rows2.Scan(&c.Content, &c.PhotoId, &c.UserId, &c.Date)
 
 		if err != nil {
 			return c, p, u, err
@@ -70,17 +70,17 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 	}
 
 	// lastly, we need to check if the photo previously existed
-	rows3, err := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
+	rows3, err3 := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
 
-	if err != nil {
-		return c, p, u, err
+	if err3 != nil {
+		return c, p, u, err3
 	}
 
 	defer rows3.Close()
 
 	for rows3.Next() {
 
-		err := rows3.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
+		err = rows3.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
 		if err != nil {
 			return c, p, u, err
@@ -99,8 +99,8 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	// Delete comment from comments' table
 
-	res, err := db.c.Exec(`DELETE FROM comments WHERE commentid=?`, c.ID)
-	if err != nil {
+	res, e := db.c.Exec(`DELETE FROM comments WHERE commentid=?`, c.ID)
+	if e != nil {
 		return c, p, u, errors.New("Error in: " + fmt.Sprint(res))
 	}
 
