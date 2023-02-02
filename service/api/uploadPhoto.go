@@ -30,21 +30,10 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 	newStr := buf.String()
 
-	// Here we have to cast the input content to a Struct
-	// jsonPhoto := `{"id": 0, "userid": 0, "path": "", "likes": "", "comments": "", "date": ""}`
 	var p Photo
-	// err = json.Unmarshal([]byte(jsonPhoto), &p)
 
 	p.UserId = intId
 	p.Path = newStr
-
-	/*
-		p.UserId = intId
-		p.Path = newStr
-
-
-		u.ID = intId
-	*/
 
 	var u User
 	u.ID = intId

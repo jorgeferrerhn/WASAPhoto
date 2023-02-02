@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"time"
 )
 
@@ -95,31 +94,26 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 	u.Banned = banned
 	u.ProfilePic = profilePic
 
-	// var resultString string
-
-	// newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `, "userid": ` + fmt.Sprint(p.UserId) + `, "path": "` + p.Path + `", "likes": "` + p.Likes + `", "comments": "` + p.Comments + `", "date": "` + p.Date.Format(time.RFC3339) + `"}`
-	// newPhoto := `{"id": ` + fmt.Sprint(p.ID) + `,"userid": ` + fmt.Sprint(p.UserId) + `,"path": "` + p.Path + `","likes": "` + p.Likes + `","comments": "` + p.Comments + `","date": "` + p.Date.Format(time.RFC3339) + `"}`
-
-	// newPhoto := fmt.Sprint(p)
-
-	// var p2 Photo
-
-	// err = json.Unmarshal([]byte(newPhoto), &p2)
-
-	var photoList []Photo
-
-	in := []byte(photos)
-	err = json.Unmarshal(in, &photoList)
+	// Here, we have to take the photos and cast them to {1, 1, ... } --> json.Unmarshal
+	in2 := []byte(photos)
+	var castPhotos []Photo
+	err = json.Unmarshal(in2, &castPhotos)
 	if err != nil {
 		return p, u, err
 	}
-	photoList = append(photoList, p)
 
-	u.Photos = fmt.Sprint(photoList)
+	castPhotos = append(castPhotos, p)
 
+	fmt.Println(castPhotos)
+
+	// Here, we have to store the photo as {"ID": 1, "UserID": ...} -->json.Marshal
+	savePhotos, err := json.Marshal(castPhotos)
 	if err != nil {
-		log.Println(err)
+		return p, u, err
 	}
+
+	fmt.Println("Saved photos: ", string(savePhotos))
+	u.Photos = string(savePhotos)
 
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)

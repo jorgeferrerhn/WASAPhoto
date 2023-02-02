@@ -130,7 +130,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	u.Followers = followers
 	u.Banned = banned
 	u.ProfilePic = profilePic
-	u.Photos = fmt.Sprint(castPhotos)
+	u.Photos = fmt.Sprint(json.Marshal(castPhotos))
 
 	var res sql.Result
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,

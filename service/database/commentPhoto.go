@@ -12,7 +12,6 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	var photoId, profilePic, photoUserId int
 	var userName, userNameTarget, followers, banned, photos, likes, photosComments, path string
 	var date time.Time
-	//  var userId int
 
 	// search for the user that comments
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, c.UserId)
@@ -127,22 +126,19 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	//  UPDATING the photo
 
-	var add string
-
-	new_list := photosComments[0 : len(photosComments)-1]
-	newComment := `{'Id': ` + fmt.Sprint(c.ID) + `,'content': '` + c.Content + `','PhotoId': ` + fmt.Sprint(c.PhotoId) + `,'userId': ` + fmt.Sprint(c.UserId) + `,'date': '` + c.Date.Format(time.RFC3339) + `'}`
-	// newComment := fmt.Sprint(c)
-
-	if photosComments == "[]" {
-		add = newComment + "]"
-
-	} else {
-		add = "," + newComment + "]"
-
+	// Here we append the comment on "raw format" { 1 Content ...} --> json.Unmarshal
+	in := []byte(photosComments)
+	var castComments []Comment
+	err = json.Unmarshal(in, &castComments)
+	if err != nil {
+		return c, p, u, err
 	}
-	new_list += add
 
-	p.Comments = new_list
+	castComments = append(castComments, c)
+
+	// Here we save the comment photo as {"ID": 1,"Content": ...} --> json.Marshal
+	saveComments, err := json.Marshal(castComments)
+	p.Comments = string(saveComments)
 
 	// UPDATING the photo's
 
@@ -152,32 +148,21 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		return c, p, u, errors.New("Error in: " + fmt.Sprint(res))
 	}
 
-	// Updating the user info
-
-	// We cast the photos to a Photo's array, then we change the one who gets commented
-	in := []byte(photos)
+	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
+	in2 := []byte(photos)
 	var castPhotos []Photo
-	err = json.Unmarshal(in, &castPhotos)
+	err = json.Unmarshal(in2, &castPhotos)
 	if err != nil {
-
+		return c, p, u, err
 	}
 
-	newPhotos := "["
 	for i := 0; i < len(castPhotos); i++ {
 		if castPhotos[i].ID == p.ID { //this is the one who gets commented
-
 			castPhotos[i].Comments = p.Comments
 		}
-		newPhoto := `{"id": ` + fmt.Sprint(castPhotos[i].ID) + `,"userid": ` + fmt.Sprint(castPhotos[i].UserId) + `,"path": "` + castPhotos[i].Path + `","likes": "` + castPhotos[i].Likes + `","comments": '` + castPhotos[i].Comments + `',"date": "` + castPhotos[i].Date.Format(time.RFC3339) + `"}`
-		// newPhoto := fmt.Sprint(p)
-		if i == len(castPhotos)-1 {
-			newPhotos += newPhoto + "]"
-		} else {
-			newPhotos += newPhoto + ","
-		}
 	}
-
-	u.Photos = newPhotos
+	savePhotos, err := json.Marshal(castPhotos)
+	u.Photos = string(savePhotos)
 
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
