@@ -16,16 +16,7 @@ export default {
     newItem: async function() {
 
 
-      this.loading = true;
-      this.errormsg = null;
-      try {
-        const response = await this.$axios.post("/session", this.message);
-        this.token = response.data["Id"];
-
-      } catch (e) {
-        this.errormsg = e.toString();
-      }
-      this.loading = false;
+      getImage
     },
     /*
         async refresh() {

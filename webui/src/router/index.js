@@ -5,7 +5,7 @@ import getMyStream from '../views/getMyStream.vue'
 import uploadPhoto from '../views/uploadPhoto.vue'
 import uploadLogo from '../views/uploadLogo.vue'
 import getImage from '../views/getImage.vue'
-
+import commentPhoto from '../views/commentPhoto.vue'
 
 
 const router = createRouter({
@@ -17,6 +17,7 @@ const router = createRouter({
 		{path: '/uploadPhoto', component: uploadPhoto},
 		{path: '/uploadLogo', component: uploadLogo},
 		{path: '/getImage', component: getImage},
+		{path: '/commentPhoto', component: commentPhoto},
 
 	]
 })
