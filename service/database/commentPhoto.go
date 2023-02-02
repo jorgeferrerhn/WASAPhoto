@@ -9,9 +9,9 @@ import (
 
 func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, User, error) {
 
-	var photoId, profilePic, photoUserId int
-	var userName, userNameTarget, followers, banned, photos, likes, photosComments, path string
-	var date time.Time
+	var userNameTarget string
+	var castComments []Comment
+	var castPhotos []Photo
 
 	// search for the user that comments
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, c.UserId)
@@ -24,7 +24,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	for rows.Next() {
 
-		err := rows.Scan(&userName)
+		err := rows.Scan(&u.Name)
 
 		if err != nil {
 			return c, p, u, err
@@ -36,7 +36,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		return c, p, u, err
 	}
 
-	if userName == "" {
+	if u.Name == "" {
 		return c, p, u, errors.New("User not found")
 	}
 
@@ -52,7 +52,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	for rows2.Next() {
 
-		err := rows2.Scan(&photoId, &photoUserId, &path, &likes, &photosComments, &date)
+		err := rows2.Scan(&p.ID, &p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
 		if err != nil {
 			return c, p, u, err
@@ -64,11 +64,11 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	if err != nil {
 		return c, p, u, err
 	}
-	if photoId == 0 {
+	if p.ID == 0 {
 		return c, p, u, errors.New("Photo not found")
 	}
+
 	// lastly, we need to check up the user that gets commented
-	p.UserId = photoUserId // to check for the target id
 
 	rows3, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
@@ -80,7 +80,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	for rows3.Next() {
 
-		err := rows3.Scan(&userNameTarget, &profilePic, &followers, &banned, &photos)
+		err := rows3.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return c, p, u, err
@@ -114,21 +114,11 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	//  We also have to update the comments's stream of the COMMENTED user
 	u.Name = userNameTarget
 	u.ID = p.UserId // this is important: the id of the user we need to update is not the one who comments, but the one who gets the comment on the photo
-	u.Followers = followers
-	u.Banned = banned
-	u.ProfilePic = profilePic
-
-	// and the photos' comment
-	p.UserId = photoUserId
-	p.Likes = likes
-	p.Date = date
-	p.Path = path
 
 	//  UPDATING the photo
 
 	// Here we append the comment on "raw format" { 1 Content ...} --> json.Unmarshal
-	in := []byte(photosComments)
-	var castComments []Comment
+	in := []byte(p.Comments)
 	err = json.Unmarshal(in, &castComments)
 	if err != nil {
 		return c, p, u, err
@@ -149,8 +139,7 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 	}
 
 	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
-	in2 := []byte(photos)
-	var castPhotos []Photo
+	in2 := []byte(u.Photos)
 	err = json.Unmarshal(in2, &castPhotos)
 	if err != nil {
 		return c, p, u, err
