@@ -8,7 +8,7 @@ import getImage from '../views/getImage.vue'
 import commentPhoto from '../views/commentPhoto.vue'
 import likePhoto from '../views/likePhoto.vue'
 import setMyUserName from '../views/setMyUserName.vue'
-
+import followUser from '../views/followUser.vue'
 
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -22,6 +22,7 @@ const router = createRouter({
 		{path: '/commentPhoto', component: commentPhoto},
 		{path: '/likePhoto', component: likePhoto},
 		{path: '/setMyUserName', component: setMyUserName},
+		{path: '/followUser', component: followUser},
 
 	]
 })

@@ -2,14 +2,12 @@ package database
 
 import (
 	"database/sql"
-
 	"errors"
 	"fmt"
 	"strings"
 )
 
 func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
-
 	//  search for the user that follows
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
 
