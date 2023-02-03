@@ -20,8 +20,13 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
+        // Let's get the cookie
+        let getToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+
         let url = "/users/"+this.id+"/uploadPhoto";
-        const response = await this.$axios.post(url,this.path);
+        const response = await this.$axios.post(url,this.path,{
+          headers:{'Authorization': getToken}
+        });
         this.photo = response.data;
 
         let contains = false

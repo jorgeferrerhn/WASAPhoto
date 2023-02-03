@@ -18,8 +18,12 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
+        let getToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+
         let url = "/users/"+this.id+"/unlikePhoto/"+this.photo;
-        const response = await this.$axios.delete(url);
+        const response = await this.$axios.delete(url,{
+          headers:{'Authorization': getToken}
+        });
         this.user = response.data;
 
       } catch (e) {
