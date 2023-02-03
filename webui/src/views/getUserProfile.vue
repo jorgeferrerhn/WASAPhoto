@@ -66,6 +66,43 @@ export default {
         <input v-model="userSearch" placeholder=" Search for a user...">
         <p>The user is: {{ user }} </p>
 
+
+        <!-- User information -->
+        <div class="col col-md-9 col-lg-7 col-xl-5">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-4">
+              <div class="d-flex text-black">
+                <div class="flex-shrink-0">
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                       alt="Generic placeholder image" class="img-fluid"
+                       style="width: 180px; border-radius: 10px;">
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5 class="mb-1">{{ user["Name"]}}</h5>
+                  <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                       style="background-color: #efefef;">
+                    <div>
+                      <p class="small text-muted mb-1">Photos uploaded</p>
+                      <p class="mb-0">{{ user["Photos"].length }}</p>
+                    </div>
+                    <div class="px-3">
+                      <p class="small text-muted mb-1">Followers </p>
+                      <p class="mb-0">{{ user["Followers"].length }}</p>
+                    </div>
+
+                  </div>
+                  <div class="d-flex pt-1">
+
+                    <button type="button" class="btn btn-primary flex-grow-1">Follow</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
         <a href="javascript:" class="btn btn-primary" @click="getUser">Search for user</a>
       </div>
     </div>
