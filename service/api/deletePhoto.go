@@ -11,6 +11,14 @@ import (
 
 func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
+	reqToken := r.Header.Get("Authorization")
+	token, errTok := strconv.Atoi(reqToken)
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Takes the photo Id and updates its like in the photos table
 	// user id
 	i := ps.ByName("id")
@@ -50,6 +58,12 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	p.ID = intPhoto
 	p.UserId = intId // only for sending it to the database function
 	u.ID = intId
+
+	if u.ID != token {
+		// Error: the authorization header is not valid
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	// update info from database
 	dbphoto, dbuser, err := rt.db.DeletePhoto(p.ToDatabase(), u.ToDatabase())

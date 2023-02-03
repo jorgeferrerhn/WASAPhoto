@@ -12,6 +12,14 @@ import (
 
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
+	reqToken := r.Header.Get("Authorization")
+	token, errTok := strconv.Atoi(reqToken)
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
 
 	// user id
@@ -46,6 +54,12 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	if !user.IsValid() {
 		// Here we validated the user structure content (correct name), and we discovered that the user data is not valid
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if user.ID != token {
+		// Error: the authorization header is not valid
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

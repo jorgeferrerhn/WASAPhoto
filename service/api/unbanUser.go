@@ -11,6 +11,14 @@ import (
 
 func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
+	reqToken := r.Header.Get("Authorization")
+	token, errTok := strconv.Atoi(reqToken)
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Takes the photo Id and updates its like in the photos table
 	// user id
 	i := ps.ByName("id")
@@ -51,6 +59,12 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 	// User 2
 	var u2 User
 	u2.ID = intFollowed
+
+	if u1.ID != token {
+		// Error: the authorization header is not valid
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	// update info from database
 	dbuser1, err := rt.db.UnbanUser(u1.ToDatabase(), u2.ToDatabase())

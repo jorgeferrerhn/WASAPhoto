@@ -12,6 +12,14 @@ import (
 
 func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
+	reqToken := r.Header.Get("Authorization")
+	token, errTok := strconv.Atoi(reqToken)
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
 
 	// user id
@@ -54,6 +62,12 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 	// create a User Struct
 	var u User
 	u.ID = intId
+
+	if u.ID != token {
+		// Error: the authorization header is not valid
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	// update info from database
 	dbphoto, dbuser, err := rt.db.UploadLogo(p.ToDatabase(), u.ToDatabase())

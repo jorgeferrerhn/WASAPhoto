@@ -3,16 +3,12 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"net/http"
-
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
+	"net/http"
 )
 
 func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-
-	// extract authorization token
-	// reqToken := r.Header.Get("Authorization")
 
 	// función que recibe username. Busca en la base de datos, si no existe lo crea.
 	var user User
