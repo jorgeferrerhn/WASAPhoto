@@ -16,15 +16,20 @@ export default {
 
     getUser: async function() {
 
-      let cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, this.token);
-      console.log(this.token);
 
 
       this.loading = true;
       this.errormsg = null;
       try {
         let url = "/users/"+this.id+"/getUserProfile";
-        const response = await this.$axios.get(url);
+        // Let's get the cookie
+        let getToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+
+
+        const response = await this.$axios.get(url,{
+          headers:{'Authorization': getToken}
+            }
+        );
         this.user = response.data;
 
         let contains = false
