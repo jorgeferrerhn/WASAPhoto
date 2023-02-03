@@ -6,6 +6,7 @@ export default {
       loading: false,
       token: 0,
       user: {},
+      users:[]
     }
   },
   methods: {
@@ -15,12 +16,29 @@ export default {
 
     getUser: async function() {
 
+      console.log(this.users)
+
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.userSearch+"/getUserProfile";
+        let url = "/users/"+this.id+"/getUserProfile";
         const response = await this.$axios.get(url);
         this.user = response.data;
+
+        let contains = false
+        for (let i = 0; i < this.users.length; i++){
+          if (this.users[i]["Id"] == this.user["Id"]){
+            contains = true
+          } // contains
+        }
+        if (!contains){
+          this.users.push(this.user);
+        }
+
+        // Check if user hasn't been added
+
+
+
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -63,12 +81,12 @@ export default {
 
         <h3 class="h3">Introduce user ID to search: </h3>
 
-        <input v-model="userSearch" placeholder=" Search for a user...">
+        <input v-model="id" placeholder=" Search for a user...">
         <p>The user is: {{ user }} </p>
 
 
         <!-- User information -->
-        <div class="col col-md-9 col-lg-7 col-xl-5">
+        <div class="col col-md-9 col-lg-7 col-xl-5" v-for="u in users" v-if="users.length > 0">
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-4">
               <div class="d-flex text-black">
@@ -78,16 +96,16 @@ export default {
                        style="width: 180px; border-radius: 10px;">
                 </div>
                 <div class="flex-grow-1 ms-3">
-                  <h5 class="mb-1">{{ user["Name"]}}</h5>
+                  <h5 class="mb-1">{{ u["Name"]}}</h5>
                   <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                        style="background-color: #efefef;">
                     <div>
                       <p class="small text-muted mb-1">Photos uploaded</p>
-                      <p class="mb-0">{{ user["Photos"].length }}</p>
+                      <p class="mb-0">{{ u["Photos"].length }}</p>
                     </div>
                     <div class="px-3">
                       <p class="small text-muted mb-1">Followers </p>
-                      <p class="mb-0">{{ user["Followers"].length }}</p>
+                      <p class="mb-0">{{ u["Followers"].length }}</p>
                     </div>
 
                   </div>
