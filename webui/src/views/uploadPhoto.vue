@@ -2,7 +2,9 @@
 export default {
   data: function() {
     return {
+      file:null,
       errormsg: null,
+      previewImage:null,
       loading: false,
       token: 0,
       photo: {},
@@ -14,6 +16,38 @@ export default {
       return load
     },
 
+    selectImage () {
+      this.$refs.fileInput.click()
+    },
+    pickFile () {
+      let input = this.$refs.fileInput
+      let file = input.files
+      if (file && file[0]) {
+        let reader = new FileReader
+        reader.onload = e => {
+          this.previewImage = e.target.result
+        }
+        reader.readAsDataURL(file[0])
+        this.$emit('input', file[0])
+      }
+    },
+
+
+    onFileChange: function(event){
+      let name =event.target.files[0]["name"];
+      this.path= "/home/jorge/WASAPhoto/webui/src/images/"+name; // update the path here
+      console.log("Aquí", this.path);
+      return this.path
+
+      /*
+      const reader = new FileReader()
+      reader.readAsDataURL(this.file)
+      reader.onload = e => {
+        this.image = e.target.result
+        console.log(this.image)
+      }*/
+    },
+
 
     uploadPhoto: async function() {
 
@@ -22,12 +56,13 @@ export default {
       try {
         // Let's get the cookie
         let getToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-
+        console.log(this.path)
         let url = "/users/"+this.id+"/uploadPhoto";
         const response = await this.$axios.post(url,this.path,{
           headers:{'Authorization': getToken}
         });
         this.photo = response.data;
+
 
         let contains = false
         for (let i = 0; i < this.photos.length; i++){
@@ -45,7 +80,7 @@ export default {
       this.loading = false;
     },
 
-  },
+  }
   /*
   mounted() {
     this.refresh()
@@ -82,7 +117,10 @@ export default {
         <input v-model="id" placeholder="1">
 
         <h3 class="h3">Introduce photo path...: </h3>
-        <input v-model="path" placeholder=" /path-to-your-favourite-photo/">
+
+        <input type="file" @change="onFileChange"/>
+        <!--v-file-input placeholder="Upload document" v-model="file" accept="image/*" label="Image" @change="onFileChange"/-->
+
         <p>Photo uploaded:  {{ photo }} </p>
 
         <!-- Photo information -->
@@ -91,10 +129,17 @@ export default {
             <div class="card-body p-4">
               <div class="d-flex text-black">
                 <div class="flex-shrink-0">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                       alt="Generic placeholder image" class="img-fluid"
-                       style="width: 180px; border-radius: 10px;">
+
+
                 </div>
+
+                <div>
+                  <div class="imagePreviewWrapper" style="width: 200px; length: 200px; border-radius: 10px;" @click="selectImage"> </div>
+
+                  <input ref="fileInput" type="file" @input="pickFile">
+                </div>
+
+
                 <div class="flex-grow-1 ms-3">
                   <h5 class="mb-1">{{ p["path"]}}</h5>
                   <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
