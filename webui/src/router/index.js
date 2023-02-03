@@ -19,7 +19,7 @@ const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes: [
 		{path: '/doLogin', component: doLogin},
-		{path: '/searchUser', component: getUserProfile},
+		{path: '/getUserProfile', component: getUserProfile},
 		{path: '/getUserStream', component: getMyStream},
 		{path: '/uploadPhoto', component: uploadPhoto},
 		{path: '/uploadLogo', component: uploadLogo},
