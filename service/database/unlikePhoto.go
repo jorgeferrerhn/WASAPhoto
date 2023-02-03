@@ -77,19 +77,19 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 
 	newList := "["
 	counter := 1
-	//  Updating the followers' list
+	// Updating the followers' list
 	for i := 1; i < len(p.Likes)-1; i++ { // Chapuza: esto hay que cambiarlo
-		c := string(p.Likes[i]) //  rune to string
+		c := string(p.Likes[i]) // rune to string
 		if c == "," {
-			number := p.Likes[counter:i] //  takes up to that position
+			number := p.Likes[counter:i] // takes up to that position
 			if number != fmt.Sprint(u.ID) {
 				newList += number + ","
 			}
 		}
 	}
-	newList = newList[:len(newList)-1] + "]" //  extract the last comma and add the last bracket
+	newList = newList[:len(newList)-1] + "]" // extract the last comma and add the last bracket
 	if newList == "]" {
-		//  It was empty
+		// It was empty
 		newList = "[]"
 	}
 

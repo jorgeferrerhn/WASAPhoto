@@ -9,7 +9,7 @@ import (
 
 func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 
-	//  search for the user that follows
+	// search for the user that follows
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("Follower not found")
 	}
 
-	//  search for the user that get followed
+	// search for the user that get followed
 	rows, err = db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user2.ID)
 
 	if err != nil {
@@ -71,11 +71,11 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 
 	newList := "["
 	counter := 1
-	//  Updating the followers' list
+	// Updating the followers' list
 	for i := 1; i < len(user2.Followers)-1; i++ { //Chapuza: a ver si puedo cambiarlo
-		c := string(user2.Followers[i]) //  rune to string
+		c := string(user2.Followers[i]) // rune to string
 		if c == "," {
-			number := user2.Followers[counter:i] //  takes up to that position
+			number := user2.Followers[counter:i] // takes up to that position
 			if number != fmt.Sprint(user1.ID) {
 				newList += number + ","
 			}

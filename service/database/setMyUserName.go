@@ -36,7 +36,7 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 	if userNameTarget == "" { // invalid user id
 		return u, errors.New("This user doesn't exist!")
 	}
-	//  Then, we have to check if the username has been already taken by everyone else
+	// Then, we have to check if the username has been already taken by everyone else
 	rows2, err2 := db.c.Query(`select id from users where name=?`, u.Name)
 
 	if err2 != nil {
@@ -57,7 +57,7 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 		return u, err
 	}
 
-	if searchId != 0 { //  There's someone with that username already
+	if searchId != 0 { // There's someone with that username already
 		return u, errors.New("This username is already picked!")
 	}
 

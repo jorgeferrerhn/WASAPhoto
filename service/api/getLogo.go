@@ -41,11 +41,11 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 
 	}
-	//  Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
+	// Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
 	p.FromDatabase(dbphoto)
 	u.FromDatabase(dbuser)
 
-	//  Send the output to the user.
+	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(p)
 

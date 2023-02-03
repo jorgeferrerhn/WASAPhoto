@@ -43,10 +43,10 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	//  Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
+	// Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
 	p.FromDatabase(dbphoto)
 
-	//  Send the output to the user.
+	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(p)
 

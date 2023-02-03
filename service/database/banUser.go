@@ -36,7 +36,7 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 		return user1, errors.New("User 1 not found")
 	}
 
-	//  search for the user that get followed
+	// search for the user that get followed
 	rows, err = db.c.Query(`SELECT name FROM users WHERE id=?`, user2.ID)
 
 	if err != nil {

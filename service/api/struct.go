@@ -39,7 +39,7 @@ type Comment struct {
 	Date    time.Time `json:"date"`
 }
 
-//  FromDatabase populates the struct with data from the database, overwriting all values.
+// FromDatabase populates the struct with data from the database, overwriting all values.
 
 func (u *User) FromDatabase(user database.User) {
 	u.ID = user.ID
@@ -63,7 +63,7 @@ func (u *User) ToDatabase() database.User {
 	}
 }
 
-//  FromDatabase populates the struct with data from the database, overwriting all values.
+// FromDatabase populates the struct with data from the database, overwriting all values.
 
 func (p *Photo) FromDatabase(photo database.Photo) {
 	p.ID = photo.ID
@@ -87,7 +87,7 @@ func (p *Photo) ToDatabase() database.Photo {
 	}
 }
 
-//  FromDatabase populates the struct with data from the database, overwriting all values.
+// FromDatabase populates the struct with data from the database, overwriting all values.
 
 func (c *Comment) FromDatabase(comment database.Comment) {
 	c.ID = comment.ID
@@ -145,7 +145,7 @@ func checkId(ps httprouter.Params) (int, error) {
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id was not properly cast
+		// id was not properly cast
 		return -1, err
 
 	}

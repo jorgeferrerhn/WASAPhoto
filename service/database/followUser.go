@@ -8,7 +8,7 @@ import (
 )
 
 func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
-	//  search for the user that follows
+	// search for the user that follows
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
 
 	if err != nil {
@@ -35,7 +35,7 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("Follower not found")
 	}
 
-	//  search for the user that get followed
+	// search for the user that get followed
 	rows, err = db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user2.ID)
 
 	if err != nil {

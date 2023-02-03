@@ -7,7 +7,7 @@ the Router.Handler() function that returns a handler that can be used in a http.
 
 Example:
 
-	//   Create the API router
+	// Create the API router
 	apirouter, err := api.New(api.Config{
 		Logger:   logger,
 		Database: appdb,
@@ -18,9 +18,9 @@ Example:
 	}
 	router := apirouter.Handler()
 
-	//   ... other stuff here, like middleware chaining, etc.
+	// ... other stuff here, like middleware chaining, etc.
 
-	//   Create the API server
+	// Create the API server
 	apiserver := http.Server{
 		Addr:              cfg.Web.APIHost,
 		Handler:           router,
@@ -29,7 +29,7 @@ Example:
 		WriteTimeout:      cfg.Web.WriteTimeout,
 	}
 
-	//   Start the service listening for requests in a separate goroutine
+	// Start the service listening for requests in a separate goroutine
 	apiserver.ListenAndServe()
 
 See the `main.go` file inside the `cmd/webapi` for a full usage example.
@@ -47,16 +47,16 @@ import (
 
 // Config is used to provide dependencies and configuration to the New function.
 type Config struct {
-	//   Logger where log entries are sent
+	// Logger where log entries are sent
 	Logger logrus.FieldLogger
 
-	//  Database is the instance of database.AppDatabase where data are saved
+	// Database is the instance of database.AppDatabase where data are saved
 	Database database.AppDatabase
 }
 
 // Router is the package API interface representing an API handler builder
 type Router interface {
-	//  Handler returns an HTTP handler for APIs provided in this package
+	// Handler returns an HTTP handler for APIs provided in this package
 	Handler() http.Handler
 
 	// Close terminates any resource used in the package

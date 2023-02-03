@@ -67,7 +67,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 
 	var liked bool
 
-	//  We check that the photo hasn't been liked before
+	// We check that the photo hasn't been liked before
 	liked = strings.Contains(p.Likes, fmt.Sprint(u.ID))
 
 	if !liked { // Chapucero: a ver si puedo cambiarlo

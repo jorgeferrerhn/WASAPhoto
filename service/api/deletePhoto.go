@@ -65,7 +65,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	u.FromDatabase(dbuser)
 	p.FromDatabase(dbphoto)
 
-	//  Send the output to the user.
+	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 
 	if p.ID == 0 { // user not found
@@ -74,7 +74,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	}
 
-	//  Send the output to the user.
+	// Send the output to the user.
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(u)

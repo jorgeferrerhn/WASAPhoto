@@ -25,7 +25,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	intId, err := strconv.Atoi(i)
 	if err != nil {
-		//  id was not properly cast
+		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -39,13 +39,13 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 	name := buf.String()
 
-	//  create user
+	// create user
 	var user User
 	user.ID = intId
-	user.Name = name //  updating the name here
+	user.Name = name // updating the name here
 
 	if !user.IsValid() {
-		//  Here we validated the user structure content (correct name), and we discovered that the user data is not valid
+		// Here we validated the user structure content (correct name), and we discovered that the user data is not valid
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -54,17 +54,17 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	dbuser, err := rt.db.SetMyUserName(user.ToDatabase())
 
 	if err != nil {
-		//  In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		//  Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
+		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't update the username")
 		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
 
-	//  Here we can re-use `user` as FromDatabase is overwriting every variable in the structure.
+	// Here we can re-use `user` as FromDatabase is overwriting every variable in the structure.
 	user.FromDatabase(dbuser)
 
-	//  Send the output to the user.
+	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(user)
 

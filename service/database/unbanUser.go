@@ -9,7 +9,7 @@ import (
 
 func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
 
-	//  search for the user that follows
+	// search for the user that follows
 	rows, err := db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user1.ID)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
 		return user1, errors.New("User 1 not found")
 	}
 
-	//  search for the user that get followed
+	// search for the user that get followed
 	rows, err = db.c.Query(`SELECT name FROM users WHERE id=?`, user2.ID)
 
 	if err != nil {
@@ -70,20 +70,20 @@ func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
 	// We cast to list the string
 	newList := "["
 	counter := 1
-	//  Updating the followers' list
+	// Updating the followers' list
 	for i := 1; i < len(user1.Banned)-1; i++ { // Chapuza: esto hay que cambiarlo
-		c := string(user1.Banned[i]) //  rune to string
+		c := string(user1.Banned[i]) // rune to string
 		if c == "," {
-			number := user1.Banned[counter:i] //  takes up to that position
+			number := user1.Banned[counter:i] // takes up to that position
 			if number != fmt.Sprint(user1.ID) {
 				newList += number + ","
 			}
 		}
 	}
 
-	newList = newList[:len(newList)-1] + "]" //  extract the last comma and add the last bracket
+	newList = newList[:len(newList)-1] + "]" // extract the last comma and add the last bracket
 	if newList == "]" {
-		//  It was empty
+		// It was empty
 		newList = "[]"
 	}
 

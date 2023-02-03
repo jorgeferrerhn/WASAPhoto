@@ -71,7 +71,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	p.Comments = "[]"
 	p.Date = time.Now()
 
-	//  We upload the photo and insert it to the photo's database
+	// We upload the photo and insert it to the photo's database
 	res, e := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
 		p.UserId, p.Path, p.Likes, p.Comments, p.Date)
 	if e != nil {
@@ -85,7 +85,7 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 
 	p.ID = int(lastInsertID)
 
-	//  We also have to update the profile picture ID
+	// We also have to update the profile picture ID
 	u.ProfilePic = p.ID
 
 	if err != nil {

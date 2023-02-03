@@ -12,7 +12,7 @@ main.WebAPIConfiguration structure):
 
 This is an example on how to migrate the DB and connect to it:
 
-	//  Start Database
+	// Start Database
 	logger.Println("initializing database support")
 	db, err := sql.Open("sqlite3", "./foo.db")
 	if err != nil {

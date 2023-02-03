@@ -88,7 +88,7 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	p.ID = int(lastInsertID)
 
-	//  We also have to update the photo's stream of the user
+	// We also have to update the photo's stream of the user
 	u.Name = userName
 
 	// Here, we have to take the photos and cast them to {1, 1, ... } --> json.Unmarshal

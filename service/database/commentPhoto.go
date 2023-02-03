@@ -111,11 +111,11 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	c.ID = int(lastInsertID)
 
-	//  We also have to update the comments's stream of the COMMENTED user
+	// We also have to update the comments's stream of the COMMENTED user
 	u.Name = userNameTarget
 	u.ID = p.UserId // this is important: the id of the user we need to update is not the one who comments, but the one who gets the comment on the photo
 
-	//  UPDATING the photo
+	// UPDATING the photo
 
 	// Here we append the comment on "raw format" { 1 Content ...} --> json.Unmarshal
 	in := []byte(p.Comments)
