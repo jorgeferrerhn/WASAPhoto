@@ -26,7 +26,7 @@ export default {
 
         let contains = false
         for (let i = 0; i < this.photos.length; i++){
-          if (this.photos[i]["Id"] == this.photo["Id"]){
+          if (this.photos[i]["id"] == this.photo["id"]){
             contains = true
           } // contains
         }
