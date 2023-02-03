@@ -24,7 +24,7 @@ export default {
         let url = "/users/"+this.id+"/getUserProfile";
         // Let's get the cookie
         let getToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-
+        this.token = getToken; // update logged user
 
         const response = await this.$axios.get(url,{
           headers:{'Authorization': getToken}
@@ -52,7 +52,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/1/followUser/"+this.id; // Aquí en principio deberíamos usar la cookie/ el método de autenticación propio. A la espera del correo
+        let url = "/users/"+this.token+"/followUser/"+this.id; // Aquí en principio deberíamos usar la cookie/ el método de autenticación propio. A la espera del correo
         const response = await this.$axios.put(url, "");
         this.user = response.data;
         console.log(this.user)
@@ -64,6 +64,29 @@ export default {
     },
 
   },
+
+  computed: {
+    isFollower(){
+      // Method to check if token user is follower of the searched user
+      let tokenIsFollower = false
+      for (let i = 0; i < this.users.length; i++){
+        let userFollowed = JSON.parse(JSON.stringify(this.users[i]));
+        let followers = JSON.parse(userFollowed["Followers"]);
+        console.log(followers);
+
+        for (let j = 0; j < followers.length; j++){
+          if (followers[i] == this.token){
+            tokenIsFollower = true;
+          }
+        }
+
+      }
+
+      return tokenIsFollower
+
+    }
+
+  }
   /*
   mounted() {
     this.refresh()
@@ -128,7 +151,9 @@ export default {
                   </div>
                   <div class="d-flex pt-1">
 
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="followUser">Follow</button>
+                    <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayer -->
+                    <button type="button" class="btn btn-primary flex-grow-1" @click="followUser" v-if="!isFollower">Follow</button>
+                    <button type="button" class="btn btn-primary flex-grow-1" @click="followUser" v-if="isFollower">Unfollow</button>
                   </div>
                 </div>
               </div>
