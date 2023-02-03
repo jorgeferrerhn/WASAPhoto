@@ -101,11 +101,11 @@ export default {
                        style="background-color: #efefef;">
                     <div>
                       <p class="small text-muted mb-1">Photos uploaded</p>
-                      <p class="mb-0">{{ u["Photos"].length }}</p>
+                      <p class="mb-0">{{ JSON.parse(u["Photos"]).length }}</p>
                     </div>
                     <div class="px-3">
                       <p class="small text-muted mb-1">Followers </p>
-                      <p class="mb-0">{{ u["Followers"].length }}</p>
+                      <p class="mb-0">{{ JSON.parse(u["Followers"]).length }}</p>
                     </div>
 
                   </div>
