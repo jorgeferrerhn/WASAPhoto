@@ -16,7 +16,9 @@ export default {
 
     getUser: async function() {
 
-      console.log(this.users)
+      let cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, this.token);
+      console.log(this.token);
+
 
       this.loading = true;
       this.errormsg = null;
@@ -35,10 +37,20 @@ export default {
           this.users.push(this.user);
         }
 
-        // Check if user hasn't been added
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+      this.loading = false;
+    },
+    followUser: async function() {
 
-
-
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/users/1/followUser/"+this.id; // Aquí en principio deberíamos usar la cookie/ el método de autenticación propio. A la espera del correo
+        const response = await this.$axios.put(url, "");
+        this.user = response.data;
+        console.log(this.user)
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -111,7 +123,7 @@ export default {
                   </div>
                   <div class="d-flex pt-1">
 
-                    <button type="button" class="btn btn-primary flex-grow-1">Follow</button>
+                    <button type="button" class="btn btn-primary flex-grow-1" @click="followUser">Follow</button>
                   </div>
                 </div>
               </div>

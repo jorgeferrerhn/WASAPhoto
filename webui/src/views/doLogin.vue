@@ -24,6 +24,9 @@ export default {
         this.user = response.data;
         this.token = response.data["Id"];
 
+        // Set the cookie for the logged user
+        document.cookie = `token=`+this.token;
+
       } catch (e) {
         this.errormsg = e.toString();
       }
