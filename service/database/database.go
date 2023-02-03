@@ -70,8 +70,8 @@ type AppDatabase interface {
 	// DoLogin  creates a new user in the database. It returns an updated User object (with the ID)
 	DoLogin(User) (User, error)
 
-	// getUserProfile gets the information of an user from its ID.
-	GetUserProfile(User) (User, error)
+	// getUserProfile gets the information of an user from its ID and the Authorization token
+	GetUserProfile(User, int) (User, error)
 
 	// getMyStream gets the stream of photos of the user searched from its ID
 	GetMyStream(User) (User, error)

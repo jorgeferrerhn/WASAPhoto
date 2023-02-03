@@ -28,13 +28,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	var user User
 	user.ID = intId
 
-	if user.ID != token {
-		// Error: the authorization header is not valid
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	dbuser, err := rt.db.GetUserProfile(user.ToDatabase())
+	dbuser, err := rt.db.GetUserProfile(user.ToDatabase(), token)
 
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user

@@ -21,31 +21,43 @@ export default {}
 					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
 						<span>General</span>
 					</h6>
+
+
 					<ul class="nav flex-column">
+
+            <li class="nav-item">
+              <RouterLink to="/doLogin" class="nav-link">
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
+                Login
+              </RouterLink>
+            </li>
+
 						<li class="nav-item">
 							<RouterLink to="/getUserProfile" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
-								Search for a user
-							</RouterLink>
-						</li>
-						<li class="nav-item">
-							<RouterLink to="/doLogin" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
-								Login
+								User search
 							</RouterLink>
 						</li>
 
-            <li class="nav-item">
-              <RouterLink to="/uploadPhoto" class="nav-link">
-                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#plus-circle"/></svg>
-                New Photo
-              </RouterLink>
-            </li>
 
             <li class="nav-item">
               <RouterLink to="/setMyUserName" class="nav-link">
                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit-2"/></svg>
                 Change username
+              </RouterLink>
+            </li>
+
+            <li class="nav-item">
+              <RouterLink to="/uploadPhoto" class="nav-link">
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#upload"/></svg>
+                Upload Photo
+              </RouterLink>
+            </li>
+
+            <li class="nav-item">
+              <RouterLink to="/getUserStream" class="nav-link">
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#camera"/></svg>
+                Search for Photos
               </RouterLink>
             </li>
 
