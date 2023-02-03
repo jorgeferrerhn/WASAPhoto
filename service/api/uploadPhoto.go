@@ -6,11 +6,18 @@ import (
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"strconv"
 )
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	// reqToken := r.Header.Get("Authorization")
+	reqToken := r.Header.Get("Authorization")
+	token, errTok := strconv.Atoi(reqToken)
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	// Takes the userId and the path of the photo, and uploads it (updates the stream of photos)
 
@@ -37,6 +44,13 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	var u User
 	u.ID = intId
+
+	if u.ID != token {
+		// Error: the authorization header is not valid
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// update info from database
 	dbphoto, dbuser, err := rt.db.UploadPhoto(p.ToDatabase(), u.ToDatabase())
 
