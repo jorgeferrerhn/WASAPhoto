@@ -27,7 +27,7 @@ export default {
         this.token = getToken; // update logged user
 
         const response = await this.$axios.get(url,{
-          headers:{'Authorization': getToken}
+          headers:{'Authorization': this.token}
             }
         );
         this.user = response.data;
@@ -53,7 +53,12 @@ export default {
       this.errormsg = null;
       try {
         let url = "/users/"+this.token+"/followUser/"+this.id; // Aquí en principio deberíamos usar la cookie/ el método de autenticación propio. A la espera del correo
-        const response = await this.$axios.put(url, "");
+        console.log(url)
+        const response = await this.$axios.put(url, {
+          headers:{'Authorization': this.token,
+                  'Access-Control-Allow-Origin':"*",
+          }
+        });
         this.user = response.data;
         console.log(this.user)
 
@@ -87,10 +92,8 @@ export default {
     }
 
   }
-  /*
-  mounted() {
-    this.refresh()
-  }*/
+
+
 }
 </script>
 

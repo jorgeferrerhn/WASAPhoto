@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -56,6 +57,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	u1.ID = intId
 	u2.ID = intFollowed
 
+	fmt.Println("Follower: ", token, "u1.ID: ", u1.ID)
 	if u1.ID != token {
 		// Error: the authorization header is not valid
 		w.WriteHeader(http.StatusBadRequest)
