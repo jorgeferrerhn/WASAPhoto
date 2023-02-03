@@ -6,6 +6,7 @@ export default {
       loading: false,
       token: 0,
       photo: {},
+      photos:[]
     }
   },
   methods: {
@@ -13,14 +14,25 @@ export default {
       return load
     },
 
+
     uploadPhoto: async function() {
 
       this.loading = true;
       this.errormsg = null;
       try {
         let url = "/users/"+this.id+"/uploadPhoto";
-        const response = await this.$axios.post(url, this.path);
+        const response = await this.$axios.post(url,this.path);
         this.photo = response.data;
+
+        let contains = false
+        for (let i = 0; i < this.photos.length; i++){
+          if (this.photos[i]["Id"] == this.photo["Id"]){
+            contains = true
+          } // contains
+        }
+        if (!contains){
+          this.photos.push(this.photo);
+        }
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -67,6 +79,46 @@ export default {
         <h3 class="h3">Introduce photo path...: </h3>
         <input v-model="path" placeholder=" /path-to-your-favourite-photo/">
         <p>Photo uploaded:  {{ photo }} </p>
+
+        <!-- Photo information -->
+        <div class="col col-md-9 col-lg-7 col-xl-5" v-for="p in photos" v-if="photos.length > 0">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-4">
+              <div class="d-flex text-black">
+                <div class="flex-shrink-0">
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                       alt="Generic placeholder image" class="img-fluid"
+                       style="width: 180px; border-radius: 10px;">
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5 class="mb-1">{{ p["path"]}}</h5>
+                  <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                       style="background-color: #efefef;">
+                    <div>
+                      <p class="small text-muted mb-1">Likes</p>
+                      <p class="mb-0">{{ JSON.parse(p["likes"]).length }}</p>
+                    </div>
+                    <div class="px-3">
+                      <p class="small text-muted mb-1">Comments </p>
+                      <p class="mb-0">{{ JSON.parse(p["comments"]).length}}</p>
+                    </div>
+
+                    <div class="px-3">
+                      <p class="small text-muted mb-1">Date Added </p>
+                      <p class="mb-0">{{ p["date"]}}</p>
+                    </div>
+
+                  </div>
+                  <div class="d-flex pt-1">
+
+                    <button type="button" class="btn btn-primary flex-grow-1" @click="likePhoto">Like</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         <a href="javascript:" class="btn btn-primary" @click="uploadPhoto">Upload a photo</a>
       </div>
