@@ -64,23 +64,28 @@ export default {
       this.errormsg = null;
       try {
         // Let's get the cookie
-        let getToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         console.log(this.path)
-        let url = "/users/"+this.id+"/uploadPhoto";
+        let url = "/users/"+this.token+"/uploadPhoto";
         const response = await this.$axios.post(url,this.path,{
-          headers:{'content-type': getToken}
+          headers:{"Authorization": this.token}
         });
-        this.photo = response.data;
+        let photo = response.data;
+
+
+        console.log(this.photos)
 
 
         let contains = false
         for (let i = 0; i < this.photos.length; i++){
-          if (this.photos[i]["id"] == this.photo["id"]){
+          if (this.photos[i]["id"] == photo["id"]){
             contains = true
-          } // contains
+          }
         }
+
+
         if (!contains){
-          this.photos.push(this.photo);
+          this.photos.push(photo);
         }
 
       } catch (e) {
@@ -121,15 +126,13 @@ export default {
     <div class="card">
       <div class="card-body">
 
-        <h3 class="h3">Introduce user id...: </h3>
-        <input v-model="id" placeholder="1">
+
 
         <h3 class="h3">Introduce photo path...: </h3>
 
         <input type="file" @change="onFileChange"/>
         <!--v-file-input placeholder="Upload document" v-model="file" accept="image/*" label="Image" @change="onFileChange"/-->
 
-        <p>Photo uploaded:  {{ photo }} </p>
 
         <!-- Photo information -->
         <div class="col col-md-9 col-lg-7 col-xl-5" v-for="p in photos" v-if="photos.length > 0">
@@ -137,39 +140,28 @@ export default {
             <div class="card-body p-4">
               <div class="d-flex text-black">
                 <div class="flex-shrink-0">
-
-
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                       alt="Generic placeholder image" class="img-fluid"
+                       style="width: 180px; border-radius: 10px;">
                 </div>
-
-                <div>
-                  <div class="imagePreviewWrapper" style="width: 200px; border-radius: 10px;" @click="selectImage"> </div>
-
-                  <input ref="fileInput" type="file" @input="pickFile">
-                </div>
-
-
                 <div class="flex-grow-1 ms-3">
-                  <h5 class="mb-1">{{ p["path"]}}</h5>
+                  <h5 class="mb-1">{{ p["id"]}}</h5>
                   <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                        style="background-color: #efefef;">
                     <div>
                       <p class="small text-muted mb-1">Likes</p>
-                      <p class="mb-0">{{ JSON.parse(p["likes"]) }}</p>
+                      <p class="mb-0">{{ JSON.parse(p["likes"]).length }}</p>
                     </div>
                     <div class="px-3">
                       <p class="small text-muted mb-1">Comments </p>
-                      <p class="mb-0">{{ JSON.parse(p["comments"])}}</p>
-                    </div>
-
-                    <div class="px-3">
-                      <p class="small text-muted mb-1">Date Added </p>
-                      <p class="mb-0">{{ p["date"]}}</p>
+                      <p class="mb-0">{{ JSON.parse(p["comments"]).length }}</p>
                     </div>
 
                   </div>
                   <div class="d-flex pt-1">
 
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="likePhoto">Like</button>
+
+
                   </div>
                 </div>
               </div>
