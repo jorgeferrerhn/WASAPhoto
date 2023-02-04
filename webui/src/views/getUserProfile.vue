@@ -6,7 +6,8 @@ export default {
       loading: false,
       token: 0,
       user: {},
-      users:[]
+      users:[],
+      isfollower: false
     }
   },
   methods: {
@@ -21,9 +22,28 @@ export default {
       this.loading = false;
     },
 
+    isFollower: async function(){
+      console.log("Calculate if it is follower: ");
+      // Method to check if token user is follower of the searched user
+      let nowIsFollowing = false;
+      for (let i = 0; i < this.users.length; i++){
+        let userFollowed = JSON.parse(JSON.stringify(this.users[i]));
+        let followers = JSON.parse(userFollowed["Followers"]);
+
+        console.log("Followers: ",followers);
+
+        for (let j = 0; j < followers.length; j++){
+          if (followers[i] == this.token){
+            nowIsFollowing = true;
+          }
+        }
+
+      }
+      this.isfollower = nowIsFollowing;
+
+    },
+
     getUser: async function() {
-
-
 
       this.loading = true;
       this.errormsg = null;
@@ -71,31 +91,35 @@ export default {
       } catch (e) {
         this.errormsg = e.toString();
       }
+      this.isFollower()
       this.loading = false;
     },
+    unfollowUser: async function() {
+
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/users/"+this.token+"/unfollowUser/"+this.id;
+        console.log(url)
+        const response = await this.$axios.delete(url,{
+          headers:{'Authorization': this.token,
+          }
+        });
+        this.user = response.data;
+        this.isFollower()
+        console.log(this.user)
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+      this.loading = false;
+    },
+
 
   },
 
   computed: {
-    isFollower(){
-      // Method to check if token user is follower of the searched user
-      let tokenIsFollower = false
-      for (let i = 0; i < this.users.length; i++){
-        let userFollowed = JSON.parse(JSON.stringify(this.users[i]));
-        let followers = JSON.parse(userFollowed["Followers"]);
-        console.log(followers);
 
-        for (let j = 0; j < followers.length; j++){
-          if (followers[i] == this.token){
-            tokenIsFollower = true;
-          }
-        }
-
-      }
-
-      return tokenIsFollower
-
-    }
 
   }
 
@@ -161,8 +185,8 @@ export default {
                   <div class="d-flex pt-1">
 
                     <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayer -->
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="followUser" v-if="!isFollower">Follow</button>
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="followUser" v-if="isFollower">Unfollow</button>
+                    <button type="button" class="btn btn-primary flex-grow-1" @click="followUser" v-if="!this.isfollower">Follow</button>
+                    <button type="button" class="btn btn-primary flex-grow-1" @click="unfollowUser" v-if="this.isfollower">Unfollow</button>
                   </div>
                 </div>
               </div>
