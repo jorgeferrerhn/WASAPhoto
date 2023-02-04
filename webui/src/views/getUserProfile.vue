@@ -5,7 +5,6 @@ export default {
       errormsg: null,
       loading: false,
       token: 0,
-      user: {},
       users:[]
     }
   },
@@ -31,50 +30,54 @@ export default {
       try {
         let url = "/users/"+this.id+"/getUserProfile";
         // Let's get the cookie
-        let getToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-        this.token = getToken; // update logged user
+        this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
 
         const response = await this.$axios.get(url,{
           headers:{"Authorization": this.token}
             }
         );
-        this.user = response.data;
-
+        let user = response.data;
         let contains = false
+        this.users = JSON.parse(JSON.stringify(this.users))
+
+        console.log(this.users)
+
         for (let i = 0; i < this.users.length; i++){
-          if (this.users[i]["Id"] == this.user["Id"]){
+          if (this.users[i]["Id"] == user["Id"]){
             contains = true
           } // contains
         }
         if (!contains){
-          this.users.push(this.user);
+          this.users.push(user);
         }
+
+
 
       } catch (e) {
         this.errormsg = e.toString();
       }
       this.loading = false;
     },
-    followUser: async function() {
+    followUser: async function(u) {
 
       this.loading = true;
       this.errormsg = null;
       try {
-        console.log(this.token)
-        let url = "/users/"+this.token+"/followUser/"+this.id;
-        console.log(url)
+        let url = "/users/"+this.token+"/followUser/"+u["Id"];
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
         });
-        this.user = response.data;
-        console.log(this.user)
+        let user = response.data;
+
 
         // update this.users list to update followers
         for (let i = 0; i < this.users.length; i++) {
-          if (this.users[i]["Id"] == this.user["Id"]){
+          console.log(this.users[i])
+          if (this.users[i]["Id"] == user["Id"]){
+
             // update followers list
-            this.users[i]["Followers"] = response.data["Followers"]
+            this.users[i]["Followers"] = user["Followers"]
         }
         }
 
@@ -85,25 +88,24 @@ export default {
 
       this.loading = false;
     },
-    unfollowUser: async function() {
+    unfollowUser: async function(u) {
 
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/unfollowUser/"+this.id;
+        let url = "/users/"+this.token+"/unfollowUser/"+u["Id"];
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
         });
-        this.user = response.data;
+        let user = response.data;
 
-        console.log(this.user)
 
         // update this.users list to update followers
         for (let i = 0; i < this.users.length; i++) {
-          if (this.users[i]["Id"] == this.user["Id"]) {
+          if (this.users[i]["Id"] == user["Id"]) {
             // update followers list
-            this.users[i]["Followers"] = response.data["Followers"]
+            this.users[i]["Followers"] = user["Followers"]
           }
         }
 
@@ -114,21 +116,24 @@ export default {
     },
 
     isFollower(u){
-      console.log("Calculate if it is follower: ");
       // Method to check if token user is follower of the searched user
+
+      let user = JSON.parse(JSON.stringify(u))
+      let users = JSON.parse(JSON.stringify(this.users))
+
       let tokenIsFollower = false;
-      for (let i = 0; i < this.users.length; i++){
-        if (this.users[i]["Id"] == u["Id"]){
-          let userFollowed = JSON.parse(JSON.stringify(this.users[i]));
-          let followers = JSON.parse(userFollowed["Followers"]);
+      for (let i = 0; i < users.length; i++){
+        console.log(users[i]);
+        if (users[i]["Id"] == user["Id"]){
+          let followers = JSON.parse(users[i]["Followers"]);
+          console.log("Followers: ",followers);
           for (let j = 0; j < followers.length; j++) {
-            if (followers[i] == this.token) {
+            if (followers[j] == this.token) {
               tokenIsFollower = true;
             }
           }
         }
       }
-      console.log("It is follower: ",tokenIsFollower)
       return tokenIsFollower
 
     }
@@ -205,8 +210,15 @@ export default {
                   <div class="d-flex pt-1">
 
                     <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayer -->
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="followUser" v-if="!isFollower(u)">Follow</button>
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="unfollowUser" v-if="isFollower(u)">Unfollow</button>
+
+                    <template v-if="isFollower(u)">
+                      <button type="button" class="btn btn-primary flex-grow-1" @click="unfollowUser(u)">Unfollow</button>
+                    </template>
+
+                    <template v-else>
+                      <button type="button" class="btn btn-primary flex-grow-1" @click="followUser(u)">Follow</button>
+                    </template>
+
                   </div>
                 </div>
               </div>
