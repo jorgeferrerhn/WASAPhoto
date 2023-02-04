@@ -35,7 +35,7 @@ export default {
         this.token = getToken; // update logged user
 
         const response = await this.$axios.get(url,{
-          headers:{'Authorization': this.token}
+          headers:{"Authorization": this.token}
             }
         );
         this.user = response.data;
@@ -60,10 +60,11 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
+        console.log(this.token)
         let url = "/users/"+this.token+"/followUser/"+this.id;
         console.log(url)
         const response = await this.$axios.put(url, "",{
-          headers:{'content-type': this.token,
+          headers:{"Authorization": this.token,
           }
         });
         this.user = response.data;
@@ -91,7 +92,7 @@ export default {
       try {
         let url = "/users/"+this.token+"/unfollowUser/"+this.id;
         const response = await this.$axios.delete(url,{
-          headers:{'content-type': this.token,
+          headers:{"Authorization": this.token,
           }
         });
         this.user = response.data;

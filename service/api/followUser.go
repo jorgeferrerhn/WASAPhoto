@@ -13,7 +13,11 @@ import (
 func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	reqToken := r.Header.Get("Authorization")
+
+	fmt.Println(reqToken)
 	token, errTok := strconv.Atoi(reqToken)
+	fmt.Println(errTok)
+
 	if errTok != nil {
 		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
@@ -57,7 +61,6 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	u1.ID = intId
 	u2.ID = intFollowed
 
-	fmt.Println("Follower: ", token, "u1.ID: ", u1.ID)
 	if u1.ID != token {
 		// Error: the authorization header is not valid
 		w.WriteHeader(http.StatusBadRequest)
