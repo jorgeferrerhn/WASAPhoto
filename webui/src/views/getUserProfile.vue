@@ -63,7 +63,7 @@ export default {
         let url = "/users/"+this.token+"/followUser/"+this.id;
         console.log(url)
         const response = await this.$axios.put(url, "",{
-          headers:{'Authorization': this.token,
+          headers:{'content-type': this.token,
           }
         });
         this.user = response.data;
@@ -91,7 +91,7 @@ export default {
       try {
         let url = "/users/"+this.token+"/unfollowUser/"+this.id;
         const response = await this.$axios.delete(url,{
-          headers:{'Authorization': this.token,
+          headers:{'content-type': this.token,
           }
         });
         this.user = response.data;

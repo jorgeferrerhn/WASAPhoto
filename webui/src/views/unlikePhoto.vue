@@ -29,7 +29,7 @@ export default {
 
         let url = "/users/"+this.id+"/unlikePhoto/"+this.photo;
         const response = await this.$axios.delete(url,{
-          headers:{'Authorization': getToken}
+          headers:{'content-type': getToken}
         });
         this.user = response.data;
 

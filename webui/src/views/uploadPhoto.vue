@@ -68,7 +68,7 @@ export default {
         console.log(this.path)
         let url = "/users/"+this.id+"/uploadPhoto";
         const response = await this.$axios.post(url,this.path,{
-          headers:{'Authorization': getToken}
+          headers:{'content-type': getToken}
         });
         this.photo = response.data;
 

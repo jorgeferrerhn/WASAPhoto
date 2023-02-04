@@ -12,7 +12,7 @@ import (
 
 func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	reqToken := r.Header.Get("Authorization")
+	reqToken := r.Header.Get("content-type")
 	token, errTok := strconv.Atoi(reqToken)
 	if errTok != nil {
 		// id was not properly cast

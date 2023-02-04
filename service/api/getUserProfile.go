@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -12,6 +13,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	reqToken := r.Header.Get("Authorization")
 	token, errTok := strconv.Atoi(reqToken)
+	fmt.Println(token)
 	if errTok != nil {
 		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
