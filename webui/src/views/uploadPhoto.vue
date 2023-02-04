@@ -44,7 +44,7 @@ export default {
 
     onFileChange: function(event){
       let name =event.target.files[0]["name"];
-      this.path= "/home/jorge/WASAPhoto/webui/src/images/"+name; // update the path here
+      this.path= name; // update the path here
       console.log("Aquí", this.path);
       return this.path
 
@@ -169,7 +169,11 @@ export default {
       }
       return tokenLiked
 
+    },
+    getImgUrl(p) {
+      return require('../assets/images/'+p["path"])
     }
+
 
 
 
@@ -220,9 +224,19 @@ export default {
             <div class="card-body p-4">
               <div class="d-flex text-black">
                 <div class="flex-shrink-0">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+
+                  <div class="col-lg-2">
+                    <img :src="'/img/'+p['path']" v-bind:alt="pic" class="img-fluid"
+                         style="width: 180px; border-radius: 10px;">
+                  </div>
+
+                  <!--img src="/home/jorge/WASAPhoto/webui/src/images/car.jpeg"
                        alt="Generic placeholder image" class="img-fluid"
-                       style="width: 180px; border-radius: 10px;">
+                       style="width: 180px; border-radius: 10px;"-->
+
+                  <!--img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                       alt="Generic placeholder image" class="img-fluid"
+                       style="width: 180px; border-radius: 10px;"-->
                 </div>
                 <div class="flex-grow-1 ms-3">
                   <h5 class="mb-1">{{ p["id"]}}</h5>
