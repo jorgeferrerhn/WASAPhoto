@@ -59,11 +59,10 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/followUser/"+this.id; // Aquí en principio deberíamos usar la cookie/ el método de autenticación propio. A la espera del correo
+        let url = "/users/"+this.token+"/followUser/"+this.id;
         console.log(url)
-        const response = await this.$axios.put(url, {
+        const response = await this.$axios.put(url, "",{
           headers:{'Authorization': this.token,
-                  'Access-Control-Allow-Origin':"*",
           }
         });
         this.user = response.data;
@@ -132,7 +131,7 @@ export default {
         <h3 class="h3">Introduce user ID to search: </h3>
 
         <input v-model="id" placeholder=" Search for a user...">
-        <p>The user is: {{ user }} </p>
+
 
 
         <!-- User information -->

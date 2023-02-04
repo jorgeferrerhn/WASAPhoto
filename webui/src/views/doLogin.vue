@@ -76,7 +76,7 @@ export default {
         <h3 class="h3">Introduce your username: </h3>
 
         <input v-model="name" placeholder=" Username">
-        <p>You have created the user: {{ user }} </p>
+
         <p>Your token is: {{ token }} </p>
 
         <a href="javascript:" class="btn btn-primary" @click="doLogin">Create a new user</a>

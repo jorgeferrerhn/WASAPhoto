@@ -15,6 +15,7 @@ export default {
 
     async refresh() {
       this.loading = true;
+      console.log("Refresh")
       this.errormsg = null;
       this.$router.push("/getMyStream");
       this.loading = false;

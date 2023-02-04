@@ -20,7 +20,7 @@ export default {
       this.loading = false;
     },
 
-    followUser: async function() {
+    followUser2: async function() {
 
       this.loading = true;
       this.errormsg = null;
@@ -78,7 +78,7 @@ export default {
 
         <p>Followed user updated:  {{ user }} </p>
 
-        <a href="javascript:" class="btn btn-primary" @click="followUser">Follow</a>
+        <a href="javascript:" class="btn btn-primary" @click="followUser2">Follow</a>
       </div>
     </div>
 

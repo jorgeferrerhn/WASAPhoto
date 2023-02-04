@@ -142,7 +142,7 @@ export default {
                 </div>
 
                 <div>
-                  <div class="imagePreviewWrapper" style="width: 200px; length: 200px; border-radius: 10px;" @click="selectImage"> </div>
+                  <div class="imagePreviewWrapper" style="width: 200px; border-radius: 10px;" @click="selectImage"> </div>
 
                   <input ref="fileInput" type="file" @input="pickFile">
                 </div>
@@ -154,11 +154,11 @@ export default {
                        style="background-color: #efefef;">
                     <div>
                       <p class="small text-muted mb-1">Likes</p>
-                      <p class="mb-0">{{ JSON.parse(p["likes"]).length }}</p>
+                      <p class="mb-0">{{ JSON.parse(p["likes"]) }}</p>
                     </div>
                     <div class="px-3">
                       <p class="small text-muted mb-1">Comments </p>
-                      <p class="mb-0">{{ JSON.parse(p["comments"]).length}}</p>
+                      <p class="mb-0">{{ JSON.parse(p["comments"])}}</p>
                     </div>
 
                     <div class="px-3">
