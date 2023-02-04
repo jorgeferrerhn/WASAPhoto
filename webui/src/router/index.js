@@ -20,7 +20,7 @@ const router = createRouter({
 	routes: [
 		{path: '/doLogin', component: doLogin},
 		{path: '/getUserProfile', component: getUserProfile},
-		{path: '/getUserStream', component: getMyStream},
+		{path: '/getMyStream', component: getMyStream},
 		{path: '/uploadPhoto', component: uploadPhoto},
 		{path: '/uploadLogo', component: uploadLogo},
 		{path: '/getImage', component: getImage},

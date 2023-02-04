@@ -13,6 +13,13 @@ export default {
       return load
     },
 
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/setMyUserName");
+      this.loading = false;
+    },
+
     setMyUserName: async function() {
 
       this.loading = true;
@@ -29,10 +36,9 @@ export default {
     },
 
   },
-  /*
   mounted() {
     this.refresh()
-  }*/
+  }
 }
 </script>
 

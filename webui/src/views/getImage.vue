@@ -13,6 +13,14 @@ export default {
       return load
     },
 
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/getImage");
+      this.loading = false;
+    },
+
+
     getImage: async function() {
 
       this.loading = true;
@@ -31,10 +39,9 @@ export default {
     },
 
   },
-  /*
   mounted() {
     this.refresh()
-  }*/
+  }
 }
 </script>
 

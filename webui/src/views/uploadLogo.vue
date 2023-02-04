@@ -13,6 +13,14 @@ export default {
       return load
     },
 
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/uploadLogo");
+      this.loading = false;
+    },
+
+
     uploadLogo: async function() {
 
       this.loading = true;
@@ -30,10 +38,9 @@ export default {
     },
 
   },
-  /*
   mounted() {
     this.refresh()
-  }*/
+  }
 }
 </script>
 

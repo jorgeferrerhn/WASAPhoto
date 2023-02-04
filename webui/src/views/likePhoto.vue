@@ -12,6 +12,12 @@ export default {
     load() {
       return load
     },
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/likePhoto");
+      this.loading = false;
+    },
 
     likePhoto: async function() {
 
@@ -29,10 +35,9 @@ export default {
     },
 
   },
-  /*
   mounted() {
     this.refresh()
-  }*/
+  }
 }
 </script>
 

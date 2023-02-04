@@ -14,6 +14,13 @@ export default {
       return load
     },
 
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/getUserProfile");
+      this.loading = false;
+    },
+
     getUser: async function() {
 
 

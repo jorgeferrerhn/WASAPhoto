@@ -13,6 +13,13 @@ export default {
       return load
     },
 
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/followUser");
+      this.loading = false;
+    },
+
     followUser: async function() {
 
       this.loading = true;
@@ -29,10 +36,10 @@ export default {
     },
 
   },
-  /*
+
   mounted() {
     this.refresh()
-  }*/
+  }
 }
 </script>
 

@@ -13,6 +13,15 @@ export default {
       return load
     },
 
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/unbanUser");
+      this.loading = false;
+    },
+
+
+
     unbanUser: async function() {
 
       this.loading = true;
@@ -29,10 +38,9 @@ export default {
     },
 
   },
-  /*
   mounted() {
     this.refresh()
-  }*/
+  }
 }
 </script>
 

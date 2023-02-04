@@ -13,6 +13,13 @@ export default {
       return load
     },
 
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/unlikePhoto");
+      this.loading = false;
+    },
+
     unlikePhoto: async function() {
 
       this.loading = true;
@@ -33,10 +40,9 @@ export default {
     },
 
   },
-  /*
   mounted() {
     this.refresh()
-  }*/
+  }
 }
 </script>
 

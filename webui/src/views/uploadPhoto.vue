@@ -16,6 +16,15 @@ export default {
       return load
     },
 
+    async refresh() {
+      this.loading = true;
+      this.errormsg = null;
+      this.$router.push("/uploadPhoto");
+      this.loading = false;
+    },
+
+
+
     selectImage () {
       this.$refs.fileInput.click()
     },
@@ -80,11 +89,10 @@ export default {
       this.loading = false;
     },
 
-  }
-  /*
+  },
   mounted() {
     this.refresh()
-  }*/
+  }
 }
 </script>
 
