@@ -40,7 +40,6 @@ export default {
         let contains = false
         this.users = JSON.parse(JSON.stringify(this.users))
 
-        console.log(this.users)
 
         for (let i = 0; i < this.users.length; i++){
           if (this.users[i]["Id"] == user["Id"]){
@@ -73,7 +72,6 @@ export default {
 
         // update this.users list to update followers
         for (let i = 0; i < this.users.length; i++) {
-          console.log(this.users[i])
           if (this.users[i]["Id"] == user["Id"]){
 
             // update followers list
@@ -123,10 +121,8 @@ export default {
 
       let tokenIsFollower = false;
       for (let i = 0; i < users.length; i++){
-        console.log(users[i]);
         if (users[i]["Id"] == user["Id"]){
           let followers = JSON.parse(users[i]["Followers"]);
-          console.log("Followers: ",followers);
           for (let j = 0; j < followers.length; j++) {
             if (followers[j] == this.token) {
               tokenIsFollower = true;
