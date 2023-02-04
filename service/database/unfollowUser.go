@@ -72,7 +72,7 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 	newList := "["
 	counter := 1
 	// Updating the followers' list
-	for i := 1; i < len(user2.Followers)-1; i++ { //Chapuza: a ver si puedo cambiarlo
+	for i := 1; i < len(user2.Followers)-1; i++ { // Chapuza: a ver si puedo cambiarlo
 		c := string(user2.Followers[i]) // rune to string
 		if c == "," {
 			number := user2.Followers[counter:i] // takes up to that position
