@@ -10,7 +10,7 @@ import (
 
 func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	reqToken := r.Header.Get("content-type")
+	reqToken := r.Header.Get("Authorization")
 	token, errTok := strconv.Atoi(reqToken)
 	if errTok != nil {
 		// id was not properly cast
