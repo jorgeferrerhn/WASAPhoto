@@ -73,9 +73,6 @@ export default {
         let photo = response.data;
 
 
-        console.log(this.photos)
-
-
         let contains = false
         for (let i = 0; i < this.photos.length; i++){
           if (this.photos[i]["id"] == photo["id"]){
@@ -93,6 +90,89 @@ export default {
       }
       this.loading = false;
     },
+
+    likePhoto: async function(p) {
+
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/users/"+this.token+"/likePhoto/"+p["id"];
+        const response = await this.$axios.put(url, "",{
+          headers:{"Authorization": this.token,
+          }
+        });
+        let photo = response.data;
+
+
+        // update this.photos list to update likes
+        for (let i = 0; i < this.photos.length; i++) {
+          if (this.photos[i]["id"] == photo["id"]){
+
+            // update likes list
+            this.photos[i]["likes"] = photo["likes"]
+          }
+        }
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+
+
+      this.loading = false;
+    },
+    unlikePhoto: async function(p) {
+
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/users/"+this.token+"/unlikePhoto/"+p["id"];
+        const response = await this.$axios.delete(url,{
+          headers:{"Authorization": this.token,
+          }
+        });
+        let photo = response.data;
+
+
+        // update this.photos list to update likes
+        for (let i = 0; i < this.photos.length; i++) {
+          if (this.photos[i]["id"] == photo["id"]) {
+            // update likes list
+            this.photos[i]["likes"] = photo["likes"]
+          }
+        }
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+      this.loading = false;
+    },
+
+    isLiked(p){
+      // Method to check if token user liked the searched photo
+
+      let photo = JSON.parse(JSON.stringify(p))
+      let photos = JSON.parse(JSON.stringify(this.photos))
+
+      console.log(photos)
+
+      let tokenLiked = false;
+      for (let i = 0; i < photos.length; i++){
+        if (photos[i]["id"] == photo["id"]){
+          let likes = JSON.parse(photos[i]["likes"]);
+          console.log(likes)
+          for (let j = 0; j < likes.length; j++) {
+            if (likes[j] == this.token) {
+              tokenLiked = true;
+            }
+          }
+        }
+      }
+      return tokenLiked
+
+    }
+
+
+
 
   },
   mounted() {
@@ -159,6 +239,16 @@ export default {
 
                   </div>
                   <div class="d-flex pt-1">
+
+                    <!--If the user didn't like the photo, a "Like" button must be displayed. Otherwise, an "Unlike" button will be displayed -->
+
+                    <template v-if="!isLiked(p)">
+                      <button type="button" class="btn btn-primary flex-grow-1" @click="likePhoto(p)">Like</button>
+                    </template>
+
+                    <template v-else>
+                      <button type="button" class="btn btn-primary flex-grow-1" @click="unlikePhoto(p)">Unlike</button>
+                    </template>
 
 
 
