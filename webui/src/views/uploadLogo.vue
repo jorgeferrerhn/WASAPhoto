@@ -22,6 +22,29 @@ export default {
       this.loading = false;
     },
 
+    getUser: async function(){
+      // Getting user information
+      let tokenUrl = "/users/"+this.token+"/getUserProfile";
+      let userToken = await this.$axios.get(tokenUrl,{
+            headers:{"Authorization": this.token}
+          }
+      );
+      console.log(userToken);
+      this.userToken = userToken.data;
+
+      // Getting logo information
+      let url = "/users/"+this.token+"/getLogo";
+      let logo = await this.$axios.get(url,{
+            headers:{"Authorization": this.token}
+          }
+      );
+
+      console.log(userToken);
+      this.path = logo.data["path"];
+
+    },
+
+
 
     uploadLogo: async function() {
       this.loading = true;
@@ -81,7 +104,8 @@ export default {
     }
   },
   mounted() {
-    this.refresh()
+    this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
+    this.getUser();
   }
 }
 </script>
@@ -112,7 +136,7 @@ export default {
       <div class="card-body">
 
 
-        <h3 class="h3">Select your new profile picture...: </h3>
+        <h3 class="h3">Select your new profile picture, {{userToken["Name"]}}...: </h3>
         <input type="file" @change="onFileChange"/>
 
         <!-- User information -->

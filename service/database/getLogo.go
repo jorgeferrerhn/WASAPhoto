@@ -6,7 +6,7 @@ import (
 
 func (db *appdbimpl) GetLogo(p Photo, u User) (Photo, User, error) {
 
-	rows, err := db.c.Query(`select id, name, followers,banned,photos from users where profilepic=?`, u.ProfilePic)
+	rows, err := db.c.Query(`select name,profilepic, followers,banned,photos from users where id=?`, u.ID)
 
 	if err != nil {
 		return p, u, err
@@ -15,7 +15,7 @@ func (db *appdbimpl) GetLogo(p Photo, u User) (Photo, User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&u.ID, &u.Name, &u.Followers, &u.Banned, &u.Photos)
+		err = rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return p, u, err
@@ -32,6 +32,8 @@ func (db *appdbimpl) GetLogo(p Photo, u User) (Photo, User, error) {
 	}
 
 	defer rows.Close()
+
+	p.ID = u.ProfilePic // we want to get the logo
 
 	rows2, err2 := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
 

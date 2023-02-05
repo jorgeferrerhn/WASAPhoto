@@ -11,17 +11,24 @@ import (
 
 func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	// this function receives a user id and returns the stream of photos of that user
+	// this function receives a user id and returns the logo
 
-	id := ps.ByName("id")
+	reqToken := r.Header.Get("Authorization")
+	token, errTok := strconv.Atoi(reqToken)
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
+	var id = ps.ByName("id")
 	if id == "" {
 		// ID not found
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	i, e := strconv.Atoi(id)
+	var i, e = strconv.Atoi(id)
 
 	if e != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -30,10 +37,15 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// Searchs for the user to get its logo
 	var p Photo
-	p.ID = i
-
 	var u User
-	u.ProfilePic = i
+	u.ID = i
+
+	if u.ID != token {
+		// Error: the authorization header is not valid
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	dbphoto, dbuser, err := rt.db.GetLogo(p.ToDatabase(), u.ToDatabase())
 
 	if err != nil {
@@ -41,6 +53,7 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 
 	}
+
 	// Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
 	p.FromDatabase(dbphoto)
 	u.FromDatabase(dbuser)
