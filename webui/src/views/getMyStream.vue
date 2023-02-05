@@ -27,7 +27,8 @@ export default {
       this.errormsg = null;
       try {
         let url = "/users/"+this.userSearchStream+"/getMyStream";
-        const response = await this.$axios.get(url);
+        const response = await this.$axios.get(url,{
+          headers:{"Authorization": this.token}});
         console.log(response)
 
         this.userStream = response.data;

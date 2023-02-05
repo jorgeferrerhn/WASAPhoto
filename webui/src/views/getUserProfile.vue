@@ -209,9 +209,31 @@ export default {
 
     },
 
-    emptyProfilePic(u){
-      // Function to check if profile picture is empty
-      return u["ProfilePic"] == 0
+    getProfilePic: function(u){
+      // Function that returns the profile pic path
+      let user = JSON.parse(JSON.stringify(u))
+      console.log("getting pic,",user)
+
+      if (user["ProfilePic"] != 0){
+        // Profile picture is not empty
+        try {
+          let tokenUrl = "/images/"+user["ProfilePic"];
+          const image = this.$axios.get(tokenUrl, {
+                headers: {"Authorization": this.token}
+              }
+          );
+          console.log(image)
+
+          let finalpath = string(image.data['path'])
+          console.log(finalpath)
+          return finalpath
+
+        }catch (e) {
+          this.errormsg = e.toString();
+        }
+      }
+      console.log("Va a devovler la imagen de prueba")
+      return "default-profile-photo.jpeg"
     }
 
 
@@ -268,17 +290,19 @@ export default {
               <div class="d-flex text-black">
                 <div class="flex-shrink-0">
 
-                  <template v-if="emptyProfilePic(u)">
-                    <img :src="'/img/default-profile-photo.jpeg'"
-                         alt="Generic placeholder image" class="img-fluid"
-                         style="width: 180px; border-radius: 10px;">
-                  </template>
+                  <img :src="getProfilePic(u)"
+                        class="img-fluid"
+                       style="width: 180px; border-radius: 10px;">
 
-                  <template v-else>
-                    <img :src="'/img/'+p['path']"
-                         alt="Generic placeholder image" class="img-fluid"
-                         style="width: 180px; border-radius: 10px;">
-                  </template>
+                  <img src="/profilepics/default-profile-photo.jpeg"
+                       class="img-fluid"
+                       style="width: 180px; border-radius: 10px;">
+
+                  <img :src="'/profilepics/'+getProfilePic(u)" v-bind:alt="getProfilePic(u)" class="img-fluid" sizes="(min-width: 991px) 10vw, (min-width: 768px) 20vw, 300px"
+                       style="border-radius: 10px; max-width: 100%; width: 275px; height: 183px;">
+
+
+
 
 
                 </div>
