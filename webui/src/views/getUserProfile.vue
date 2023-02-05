@@ -284,7 +284,7 @@ export default {
 
 
         <!-- User information -->
-        <div class="col col-md-9 col-lg-7 col-xl-5" v-for="u in users" v-if="users.length > 0">
+        <div class="col col-md-9 col-lg-7 col-xl-5" v-for="(u,index) in users" :key="index" v-if="users.length > 0">
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-4">
               <div class="d-flex text-black">
