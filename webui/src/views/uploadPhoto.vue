@@ -169,9 +169,6 @@ export default {
       }
       return tokenLiked
 
-    },
-    getImgUrl(p) {
-      return require('../assets/images/'+p["path"])
     }
 
 
@@ -209,9 +206,6 @@ export default {
 
     <div class="card">
       <div class="card-body">
-
-
-
         <h3 class="h3">Introduce photo path...: </h3>
 
         <input type="file" @change="onFileChange"/>
@@ -226,8 +220,8 @@ export default {
                 <div class="flex-shrink-0">
 
                   <div class="col-lg-2">
-                    <img :src="'/img/'+p['path']" v-bind:alt="pic" class="img-fluid"
-                         style="width: 180px; border-radius: 10px;">
+                    <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid" sizes="(min-width: 991px) 10vw, (min-width: 768px) 20vw, 300px"
+                         style="border-radius: 10px; max-width: 100%; width: 275px; height: 183px;">
                   </div>
 
                   <!--img src="/home/jorge/WASAPhoto/webui/src/images/car.jpeg"
@@ -263,6 +257,11 @@ export default {
                     <template v-else>
                       <button type="button" class="btn btn-primary flex-grow-1" @click="unlikePhoto(p)">Unlike</button>
                     </template>
+
+                    <!--Comment  -->
+
+                    <input v-model="comment" placeholder=" Add a comment...">
+                    <button type="button" class="btn btn-primary flex-grow-1" @click="commentPhoto(p)">Like</button>
 
 
 
