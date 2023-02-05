@@ -5,6 +5,7 @@ export default {
       errormsg: null,
       loading: false,
       token: 0,
+      tokenUser:{},
       users:[]
     }
   },
@@ -28,10 +29,19 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.id+"/getUserProfile";
+        // The first thing we will do is save the token user object
+
         // Let's get the cookie
         this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
+        let tokenUrl = "/users/"+this.token+"/getUserProfile";
+        const userToken = await this.$axios.get(tokenUrl,{
+              headers:{"Authorization": this.token}
+            }
+        );
+        this.tokenUser = userToken.data;
 
+        // Then, we search for the requested user
+        let url = "/users/"+this.id+"/getUserProfile";
         const response = await this.$axios.get(url,{
           headers:{"Authorization": this.token}
             }
@@ -132,6 +142,71 @@ export default {
       }
       return tokenIsFollower
 
+    },
+
+    banUser: async function(u) {
+
+      console.log("Ban")
+
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/users/"+this.token+"/banUser/"+u["Id"];
+        const response = await this.$axios.put(url, "",{
+          headers:{"Authorization": this.token,
+          }
+        });
+        let user = response.data; // In this case, this returns the user 1
+
+        this.tokenUser["Banned"] = user["Banned"];
+
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+
+
+      this.loading = false;
+    },
+    unbanUser: async function(u) {
+
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/users/"+this.token+"/unbanUser/"+u["Id"];
+        const response = await this.$axios.delete(url,{
+          headers:{"Authorization": this.token,
+          }
+        });
+        let user = response.data; // In this case, this returns the user 1
+
+
+        this.tokenUser["Banned"] = user["Banned"];
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+      this.loading = false;
+    },
+
+    isBanned(u){
+      // Method to check if token user has banned the parameter user
+
+      let user = JSON.parse(JSON.stringify(u))
+      console.log("User to search: ",user)
+      let tokenIsBanned = false;
+
+      let banned = JSON.parse(this.tokenUser["Banned"]);
+      console.log("Banned: ",banned)
+      for (let j = 0; j < banned.length; j++) {
+        if (banned[j] == user["Id"]) {
+          tokenIsBanned = true
+        }
+      }
+
+
+      return tokenIsBanned
+
     }
 
 
@@ -205,7 +280,7 @@ export default {
                   </div>
                   <div class="d-flex pt-1">
 
-                    <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayer -->
+                    <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
 
                     <template v-if="isFollower(u)">
                       <button type="button" class="btn btn-primary flex-grow-1" @click="unfollowUser(u)">Unfollow</button>
@@ -213,6 +288,16 @@ export default {
 
                     <template v-else>
                       <button type="button" class="btn btn-primary flex-grow-1" @click="followUser(u)">Follow</button>
+                    </template>
+
+                    <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
+
+                    <template v-if="isBanned(u)">
+                      <button type="button" class="btn btn-primary flex-grow-1" @click="unbanUser(u)">Unban</button>
+                    </template>
+
+                    <template v-else>
+                      <button type="button" class="btn btn-primary flex-grow-1" @click="banUser(u)">Ban</button>
                     </template>
 
                   </div>
