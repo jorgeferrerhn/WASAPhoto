@@ -207,6 +207,11 @@ export default {
 
       return tokenIsBanned
 
+    },
+
+    emptyProfilePic(u){
+      // Function to check if profile picture is empty
+      return u["ProfilePic"] == 0
     }
 
 
@@ -260,9 +265,20 @@ export default {
             <div class="card-body p-4">
               <div class="d-flex text-black">
                 <div class="flex-shrink-0">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                       alt="Generic placeholder image" class="img-fluid"
-                       style="width: 180px; border-radius: 10px;">
+
+                  <template v-if="emptyProfilePic(u)">
+                    <img :src="'/img/default-profile-photo.jpeg'"
+                         alt="Generic placeholder image" class="img-fluid"
+                         style="width: 180px; border-radius: 10px;">
+                  </template>
+
+                  <template v-else>
+                    <img :src="'/img/'+p['path']"
+                         alt="Generic placeholder image" class="img-fluid"
+                         style="width: 180px; border-radius: 10px;">
+                  </template>
+
+
                 </div>
                 <div class="flex-grow-1 ms-3">
                   <h5 class="mb-1">{{ u["Name"]}}</h5>
