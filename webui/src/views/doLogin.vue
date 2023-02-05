@@ -41,6 +41,18 @@ export default {
       this.loading = false;
     },
 
+    getUser: async function(){
+      // Getting user information
+      let tokenUrl = "/users/"+this.token+"/getUserProfile";
+      let userToken = await this.$axios.get(tokenUrl,{
+            headers:{"Authorization": this.token}
+          }
+      );
+      console.log(userToken);
+      this.user = userToken.data;
+
+    },
+
     logOut: async function() {
       console.log("Logging out")
       document.cookie = `token=0`; // reset the cookie
@@ -49,7 +61,8 @@ export default {
 
   },
   mounted() {
-    this.refresh()
+    this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
+    this.getUser();
   }
 }
 

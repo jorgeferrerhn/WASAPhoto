@@ -277,82 +277,70 @@ export default {
     <div class="card">
       <div class="card-body">
 
-        <h3 class="h3">Introduce user ID to search: </h3>
+        <h3 class="h3 mb-3 mt-3">Introduce user ID to search: </h3>
 
-        <input v-model="id" placeholder=" Search for a user...">
-
+        <input class="mb-3 mt-3" v-model="id" placeholder=" Search for a user...">
+        <a href="javascript:" class="btn btn-primary m-3" @click="getUser">Search for user</a>
 
 
         <!-- User information -->
-        <div class="col col-md-9 col-lg-7 col-xl-5" v-for="(u,index) in users" :key="index" v-if="users.length > 0">
-          <div class="card" style="border-radius: 15px;">
-            <div class="card-body p-4">
-              <div class="d-flex text-black">
-                <div class="flex-shrink-0">
+        <div class="col col-md-9 col-lg-7 col-xl-5 mt-3 mb-3" v-for="(u,index) in users" :key="index" v-if="users.length > 0">
+          <div class="card mt-3 d-lg-grid" style="border-radius: 15px;">
 
-                  <img :src="getProfilePic(u)"
-                        class="img-fluid"
-                       style="width: 180px; border-radius: 10px;">
 
-                  <img src="/profilepics/default-profile-photo.jpeg"
-                       class="img-fluid"
-                       style="width: 180px; border-radius: 10px;">
-
-                  <img :src="'/profilepics/'+getProfilePic(u)" v-bind:alt="getProfilePic(u)" class="img-fluid" sizes="(min-width: 991px) 10vw, (min-width: 768px) 20vw, 300px"
-                       style="border-radius: 10px; max-width: 100%; width: 275px; height: 183px;">
+              <h5 class="m-3 p-3">{{ u["Name"]}}</h5>
+              <img :src="'/profilepics/'+getProfilePic(u)" v-bind:alt="getProfilePic(u)" class="avatar img-fluid m-3"
+                   style="border-radius: 10px; width: 100px; height: 100px;">
 
 
 
 
-
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h5 class="mb-1">{{ u["Name"]}}</h5>
-                  <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+            <div class="d-flex mb-2"
                        style="background-color: #efefef;">
-                    <div>
-                      <p class="small text-muted mb-1">Photos uploaded</p>
-                      <p class="mb-0">{{ JSON.parse(u["Photos"]).length }}</p>
-                    </div>
-                    <div class="px-3">
-                      <p class="small text-muted mb-1">Followers </p>
-                      <p class="mb-0">{{ JSON.parse(u["Followers"]).length }}</p>
-                    </div>
-
-                  </div>
-                  <div class="d-flex pt-1">
-
-                    <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
-
-                    <template v-if="isFollower(u)">
-                      <button type="button" class="btn btn-primary flex-grow-1" @click="unfollowUser(u)">Unfollow</button>
-                    </template>
-
-                    <template v-else>
-                      <button type="button" class="btn btn-primary flex-grow-1" @click="followUser(u)">Follow</button>
-                    </template>
-
-                    <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
-
-                    <template v-if="isBanned(u)">
-                      <button type="button" class="btn btn-primary flex-grow-1" @click="unbanUser(u)">Unban</button>
-                    </template>
-
-                    <template v-else>
-                      <button type="button" class="btn btn-primary flex-grow-1" @click="banUser(u)">Ban</button>
-                    </template>
-
-                  </div>
+                <div>
+                  <p class="small text-muted m-3">Photos uploaded</p>
+                  <p class="m-3">{{ JSON.parse(u["Photos"]).length }}</p>
                 </div>
-              </div>
+
+                <div class="px-3">
+                  <p class="small text-muted m-3">Followers </p>
+                  <p class="m-3">{{ JSON.parse(u["Followers"]).length }}</p>
+                </div>
+
             </div>
+
+
+        </div>
+          <div class="d-flex pt-1">
+
+            <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
+
+            <template v-if="isFollower(u)">
+              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unfollowUser(u)">Unfollow</button>
+            </template>
+
+            <template v-else>
+              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="followUser(u)">Follow</button>
+            </template>
+
+            <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
+
+            <template v-if="isBanned(u)">
+              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unbanUser(u)">Unban</button>
+            </template>
+
+            <template v-else>
+              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="banUser(u)">Ban</button>
+            </template>
+
           </div>
         </div>
 
 
 
-        <a href="javascript:" class="btn btn-primary" @click="getUser">Search for user</a>
+
       </div>
+
     </div>
 
 
