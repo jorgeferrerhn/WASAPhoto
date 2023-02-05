@@ -6,6 +6,8 @@ export default {
       loading: false,
       token: 0,
       logo: {},
+      path: "",
+      userToken:{}
     }
   },
   methods: {
@@ -22,14 +24,26 @@ export default {
 
 
     uploadLogo: async function() {
-
       this.loading = true;
       this.errormsg = null;
-      try {
 
-        let url = "/users/"+this.id+"/uploadLogo";
-        const response = await this.$axios.post(url, this.path);
-        this.logo = response.data;
+
+
+      // The single user of this.userToken is the logged one. Let's search for it to get its information
+      try {
+        let url = "/users/"+this.token+"/uploadLogo";
+        console.log(url)
+        console.log(this.path)
+
+        const response = await this.$axios.post(url, this.path,{
+          headers:{"Authorization": this.token}
+        });
+        console.log(response.data)
+        this.userToken = response.data; // update the userToken
+        this.userToken = JSON.parse(JSON.stringify(this.userToken))
+        console.log(this.userToken)
+
+
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -37,6 +51,34 @@ export default {
       this.loading = false;
     },
 
+    onFileChange: async function(event) {
+
+      this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
+      console.log(this.token)
+      let tokenUrl = "/users/"+this.token+"/getUserProfile";
+      const userToken = await this.$axios.get(tokenUrl,{
+            headers:{"Authorization": this.token}
+          }
+      );
+      this.userToken = userToken;
+      let name = event.target.files[0]["name"];
+      this.path=name
+
+    }
+
+
+
+
+  },
+
+  computed:{
+    userNotEmpty(){
+      let tok = JSON.parse(JSON.stringify(this.userToken))
+     if ((Object.keys(tok).length) > 0){
+       return true
+     }
+      return false
+    }
   },
   mounted() {
     this.refresh()
@@ -69,12 +111,53 @@ export default {
     <div class="card">
       <div class="card-body">
 
-        <h3 class="h3">Introduce user id...: </h3>
-        <input v-model="id" placeholder="1">
 
-        <h3 class="h3">Introduce photo path...: </h3>
-        <input v-model="path" placeholder=" /path-to-your-favourite-photo/">
-        <p>Logo uploaded. New information for the user:  {{ logo }} </p>
+        <h3 class="h3">Select your new profile picture...: </h3>
+        <input type="file" @change="onFileChange"/>
+
+        <!-- User information -->
+      <template v-if="userNotEmpty">
+        <div class="col col-md-9 col-lg-7 col-xl-5" >
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-4">
+              <div class="d-flex text-black">
+                <div class="flex-shrink-0">
+
+                  <template v-if="userToken['ProfilePic'] == 0">
+                    <img :src="'/profilepics/default-profile-photo.jpeg'"
+                         alt="Generic placeholder image" class="img-fluid"
+                         style="width: 180px; border-radius: 10px;">
+                  </template>
+
+                  <template v-else>
+                    <img :src="'/profilepics/'+this.path"
+                         alt="Generic placeholder image" class="img-fluid"
+                         style="width: 180px; border-radius: 10px;">
+                  </template>
+
+
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5 class="mb-1">{{ userToken["Name"]}}</h5>
+                  <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                       style="background-color: #efefef;">
+                    <div>
+                      <p class="small text-muted mb-1">Photos uploaded</p>
+                      <p class="mb-0">{{ JSON.parse(userToken["Photos"]).length }}</p>
+                    </div>
+                    <div class="px-3">
+                      <p class="small text-muted mb-1">Followers </p>
+                      <p class="mb-0">{{ JSON.parse(userToken["Followers"]).length }}</p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
 
         <a href="javascript:" class="btn btn-primary" @click="uploadLogo">Upload logo for the user</a>
       </div>

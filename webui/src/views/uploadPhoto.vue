@@ -206,7 +206,7 @@ export default {
 
     <div class="card">
       <div class="card-body">
-        <h3 class="h3">Introduce photo path...: </h3>
+        <h3 class="h3">Select new picture to upload...: </h3>
 
         <input type="file" @change="onFileChange"/>
         <!--v-file-input placeholder="Upload document" v-model="file" accept="image/*" label="Image" @change="onFileChange"/-->

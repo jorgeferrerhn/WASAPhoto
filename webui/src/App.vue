@@ -61,10 +61,18 @@ export default {}
               </RouterLink>
             </li>
 
+            <li class="nav-item">
+              <RouterLink to="/uploadLogo" class="nav-link">
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
+                Change profile picture
+              </RouterLink>
+            </li>
 
 
 
-					</ul>
+
+
+          </ul>
 				</div>
 			</nav>
 
