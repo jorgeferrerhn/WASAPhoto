@@ -8,11 +8,11 @@ WASAPhoto is a simulator of a social web app made specially for the Web And Soft
 # How to build container images
 # Backend
 `docker build -t wasa-photos-backend:latest -f Dockerfile.backend .`
-# Frontend`
+# Frontend
 `docker build -t wasa-photos-frontend:latest -f Dockerfile.frontend .`
 
 # How to run container images`
 # Backend
 `docker run -it --rm -p 3000:3000 wasa-photos-backend:latest`
-#Frontend
+# Frontend
 `docker run -it --rm -p 8081:80 wasa-photos-frontend:latest`
