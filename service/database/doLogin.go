@@ -3,10 +3,9 @@ package database
 func (db *appdbimpl) DoLogin(u User) (User, error) {
 
 	var id int
-	var nameSearch string
 
 	// first we search the user. It should have a unique username, so we'll search for it
-	rows, err := db.c.Query(`select id, name,profilepic,followers,banned,photos from users where name=?`, u.Name)
+	rows, err := db.c.Query(`select id,profilepic,followers,banned,photos from users where name=?`, u.Name)
 
 	if err != nil {
 		return u, err
@@ -16,7 +15,7 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 
 	for rows.Next() {
 
-		err = rows.Scan(&id, &nameSearch, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err = rows.Scan(&id, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 		if err != nil {
 			return u, err
 		}
@@ -27,7 +26,7 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 		return u, err
 	}
 
-	if nameSearch == "" || id == 0 { // this user has not been created before
+	if u.Name == "" || id == 0 { // this user has not been created before
 
 		u.ProfilePic = 0
 		u.Followers = "[]"

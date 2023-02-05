@@ -5,8 +5,7 @@ import (
 )
 
 func (db *appdbimpl) GetUserProfile(u User, token int) (User, error) {
-	var id int
-	var name, tokName string
+	var tokName string
 
 	// First, we have to search if the token ID exists
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, token)
@@ -32,7 +31,7 @@ func (db *appdbimpl) GetUserProfile(u User, token int) (User, error) {
 		return u, errors.New("Token user doesn't exist!")
 	}
 
-	rows, err = db.c.Query(`select id, name,profilepic,followers,banned, photos from users where id=?`, u.ID) // Here followers will be a string, then cast to string array
+	rows, err = db.c.Query(`select name,profilepic,followers,banned, photos from users where id=?`, u.ID) // Here followers will be a string, then cast to string array
 
 	if err != nil {
 		return u, err
@@ -41,7 +40,7 @@ func (db *appdbimpl) GetUserProfile(u User, token int) (User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&id, &name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err = rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err != nil {
 			return u, err
@@ -53,10 +52,9 @@ func (db *appdbimpl) GetUserProfile(u User, token int) (User, error) {
 		return u, err
 	}
 
-	if name == "" || id == 0 {
+	if u.Name == "" || u.ID == 0 {
 		return u, errors.New("User not found")
 	}
 
-	u.Name = name
 	return u, nil
 }
