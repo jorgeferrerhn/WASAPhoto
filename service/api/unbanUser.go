@@ -81,7 +81,12 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 
-	_ = json.NewEncoder(w).Encode(u1)
+	err = json.NewEncoder(w).Encode(u1)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
 
 	defer r.Body.Close()
 

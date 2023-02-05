@@ -80,7 +80,12 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 
-	_ = json.NewEncoder(w).Encode(u1)
+	err = json.NewEncoder(w).Encode(u1)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest) // 400
+		return
+
+	}
 
 	defer r.Body.Close()
 

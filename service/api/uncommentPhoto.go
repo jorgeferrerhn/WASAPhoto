@@ -86,7 +86,12 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	// Send the output to the user.
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(p) // Return the photo
+	err = json.NewEncoder(w).Encode(p) // Return the photo
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
 
 	defer r.Body.Close()
 

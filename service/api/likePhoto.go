@@ -91,7 +91,12 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	// Send the output to the user.
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(p)
+	err = json.NewEncoder(w).Encode(p)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
 
 	defer r.Body.Close()
 

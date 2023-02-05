@@ -48,7 +48,12 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(p)
+	err = json.NewEncoder(w).Encode(p)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
 
 	defer r.Body.Close()
 
