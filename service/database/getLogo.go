@@ -15,10 +15,10 @@ func (db *appdbimpl) GetLogo(p Photo, u User) (Photo, User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err2 := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
-		if err != nil {
-			return p, u, err
+		if err2 != nil {
+			return p, u, err2
 		}
 
 	}
@@ -26,31 +26,31 @@ func (db *appdbimpl) GetLogo(p Photo, u User) (Photo, User, error) {
 	if u.Name == "" {
 		return p, u, errors.New("User didn't exist!")
 	}
-	err = rows.Err()
-	if err != nil {
-		return p, u, err
+	err3 := rows.Err()
+	if err3 != nil {
+		return p, u, err3
 	}
 
 	defer rows.Close()
 
 	p.ID = u.ProfilePic // we want to get the logo
 
-	rows2, err2 := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
+	rows2, err4 := db.c.Query(`select userid,path,likes,comments,date from photos where id=?`, p.ID)
 
-	if err2 != nil {
-		return p, u, err2
+	if err4 != nil {
+		return p, u, err4
 	}
 	for rows2.Next() {
-		err = rows2.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
+		err5 := rows2.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
-		if err != nil {
-			return p, u, err
+		if err5 != nil {
+			return p, u, err5
 		}
 
 	}
-	err = rows2.Err()
-	if err != nil {
-		return p, u, err
+	err6 := rows2.Err()
+	if err6 != nil {
+		return p, u, err6
 	}
 
 	return p, u, nil
