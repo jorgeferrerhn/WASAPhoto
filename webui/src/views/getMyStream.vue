@@ -4,7 +4,6 @@ export default {
     return {
       errormsg: null,
       loading: false,
-      userStream: {},
       photos:[],
       token: 0
     }
@@ -31,10 +30,6 @@ export default {
         const photos = await this.$axios.get(url,{
           headers:{"Authorization": this.token}});
         console.log(photos.data)
-
-        this.userStream = photos.data;
-
-        let contains = false
         this.photos = photos.data
 
 
@@ -156,73 +151,82 @@ export default {
 
 
 
-    <div class="card">
-      <div class="card-body">
+    <div class="card m-3">
+      <div class="card-body m-3">
 
-        <h3 class="h3">Introduce user ID to search for its stream...: </h3>
+        <h3 class="h3 m-3 ">Introduce user ID to search for its stream...: </h3>
 
-        <input v-model="userSearchStream" placeholder=" Search for a user...">
-        <p>The stream of the user is: {{ userStream }} </p>
+        <input class = "m-3" v-model="search" placeholder=" Search for a user...">
 
-        <a href="javascript:" class="btn btn-primary" @click="getUserStream">Search for user stream</a>
+        <a href="javascript:" class="btn btn-primary m-3" @click="getUserStream">Search for user stream</a>
       </div>
       <!-- Photo information -->
-      <div class="col col-md-9 col-lg-7 col-xl-5" v-for="p in photos" v-if="photos.length > 0">
-        <div class="card" style="border-radius: 15px;">
-          <div class="card-body p-4">
-            <div class="d-flex text-black">
-              <div class="flex-shrink-0">
+      <div class="m-3" v-for="p in photos" v-if="photos.length > 0">
+        <div class="card m-3" style="border-radius: 15px;">
 
-                <div class="col-lg-2">
-                  <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid" sizes="(min-width: 991px) 10vw, (min-width: 768px) 20vw, 300px"
-                       style="border-radius: 10px; max-width: 100%; width: 275px; height: 183px;">
+
+
+              <div class="flex-grow-1 ms-3">
+                <!--Title-->
+                <div class="m-3">
+                  <h5 class="mb-1 m-3 p-3">Photo ID: {{ p["id"]}}</h5>
                 </div>
 
-                <!--img src="/home/jorge/WASAPhoto/webui/src/images/car.jpeg"
-                     alt="Generic placeholder image" class="img-fluid"
-                     style="width: 180px; border-radius: 10px;"-->
+                <!--Background container-->
 
-                <!--img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                     alt="Generic placeholder image" class="img-fluid"
-                     style="width: 180px; border-radius: 10px;"-->
-              </div>
-              <div class="flex-grow-1 ms-3">
-                <h5 class="mb-1">{{ p["id"]}}</h5>
                 <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                      style="background-color: #efefef;">
-                  <div>
-                    <p class="small text-muted mb-1">Likes</p>
+
+                  <!--Image-->
+                  <div class="m-3">
+                    <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3" sizes="(min-width: 991px) 10vw, (min-width: 768px) 20vw, 300px"
+                         style="border-radius: 10px; max-width: 100%; width: 275px; height: 183px;">
+                  </div>
+
+                  <!--Likes-->
+                  <div class="m-3">
+                    <p class="mb-1">Likes</p>
                     <p class="mb-0">{{ JSON.parse(p["likes"]).length }}</p>
                   </div>
-                  <div class="px-3">
-                    <p class="small text-muted mb-1">Comments </p>
-                    <p class="mb-0">{{ JSON.parse(p["comments"]).length }}</p>
+                  <!--Comments-->
+                  <div class="px-3 m-3">
+                    <p class="mb-1">Comments </p>
+                    <p class="mb-1">{{ JSON.parse(p["comments"]).length }}</p>
+                  </div>
+
+                  <!--Like Button-->
+
+                  <div class="m-3">
+
+                    <!--If the user didn't like the photo, a "Like" button must be displayed. Otherwise, an "Unlike" button will be displayed -->
+
+                    <template v-if="!isLiked(p)">
+                      <button type="button" class="btn btn-primary flex-grow-1" @click="likePhoto(p)">Like</button>
+                    </template>
+
+                    <template v-else>
+                      <button type="button" class="btn btn-primary flex-grow-1" @click="unlikePhoto(p)">Unlike</button>
+                    </template>
+
                   </div>
 
                 </div>
-                <div class="d-flex pt-1">
 
-                  <!--If the user didn't like the photo, a "Like" button must be displayed. Otherwise, an "Unlike" button will be displayed -->
 
-                  <template v-if="!isLiked(p)">
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="likePhoto(p)">Like</button>
-                  </template>
-
-                  <template v-else>
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="unlikePhoto(p)">Unlike</button>
-                  </template>
-
-                  <!--Comment  -->
-
+                <div class="m-3">
                   <input v-model="comment" placeholder=" Add a comment...">
+                </div>
+
+                <div class="d-flex pt-1 m-3">
+
                   <button type="button" class="btn btn-primary flex-grow-1" @click="commentPhoto(p)">Comment</button>
 
 
 
                 </div>
               </div>
-            </div>
-          </div>
+
+
         </div>
       </div>
     </div>
