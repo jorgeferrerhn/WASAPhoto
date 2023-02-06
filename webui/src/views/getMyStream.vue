@@ -147,6 +147,9 @@ export default {
           }
         }
 
+        // The last thing we have to do is update the information
+        await this.getUserStream();
+
       } catch (e) {
         this.errormsg = e.toString();
       }
