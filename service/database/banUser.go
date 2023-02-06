@@ -20,16 +20,16 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err = rows.Scan(&user1.Name, &user1.ProfilePic, &user1.Followers, &user1.Banned, &user1.Photos)
+		err2 := rows.Scan(&user1.Name, &user1.ProfilePic, &user1.Followers, &user1.Banned, &user1.Photos)
 
-		if err != nil {
-			return user1, err
+		if err2 != nil {
+			return user1, err2
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return user1, err
+	err3 := rows.Err()
+	if err3 != nil {
+		return user1, err3
 	}
 
 	if user1.Name == "" {
@@ -37,26 +37,26 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 	}
 
 	// search for the user that get followed
-	rows, err = db.c.Query(`SELECT name FROM users WHERE id=?`, user2.ID)
+	rows2, err4 := db.c.Query(`SELECT name FROM users WHERE id=?`, user2.ID)
 
-	if err != nil {
+	if err4 != nil {
 		return user1, err
 	}
 
-	defer rows.Close()
+	defer rows2.Close()
 
-	for rows.Next() {
+	for rows2.Next() {
 
-		err = rows.Scan(&user2.Name)
+		err5 := rows2.Scan(&user2.Name)
 
-		if err != nil {
-			return user1, err
+		if err5 != nil {
+			return user1, err5
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return user1, err
+	err6 := rows.Err()
+	if err6 != nil {
+		return user1, err6
 	}
 
 	if user2.Name == "" {
@@ -78,9 +78,10 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 	}
 
 	var res sql.Result
-	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+	var err7 error
+	res, err7 = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		user1.Name, user1.ProfilePic, user1.Followers, user1.Banned, user1.Photos, user1.ID)
-	if err != nil {
+	if err7 != nil {
 		return user1, errors.New("Error in " + fmt.Sprint(res))
 	}
 
