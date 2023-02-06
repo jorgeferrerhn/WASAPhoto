@@ -109,6 +109,9 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 		}
 	}
 	savePhotos, err := json.Marshal(castPhotos)
+	if err != nil {
+		return p, u, err
+	}
 	u.Photos = string(savePhotos)
 	u.ID = p.UserId // this is important: the id of the user we need to update is not the one who likes, but the one who gets the like on the photo
 

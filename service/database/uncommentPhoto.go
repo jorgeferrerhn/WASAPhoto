@@ -120,6 +120,9 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 
 	// Now, in newComments we have only the comments we want. We have to store them as {"ID": 1, "Content": ...} --> json.Marshal
 	saveComments, err := json.Marshal(newComments)
+	if err != nil {
+		return c, p, u, err
+	}
 	p.Comments = string(saveComments)
 
 	res, err = db.c.Exec(`UPDATE photos SET path=?,comments=?,date=?,userid=?,likes=? WHERE id=?`,
@@ -141,6 +144,9 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 		}
 	}
 	savePhotos, err := json.Marshal(castPhotos)
+	if err != nil {
+		return c, p, u, err
+	}
 	u.Photos = string(savePhotos)
 
 	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,

@@ -83,6 +83,9 @@ func (db *appdbimpl) DeletePhoto(p Photo, u User) (Photo, User, error) {
 		}
 	}
 	savePhotos, err := json.Marshal(newPhotos)
+	if err != nil {
+		return p, u, err
+	}
 	u.Photos = string(savePhotos)
 
 	// SQL Statements

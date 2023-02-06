@@ -128,6 +128,10 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	// Here we save the comment photo as {"ID": 1,"Content": ...} --> json.Marshal
 	saveComments, err := json.Marshal(castComments)
+	if err != nil {
+		return c, p, u, err
+	}
+
 	p.Comments = string(saveComments)
 
 	// UPDATING the photo's
