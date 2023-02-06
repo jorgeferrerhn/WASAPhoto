@@ -169,7 +169,39 @@ export default {
       }
       return tokenLiked
 
-    }
+    },
+
+    commentPhoto: async function(p) {
+
+      console.log("Commenting")
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/users/"+this.token+"/commentPhoto/"+p["id"];
+        const response = await this.$axios.post(url, this.comment,{
+          headers:{"Authorization": this.token,
+          }
+        });
+        let photo = response.data;
+        console.log(photo)
+
+
+        // update this.photos list to update likes
+        for (let i = 0; i < this.photos.length; i++) {
+          if (this.photos[i]["id"] == photo["id"]){
+
+            // update likes list
+            this.photos[i]["comments"] = photo["comments"]
+          }
+        }
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+
+
+      this.loading = false;
+    },
 
 
 
@@ -177,6 +209,7 @@ export default {
 
   },
   mounted() {
+    this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     this.refresh()
   }
 }
@@ -261,7 +294,7 @@ export default {
                     <!--Comment  -->
 
                     <input v-model="comment" placeholder=" Add a comment...">
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="commentPhoto(p)">Like</button>
+                    <button type="button" class="btn btn-primary flex-grow-1" @click="commentPhoto(p)">Comment</button>
 
 
 
