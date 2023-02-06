@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"strings"
@@ -20,16 +19,16 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 
 	for rows.Next() {
 
-		err = rows.Scan(&user1.Name)
+		err2 := rows.Scan(&user1.Name)
 
-		if err != nil {
-			return user2, err
+		if err2 != nil {
+			return user2, err2
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return user2, err
+	err3 := rows.Err()
+	if err3 != nil {
+		return user2, err3
 	}
 
 	if user1.Name == "" {
@@ -37,26 +36,26 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 	}
 
 	// search for the user that get followed
-	rows, err = db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user2.ID)
+	rows, err4 := db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user2.ID)
 
-	if err != nil {
-		return user2, err
+	if err4 != nil {
+		return user2, err4
 	}
 
 	defer rows.Close()
 
 	for rows.Next() {
 
-		err = rows.Scan(&user2.Name, &user2.ProfilePic, &user2.Followers, &user2.Banned, &user2.Photos)
+		err5 := rows.Scan(&user2.Name, &user2.ProfilePic, &user2.Followers, &user2.Banned, &user2.Photos)
 
-		if err != nil {
-			return user2, err
+		if err5 != nil {
+			return user2, err5
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return user2, err
+	err6 := rows.Err()
+	if err6 != nil {
+		return user2, err6
 	}
 
 	if user2.Name == "" {
@@ -88,10 +87,9 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 	}
 	user2.Followers = newList
 
-	var res sql.Result
-	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+	res, err7 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		user2.Name, user2.ProfilePic, user2.Followers, user2.Banned, user2.Photos, user2.ID)
-	if err != nil {
+	if err7 != nil {
 		return user2, errors.New("Error in " + fmt.Sprint(res))
 	}
 
