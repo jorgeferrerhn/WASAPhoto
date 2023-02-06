@@ -27,9 +27,9 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	dbuser, err := rt.db.DoLogin(user.ToDatabase())
+	dbuser, err2 := rt.db.DoLogin(user.ToDatabase())
 
-	if err != nil {
+	if err2 != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
 		ctx.Logger.WithError(err).Error("can't create the user")
@@ -43,8 +43,8 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	// Send the output to the user.
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(user)
-	if err != nil {
+	err3 := json.NewEncoder(w).Encode(user)
+	if err3 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 

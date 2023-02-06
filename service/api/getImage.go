@@ -36,9 +36,9 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 	var p Photo
 
 	p.ID = imageId
-	dbphoto, err := rt.db.GetImage(p.ToDatabase())
+	dbphoto, err3 := rt.db.GetImage(p.ToDatabase())
 
-	if err != nil {
+	if err3 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -48,8 +48,8 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(p)
-	if err != nil {
+	err4 := json.NewEncoder(w).Encode(p)
+	if err4 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 

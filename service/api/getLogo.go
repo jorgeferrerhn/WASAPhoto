@@ -49,11 +49,7 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 	dbphoto, dbuser, err := rt.db.GetLogo(p.ToDatabase(), u.ToDatabase())
 
 	if err != nil {
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
 
-		}
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
@@ -65,8 +61,8 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(p)
-	if err != nil {
+	err2 := json.NewEncoder(w).Encode(p)
+	if err2 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
