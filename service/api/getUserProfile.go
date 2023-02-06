@@ -5,18 +5,9 @@ import (
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
-	"strconv"
 )
 
 func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-
-	reqToken := r.Header.Get("Authorization")
-	token, errTok := strconv.Atoi(reqToken)
-	if errTok != nil {
-		// id was not properly cast
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	intId, err := checkId(ps)
 	if err != nil {
@@ -28,7 +19,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	var user User
 	user.ID = intId
 
-	dbuser, err := rt.db.GetUserProfile(user.ToDatabase(), token)
+	dbuser, err := rt.db.GetUserProfile(user.ToDatabase())
 
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
