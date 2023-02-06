@@ -1,5 +1,10 @@
 package database
 
+import (
+	"errors"
+	"fmt"
+)
+
 func (db *appdbimpl) DoLogin(u User) (User, error) {
 
 	var id int
@@ -15,15 +20,15 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 
 	for rows.Next() {
 
-		err = rows.Scan(&id, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
-		if err != nil {
-			return u, err
+		err2 := rows.Scan(&id, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		if err2 != nil {
+			return u, err2
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return u, err
+	err3 := rows.Err()
+	if err3 != nil {
+		return u, err3
 	}
 
 	if u.Name == "" || id == 0 { // this user has not been created before
@@ -37,12 +42,12 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 			u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos)
 
 		if e != nil {
-			return u, e
+			return u, errors.New("Error in " + fmt.Sprint(res))
 		}
 
-		lastInsertID, err := res.LastInsertId()
-		if err != nil {
-			return u, err
+		lastInsertID, err4 := res.LastInsertId()
+		if err4 != nil {
+			return u, err4
 		}
 
 		u.ID = int(lastInsertID) // gets the ID
@@ -50,25 +55,25 @@ func (db *appdbimpl) DoLogin(u User) (User, error) {
 	} else { // This user has been created before
 		u.ID = id
 
-		rows, err = db.c.Query(`select followers,profilepic,banned,photos from users where id=?`, u.ID)
+		rows2, err5 := db.c.Query(`select followers,profilepic,banned,photos from users where id=?`, u.ID)
 
-		if err != nil {
-			return u, err
+		if err5 != nil {
+			return u, err5
 		}
 
-		defer rows.Close()
+		defer rows2.Close()
 
-		for rows.Next() {
+		for rows2.Next() {
 
-			err = rows.Scan(&u.Followers, &u.ProfilePic, &u.Banned, &u.Photos)
-			if err != nil {
-				return u, err
+			err6 := rows2.Scan(&u.Followers, &u.ProfilePic, &u.Banned, &u.Photos)
+			if err6 != nil {
+				return u, err6
 			}
 		}
 
-		err = rows.Err()
-		if err != nil {
-			return u, err
+		err7 := rows2.Err()
+		if err7 != nil {
+			return u, err7
 		}
 
 	}
