@@ -246,62 +246,36 @@ export default {
 
 
         <!-- Photo information -->
-        <div class="col col-md-9 col-lg-7 col-xl-5" v-for="(p,index) in photos" :key="index" v-if="photos.length > 0">
-          <div class="card" style="border-radius: 15px;">
-            <div class="card-body p-4">
-              <div class="d-flex text-black">
-                <div class="flex-shrink-0">
+        <div class="m-3" v-for="(p,index) in photos" :key="index" v-if="photos.length > 0">
+          <div class="card m-3" style="border-radius: 15px;">
+            <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
+              <div class="m-3">
+                <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3"
+                     style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+              </div>
 
-                  <div class="col-lg-2">
-                    <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid" sizes="(min-width: 991px) 10vw, (min-width: 768px) 20vw, 300px"
-                         style="border-radius: 10px; max-width: 100%; width: 275px; height: 183px;">
-                  </div>
+              <div class="m-3">
+                <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
 
-                  <!--img src="/home/jorge/WASAPhoto/webui/src/images/car.jpeg"
-                       alt="Generic placeholder image" class="img-fluid"
-                       style="width: 180px; border-radius: 10px;"-->
-
-                  <!--img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                       alt="Generic placeholder image" class="img-fluid"
-                       style="width: 180px; border-radius: 10px;"-->
+                <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
+                  <p class="">{{c['UserId']}} : {{c['Content']}}</p>
                 </div>
-                <div class="flex-grow-1 ms-3">
-                  <h5 class="mb-1">{{ p["id"]}}</h5>
-                  <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                       style="background-color: #efefef;">
-                    <div>
-                      <p class="small text-muted mb-1">Likes</p>
-                      <p class="mb-0">{{ JSON.parse(p["likes"]).length }}</p>
-                    </div>
-                    <div class="px-3">
-                      <p class="small text-muted mb-1">Comments </p>
-                      <p class="mb-0">{{ JSON.parse(p["comments"]).length }}</p>
-                    </div>
 
-                  </div>
-                  <div class="d-flex pt-1">
+              </div>
 
-                    <!--If the user didn't like the photo, a "Like" button must be displayed. Otherwise, an "Unlike" button will be displayed -->
+            </div>
 
-                    <template v-if="!isLiked(p)">
-                      <button type="button" class="btn btn-primary flex-grow-1" @click="likePhoto(p)">Like</button>
-                    </template>
+            <div class="d-flex align-items-center">
 
-                    <template v-else>
-                      <button type="button" class="btn btn-primary flex-grow-1" @click="unlikePhoto(p)">Unlike</button>
-                    </template>
-
-                    <!--Comment  -->
-
-                    <input v-model="comment" placeholder=" Add a comment...">
-                    <button type="button" class="btn btn-primary flex-grow-1" @click="commentPhoto(p)">Comment</button>
-
-
-
-                  </div>
+              <div class="m-3 d-flex align-items-center">
+                <div class="m-3 d-flex align-items-center">
+                  <h6 class="m-3 ">Photo ID: {{ p["id"]}}</h6>
+                  <p class="m-3">Likes: {{ JSON.parse(p["likes"]).length }}</p>
+                  <p class="m-3">Comments: {{ JSON.parse(p["comments"]).length }}</p>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
