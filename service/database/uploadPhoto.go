@@ -3,6 +3,7 @@ package database
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -23,16 +24,16 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	for rows2.Next() {
 
-		err2 = rows2.Scan(&id, &userName, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err := rows2.Scan(&id, &userName, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
-		if err2 != nil {
-			return p, u, err2
+		if err != nil {
+			return p, u, err
 		}
 	}
 
-	err2 = rows2.Err()
-	if err2 != nil {
-		return p, u, err2
+	err3 := rows2.Err()
+	if err3 != nil {
+		return p, u, err3
 	}
 
 	if userName == "" || id == 0 {
@@ -40,26 +41,25 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 	}
 
 	// search for the photo id (check if it existed)
-	rows, err := db.c.Query(`select id from photos where path=? and userid=?`, p.Path, p.UserId)
+	rows, err4 := db.c.Query(`select id from photos where path=? and userid=?`, p.Path, p.UserId)
 
-	if err != nil {
-		return p, u, err
+	if err4 != nil {
+		return p, u, err4
 	}
-
 	defer rows.Close()
 
 	for rows.Next() {
 
-		err = rows.Scan(&p.ID)
+		err5 := rows.Scan(&p.ID)
 
-		if err != nil {
-			return p, u, err
+		if err5 != nil {
+			return p, u, err5
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return p, u, err
+	err6 := rows.Err()
+	if err6 != nil {
+		return p, u, err6
 	}
 
 	if p.ID != 0 {
@@ -78,12 +78,12 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 	res, e := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
 		p.UserId, p.Path, p.Likes, p.Comments, p.Date)
 	if e != nil {
-		return p, u, e
+		return p, u, errors.New("Error in: " + fmt.Sprint(res))
 	}
 
-	lastInsertID, err := res.LastInsertId()
-	if err != nil {
-		return p, u, err
+	lastInsertID, err7 := res.LastInsertId()
+	if err7 != nil {
+		return p, u, err7
 	}
 
 	p.ID = int(lastInsertID)
@@ -93,24 +93,24 @@ func (db *appdbimpl) UploadPhoto(p Photo, u User) (Photo, User, error) {
 
 	// Here, we have to take the photos and cast them to {1, 1, ... } --> json.Unmarshal
 	in2 := []byte(u.Photos)
-	err = json.Unmarshal(in2, &castPhotos)
-	if err != nil {
-		return p, u, err
+	err8 := json.Unmarshal(in2, &castPhotos)
+	if err8 != nil {
+		return p, u, err8
 	}
 
 	castPhotos = append(castPhotos, p)
 
 	// Here, we have to store the photo as {"ID": 1, "UserID": ...} -->json.Marshal
-	savePhotos, err := json.Marshal(castPhotos)
-	if err != nil {
-		return p, u, err
+	savePhotos, err9 := json.Marshal(castPhotos)
+	if err9 != nil {
+		return p, u, err9
 	}
 	u.Photos = string(savePhotos)
 
-	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+	res2, err10 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
-	if err != nil {
-		return p, u, err
+	if err10 != nil {
+		return p, u, errors.New("Error in: " + fmt.Sprint(res2))
 	}
 
 	return p, u, nil

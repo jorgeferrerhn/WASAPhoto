@@ -2,6 +2,7 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -20,16 +21,16 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 
 	for rows2.Next() {
 
-		err2 = rows2.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err := rows2.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
-		if err2 != nil {
-			return p, u, err2
+		if err != nil {
+			return p, u, err
 		}
 	}
 
-	err2 = rows2.Err()
-	if err2 != nil {
-		return p, u, err2
+	err3 := rows2.Err()
+	if err3 != nil {
+		return p, u, err3
 	}
 
 	if u.Name == "" {
@@ -37,26 +38,26 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	}
 
 	// search for the photo id (check if it existed)
-	rows, err := db.c.Query(`select id from photos where path=? and userid=?`, p.Path, p.UserId)
+	rows, err4 := db.c.Query(`select id from photos where path=? and userid=?`, p.Path, p.UserId)
 
-	if err != nil {
-		return p, u, err
+	if err4 != nil {
+		return p, u, err4
 	}
 
 	defer rows.Close()
 
 	for rows.Next() {
 
-		err = rows.Scan(&photoId)
+		err5 := rows.Scan(&photoId)
 
-		if err != nil {
-			return p, u, err
+		if err5 != nil {
+			return p, u, err5
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return p, u, err
+	err6 := rows.Err()
+	if err6 != nil {
+		return p, u, err6
 	}
 
 	if photoId == u.ProfilePic && photoId != 0 {
@@ -75,12 +76,12 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	res, e := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
 		p.UserId, p.Path, p.Likes, p.Comments, p.Date)
 	if e != nil {
-		return p, u, e
+		return p, u, errors.New("Error in: " + fmt.Sprint(res))
 	}
 
-	lastInsertID, err := res.LastInsertId()
-	if err != nil {
-		return p, u, err
+	lastInsertID, err7 := res.LastInsertId()
+	if err7 != nil {
+		return p, u, err7
 	}
 
 	p.ID = int(lastInsertID)
@@ -88,14 +89,14 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	// We also have to update the profile picture ID
 	u.ProfilePic = p.ID
 
-	if err != nil {
-		return p, u, err
+	if err7 != nil {
+		return p, u, err7
 	}
 
-	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+	res2, err8 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
-	if err != nil {
-		return p, u, err
+	if err8 != nil {
+		return p, u, errors.New("Error in: " + fmt.Sprint(res2))
 	}
 
 	return p, u, nil
