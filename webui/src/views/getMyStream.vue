@@ -153,83 +153,49 @@ export default {
 
     <div class="card m-3">
       <div class="card-body m-3">
-
-        <h3 class="h3 m-3 ">Introduce user ID to search for its stream...: </h3>
-
-        <input class = "m-3" v-model="search" placeholder=" Search for a user...">
-
-        <a href="javascript:" class="btn btn-primary m-3" @click="getUserStream">Search for user stream</a>
+        <h1 class="m-3">Introduce User ID...</h1>
+        <input class="m-3 form-control" v-model="search" placeholder="Enter user ID">
+        <button class="btn btn-primary m-3" @click="getUserStream">Search</button>
       </div>
-      <!-- Photo information -->
+
       <div class="m-3" v-for="p in photos" v-if="photos.length > 0">
         <div class="card m-3" style="border-radius: 15px;">
+          <div class="d-flex justify-content-start p-2 mb-2" style="background-color: #efefef;">
+            <div class="m-3">
+              <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3"
+                   style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+            </div>
+            <div class="m-3">
+              <h5 class="mb-1 m-3 p-3">Photo ID: {{ p["id"]}}</h5>
+              <p class="mb-1">Likes: {{ JSON.parse(p["likes"]).length }}</p>
+              <p class="mb-1">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+            </div>
 
+          </div>
 
+          <div class="d-flex align-items-center">
+            <div class="m-3">
+              <input v-model="comment" placeholder="Add a comment..." class="form-control">
+              <div class="d-flex align-items-center">
+                <button class="btn btn-primary m-3" @click="commentPhoto(p)">Comment</button>
 
-              <div class="flex-grow-1 ms-3">
-                <!--Title-->
-                <div class="m-3">
-                  <h5 class="mb-1 m-3 p-3">Photo ID: {{ p["id"]}}</h5>
-                </div>
-
-                <!--Background container-->
-
-                <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                     style="background-color: #efefef;">
-
-                  <!--Image-->
-                  <div class="m-3">
-                    <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3" sizes="(min-width: 991px) 10vw, (min-width: 768px) 20vw, 300px"
-                         style="border-radius: 10px; max-width: 100%; width: 275px; height: 183px;">
-                  </div>
-
-                  <!--Likes-->
-                  <div class="m-3">
-                    <p class="mb-1">Likes</p>
-                    <p class="mb-0">{{ JSON.parse(p["likes"]).length }}</p>
-                  </div>
-                  <!--Comments-->
-                  <div class="px-3 m-3">
-                    <p class="mb-1">Comments </p>
-                    <p class="mb-1">{{ JSON.parse(p["comments"]).length }}</p>
-                  </div>
-
-                  <!--Like Button-->
-
-                  <div class="m-3">
-
-                    <!--If the user didn't like the photo, a "Like" button must be displayed. Otherwise, an "Unlike" button will be displayed -->
-
-                    <template v-if="!isLiked(p)">
-                      <button type="button" class="btn btn-primary flex-grow-1" @click="likePhoto(p)">Like</button>
-                    </template>
-
-                    <template v-else>
-                      <button type="button" class="btn btn-primary flex-grow-1" @click="unlikePhoto(p)">Unlike</button>
-                    </template>
-
-                  </div>
-
-                </div>
-
-
-                <div class="m-3">
-                  <input v-model="comment" placeholder=" Add a comment...">
-                </div>
-
-                <div class="d-flex pt-1 m-3">
-
-                  <button type="button" class="btn btn-primary flex-grow-1" @click="commentPhoto(p)">Comment</button>
-
-
-
-                </div>
+                <template v-if="!isLiked(p)">
+                  <button class="btn btn-primary m-3" @click="likePhoto(p)">Like</button>
+                </template>
+                <template v-else>
+                  <button class="btn btn-primary m-3" @click="unlikePhoto(p)">Unlike</button>
+                </template>
               </div>
+            </div>
+            <div class="m-3">
 
+          </div>
+          </div>
 
         </div>
       </div>
     </div>
+
 
 
   </div>
