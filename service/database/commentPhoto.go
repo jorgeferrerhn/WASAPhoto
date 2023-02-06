@@ -24,16 +24,16 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	for rows.Next() {
 
-		err = rows.Scan(&u.Name)
+		err2 := rows.Scan(&u.Name)
 
-		if err != nil {
-			return c, p, u, err
+		if err2 != nil {
+			return c, p, u, err2
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return c, p, u, err
+	err3 := rows.Err()
+	if err3 != nil {
+		return c, p, u, err3
 	}
 
 	if u.Name == "" {
@@ -42,27 +42,27 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	// then we search the photo id. If it doesn't exist, we cannot comment on the photo
 
-	rows2, err2 := db.c.Query(`select id,userid,path,likes,comments,date from photos where id=?`, c.PhotoId)
+	rows2, err4 := db.c.Query(`select id,userid,path,likes,comments,date from photos where id=?`, c.PhotoId)
 
-	if err2 != nil {
-		return c, p, u, err2
+	if err4 != nil {
+		return c, p, u, err4
 	}
 
 	defer rows2.Close()
 
 	for rows2.Next() {
 
-		err = rows2.Scan(&p.ID, &p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
+		err5 := rows2.Scan(&p.ID, &p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
-		if err != nil {
-			return c, p, u, err
+		if err5 != nil {
+			return c, p, u, err5
 		}
 
 	}
 
-	err = rows2.Err()
-	if err != nil {
-		return c, p, u, err
+	err6 := rows2.Err()
+	if err6 != nil {
+		return c, p, u, err6
 	}
 	if p.ID == 0 {
 		return c, p, u, errors.New("Photo not found")
@@ -70,27 +70,27 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	// lastly, we need to check up the user that gets commented
 
-	rows3, err3 := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
+	rows3, err7 := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
 
-	if err3 != nil {
-		return c, p, u, err3
+	if err7 != nil {
+		return c, p, u, err7
 	}
 
 	defer rows3.Close()
 
 	for rows3.Next() {
 
-		err3 = rows3.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err8 := rows3.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
-		if err3 != nil {
-			return c, p, u, err
+		if err8 != nil {
+			return c, p, u, err8
 		}
 
 	}
 
-	err3 = rows3.Err()
-	if err3 != nil {
-		return c, p, u, err
+	err9 := rows3.Err()
+	if err9 != nil {
+		return c, p, u, err9
 	}
 
 	if userNameTarget == "" {
@@ -104,9 +104,9 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 		return c, p, u, e
 	}
 
-	lastInsertID, err := res.LastInsertId()
-	if err != nil {
-		return c, p, u, err
+	lastInsertID, err10 := res.LastInsertId()
+	if err10 != nil {
+		return c, p, u, err10
 	}
 
 	c.ID = int(lastInsertID)
@@ -119,34 +119,34 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 
 	// Here we append the comment on "raw format" { 1 Content ...} --> json.Unmarshal
 	in := []byte(p.Comments)
-	err = json.Unmarshal(in, &castComments)
-	if err != nil {
-		return c, p, u, err
+	err11 := json.Unmarshal(in, &castComments)
+	if err11 != nil {
+		return c, p, u, err11
 	}
 
 	castComments = append(castComments, c)
 
 	// Here we save the comment photo as {"ID": 1,"Content": ...} --> json.Marshal
-	saveComments, err := json.Marshal(castComments)
-	if err != nil {
-		return c, p, u, err
+	saveComments, err12 := json.Marshal(castComments)
+	if err12 != nil {
+		return c, p, u, err12
 	}
 
 	p.Comments = string(saveComments)
 
 	// UPDATING the photo's
 
-	res, err = db.c.Exec(`UPDATE photos SET path=?,comments=?,date=?,userid=?,likes=? WHERE id=?`,
+	res1, err13 := db.c.Exec(`UPDATE photos SET path=?,comments=?,date=?,userid=?,likes=? WHERE id=?`,
 		p.Path, p.Comments, p.Date, p.UserId, p.Likes, p.ID)
-	if err != nil {
-		return c, p, u, errors.New("Error in: " + fmt.Sprint(res))
+	if err13 != nil {
+		return c, p, u, errors.New("Error in: " + fmt.Sprint(res1))
 	}
 
 	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
 	in2 := []byte(u.Photos)
-	err = json.Unmarshal(in2, &castPhotos)
-	if err != nil {
-		return c, p, u, err
+	err14 := json.Unmarshal(in2, &castPhotos)
+	if err14 != nil {
+		return c, p, u, err14
 	}
 
 	for i := 0; i < len(castPhotos); i++ {
@@ -154,16 +154,16 @@ func (db *appdbimpl) CommentPhoto(c Comment, p Photo, u User) (Comment, Photo, U
 			castPhotos[i].Comments = p.Comments
 		}
 	}
-	savePhotos, err := json.Marshal(castPhotos)
-	if err != nil {
-		return c, p, u, err
+	savePhotos, err15 := json.Marshal(castPhotos)
+	if err15 != nil {
+		return c, p, u, err15
 	}
 	u.Photos = string(savePhotos)
 
-	res, err = db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
+	res2, err16 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
-	if err != nil {
-		return c, p, u, err
+	if err16 != nil {
+		return c, p, u, errors.New("Error in: " + fmt.Sprint(res2))
 	}
 
 	return c, p, u, nil
