@@ -26,11 +26,12 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/getMyStream";
+        let url = "/users/"+this.search+"/getMyStream";
         const photos = await this.$axios.get(url,{
           headers:{"Authorization": this.token}});
         console.log(photos.data)
         this.photos = photos.data
+        console.log(this.photos)
 
 
       } catch (e) {
@@ -119,12 +120,50 @@ export default {
 
     },
 
+    commentPhoto: async function(p) {
+
+      console.log("Commenting")
+      this.loading = true;
+      this.errormsg = null;
+      try {
+
+        // Getting the comment
+
+        let url = "/users/"+this.token+"/commentPhoto/"+p["id"];
+        const response = await this.$axios.post(url, this.comment,{
+          headers:{"Authorization": this.token,
+          }
+        });
+        let photo = response.data;
+        console.log(photo)
+
+
+        // update this.photos list to update likes
+        for (let i = 0; i < this.photos.length; i++) {
+          if (this.photos[i]["id"] == photo["id"]){
+
+            // update likes list
+            this.photos[i]["comments"] = photo["comments"]
+          }
+        }
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+
+
+      this.loading = false;
+    }
+
 
 
   },
-  mounted() {
+  async mounted() {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    this.refresh()
+    if (this.search != undefined){
+      await this.getUserStream()
+    }
+
   }
 }
 </script>
@@ -158,7 +197,7 @@ export default {
         <button class="btn btn-primary m-3" @click="getUserStream">Search</button>
       </div>
 
-      <div class="m-3" v-for="p in photos" v-if="photos.length > 0">
+      <div class="m-3" v-for="(p,index) in photos" :key="index" v-if="photos.length > 0">
         <div class="card m-3" style="border-radius: 15px;">
           <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
             <div class="m-3">
@@ -170,7 +209,7 @@ export default {
               <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
 
               <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
-                <p class="p-3 m-3">{{c['UserId']}} : {{c['Content']}}</p>
+                <p class="">{{c['UserId']}} : {{c['Content']}}</p>
               </div>
 
             </div>

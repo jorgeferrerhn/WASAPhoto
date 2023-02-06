@@ -5,18 +5,9 @@ import (
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
-	"strconv"
 )
 
 func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-
-	reqToken := r.Header.Get("Authorization")
-	token, errTok := strconv.Atoi(reqToken)
-	if errTok != nil {
-		// id was not properly cast
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	// This function receives a user id and returns the stream of photos of that user
 
@@ -30,12 +21,6 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 	// Search for the user to get the stream of photos
 	var user User
 	user.ID = intId
-
-	if user.ID != token {
-		// Error: the authorization header is not valid
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	dbuser, err := rt.db.GetMyStream(user.ToDatabase())
 	if err != nil {

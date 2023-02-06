@@ -246,7 +246,7 @@ export default {
 
 
         <!-- Photo information -->
-        <div class="col col-md-9 col-lg-7 col-xl-5" v-for="p in photos" v-if="photos.length > 0">
+        <div class="col col-md-9 col-lg-7 col-xl-5" v-for="(p,index) in photos" :key="index" v-if="photos.length > 0">
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-4">
               <div class="d-flex text-black">
