@@ -66,11 +66,11 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// update info from database
-	dbphoto, dbuser, err := rt.db.LikePhoto(p.ToDatabase(), u.ToDatabase())
-	if err != nil {
+	dbphoto, dbuser, err2 := rt.db.LikePhoto(p.ToDatabase(), u.ToDatabase())
+	if err2 != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the like to the photo")
+		ctx.Logger.WithError(err2).Error("can't upload the like to the photo")
 		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
@@ -91,8 +91,8 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	// Send the output to the user.
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(p)
-	if err != nil {
+	err3 := json.NewEncoder(w).Encode(p)
+	if err3 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 

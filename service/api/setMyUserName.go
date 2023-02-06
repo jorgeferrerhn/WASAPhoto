@@ -40,8 +40,8 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	// new user name
 	buf := new(bytes.Buffer)
-	n, err := buf.ReadFrom(r.Body)
-	if err != nil || n == 0 {
+	n, err2 := buf.ReadFrom(r.Body)
+	if err2 != nil || n == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -65,12 +65,12 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// update info from database
-	dbuser, err := rt.db.SetMyUserName(user.ToDatabase())
+	dbuser, err3 := rt.db.SetMyUserName(user.ToDatabase())
 
-	if err != nil {
+	if err3 != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't update the username")
+		ctx.Logger.WithError(err3).Error("can't update the username")
 		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
@@ -80,8 +80,8 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(user)
-	if err != nil {
+	err4 := json.NewEncoder(w).Encode(user)
+	if err4 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
