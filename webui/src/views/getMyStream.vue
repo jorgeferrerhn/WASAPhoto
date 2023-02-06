@@ -160,15 +160,19 @@ export default {
 
       <div class="m-3" v-for="p in photos" v-if="photos.length > 0">
         <div class="card m-3" style="border-radius: 15px;">
-          <div class="d-flex justify-content-start p-2 mb-2" style="background-color: #efefef;">
+          <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
             <div class="m-3">
               <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3"
                    style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
             </div>
+
             <div class="m-3">
-              <h5 class="mb-1 m-3 p-3">Photo ID: {{ p["id"]}}</h5>
-              <p class="mb-1">Likes: {{ JSON.parse(p["likes"]).length }}</p>
-              <p class="mb-1">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+              <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
+
+              <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
+                <p class="p-3 m-3">{{c['UserId']}} : {{c['Content']}}</p>
+              </div>
+
             </div>
 
           </div>
@@ -186,10 +190,16 @@ export default {
                   <button class="btn btn-primary m-3" @click="unlikePhoto(p)">Unlike</button>
                 </template>
               </div>
+
+
             </div>
             <div class="m-3">
-
-          </div>
+              <div class="m-3">
+                <h6 class="mb-1 ">Photo ID: {{ p["id"]}}</h6>
+                <p class="mb-1">Likes: {{ JSON.parse(p["likes"]).length }}</p>
+                <p class="mb-1">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+              </div>
+            </div>
           </div>
 
         </div>
