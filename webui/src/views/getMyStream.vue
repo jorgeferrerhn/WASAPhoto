@@ -120,9 +120,27 @@ export default {
 
     },
 
+    getName: async function(i){
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let url = "/users/"+i+"/getUserProfile";
+        const user = await this.$axios.get(url,{
+          headers:{"Authorization": this.token}});
+
+        console.log(user.data["Name"])
+        user.data["Name"]
+
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+      this.loading = false;
+
+    },
+
     commentPhoto: async function(p) {
 
-      console.log("Commenting")
       this.loading = true;
       this.errormsg = null;
       try {
@@ -212,7 +230,7 @@ export default {
               <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
 
               <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
-                <p class="">{{c['UserId']}} : {{c['Content']}}</p>
+                <p class="">{{getName(c['UserId'])}} : {{c['Content']}}</p>
               </div>
 
             </div>
