@@ -15,21 +15,21 @@ func (db *appdbimpl) GetMyStream(u User) (User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err2 := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
-		if err != nil {
-			return u, err
+		if err2 != nil {
+			return u, err2
 		}
 
 	}
-	err = rows.Err()
-	if err != nil {
-		return u, err
+	err3 := rows.Err()
+	if err3 != nil {
+		return u, err3
 	}
 
 	if u.Name == "" || u.ID == 0 {
 		return u, errors.New("User not found")
 	}
 
-	return u, err
+	return u, nil
 }
