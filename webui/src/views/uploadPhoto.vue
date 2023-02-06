@@ -41,6 +41,27 @@ export default {
       }
     },
 
+    onUpload: async function() {
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let formData = new FormData();
+        formData.append('file', this.imageData);
+        this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        console.log(this.path)
+        let url = "/users/" + this.token + "/uploadPhoto";
+        const response = await this.$axios.post(url, this.path, {
+          headers: {"Authorization": this.token}
+        });
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+      this.loading = false;
+
+    },
+
+
 
     onFileChange: function(event){
       let name =event.target.files[0]["name"];
@@ -240,8 +261,9 @@ export default {
     <div class="card">
       <div class="card-body">
         <h3 class="h3">Select new picture to upload...: </h3>
+        <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick a photo" prepend-icon="mdi-camera" v-model="imageData">Select image...</v-file-input>
 
-        <input type="file" @change="onFileChange"/>
+        <!--v-file-input type="file" @change="onFileChange"/-->
         <!--v-file-input placeholder="Upload document" v-model="file" accept="image/*" label="Image" @change="onFileChange"/-->
 
 

@@ -70,6 +70,15 @@ export default {
 
         let users = JSON.parse(JSON.stringify(this.users));
 
+        /* Getting logo information
+        let urlogo = "/users/"+this.token+"/getLogo";
+        let logo = await this.$axios.get(urlogo,{
+              headers:{"Authorization": this.token}
+            }
+        );*/
+
+
+
         for (let i = 0; i < users.length; i++){
           if (users[i]["Id"] == user["Id"]){
             contains = true
@@ -239,11 +248,13 @@ export default {
       if (user["ProfilePic"] != 0){
         // Profile picture is not empty
         try {
-          let tokenUrl = "/images/"+user["ProfilePic"];
+          let tokenUrl = "/users/"+user["Id"]+"/getLogo";
           const data = await this.$axios.get(tokenUrl, {
                 headers: {"Authorization": this.token}
               }
-          ).then((image)=>{return image.data});
+          );
+
+          console.log(data)
 
           console.log(data["path"]);
           return data["path"];
@@ -308,6 +319,21 @@ export default {
         <!-- User information -->
         <div v-for="(u,index) in users" :key="index" v-if="users.length > 0" class="flex-grow-1 ms-3">
           <h5 class="mb-1">{{ u["Name"]}}</h5>
+
+          <div class="flex-shrink-0">
+
+            <template >
+              <img :src="'/img/'+getProfilePic(index)"
+                   alt="Generic placeholder image" class="img-fluid"
+                   style="width: 180px; border-radius: 10px;">
+            </template>
+
+
+
+
+          </div>
+
+
           <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                style="background-color: #efefef;">
             <div>
