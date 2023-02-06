@@ -45,8 +45,8 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	intPhoto, err := strconv.Atoi(photoId)
-	if err != nil {
+	intPhoto, err2 := strconv.Atoi(photoId)
+	if err2 != nil {
 		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -66,11 +66,11 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// update info from database
-	dbphoto, dbuser, err := rt.db.UnlikePhoto(p.ToDatabase(), u.ToDatabase())
-	if err != nil {
+	dbphoto, dbuser, err3 := rt.db.UnlikePhoto(p.ToDatabase(), u.ToDatabase())
+	if err3 != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't unlike the photo")
+		ctx.Logger.WithError(err3).Error("can't unlike the photo")
 		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
@@ -91,8 +91,8 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// Send the output to the user.
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(p)
-	if err != nil {
+	err4 := json.NewEncoder(w).Encode(p)
+	if err4 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 

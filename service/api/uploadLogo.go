@@ -38,8 +38,8 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	intId2, err := strconv.Atoi(i)
-	if err != nil {
+	intId2, err2 := strconv.Atoi(i)
+	if err2 != nil {
 		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -47,8 +47,8 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 
 	// path to the image
 	buf := new(bytes.Buffer)
-	n, err := buf.ReadFrom(r.Body)
-	if err != nil || n == 0 {
+	n, err3 := buf.ReadFrom(r.Body)
+	if err3 != nil || n == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -70,12 +70,12 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 
 	// update info from database
-	dbphoto, dbuser, err := rt.db.UploadLogo(p.ToDatabase(), u.ToDatabase())
+	dbphoto, dbuser, err4 := rt.db.UploadLogo(p.ToDatabase(), u.ToDatabase())
 
-	if err != nil {
+	if err4 != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the logo")
+		ctx.Logger.WithError(err4).Error("can't upload the logo")
 		w.WriteHeader(http.StatusBadRequest) // 500
 		return
 	}
@@ -86,8 +86,8 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 	// Send the output to the user.
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(u)
-	if err != nil {
+	err5 := json.NewEncoder(w).Encode(u)
+	if err5 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 

@@ -45,8 +45,8 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	intComment, err := strconv.Atoi(commentId)
-	if err != nil {
+	intComment, err2 := strconv.Atoi(commentId)
+	if err2 != nil {
 		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -70,11 +70,11 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// update info from database
-	dbcomment, dbphoto, dbuser, err := rt.db.UncommentPhoto(c.ToDatabase(), p.ToDatabase(), u.ToDatabase())
-	if err != nil {
+	dbcomment, dbphoto, dbuser, err3 := rt.db.UncommentPhoto(c.ToDatabase(), p.ToDatabase(), u.ToDatabase())
+	if err3 != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't delete the comment")
+		ctx.Logger.WithError(err3).Error("can't delete the comment")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -86,8 +86,8 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	// Send the output to the user.
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(p) // Return the photo
-	if err != nil {
+	err4 := json.NewEncoder(w).Encode(p) // Return the photo
+	if err4 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 

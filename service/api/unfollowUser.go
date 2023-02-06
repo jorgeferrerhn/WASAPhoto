@@ -45,8 +45,8 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	intFollowed, err := strconv.Atoi(idFollowed)
-	if err != nil {
+	intFollowed, err2 := strconv.Atoi(idFollowed)
+	if err2 != nil {
 		// id was not properly cast
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -63,11 +63,11 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// update info from database
-	dbuser2, err := rt.db.UnfollowUser(u1.ToDatabase(), u2.ToDatabase())
-	if err != nil {
+	dbuser2, err3 := rt.db.UnfollowUser(u1.ToDatabase(), u2.ToDatabase())
+	if err3 != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't update the followers' list")
+		ctx.Logger.WithError(err3).Error("can't update the followers' list")
 		w.WriteHeader(http.StatusBadRequest) // 400
 		return
 	}
@@ -77,8 +77,8 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
 
-	err = json.NewEncoder(w).Encode(u2)
-	if err != nil {
+	err4 := json.NewEncoder(w).Encode(u2)
+	if err4 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 

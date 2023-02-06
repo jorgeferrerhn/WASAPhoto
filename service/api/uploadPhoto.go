@@ -30,8 +30,8 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 	// path to the image
 	buf := new(bytes.Buffer)
-	n, err := buf.ReadFrom(r.Body)
-	if err != nil || n == 0 {
+	n, err2 := buf.ReadFrom(r.Body)
+	if err2 != nil || n == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -52,12 +52,12 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// update info from database
-	dbphoto, dbuser, err := rt.db.UploadPhoto(p.ToDatabase(), u.ToDatabase())
+	dbphoto, dbuser, err3 := rt.db.UploadPhoto(p.ToDatabase(), u.ToDatabase())
 
-	if err != nil {
+	if err3 != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't upload the photo")
+		ctx.Logger.WithError(err3).Error("can't upload the photo")
 		w.WriteHeader(http.StatusBadRequest) // 500
 		return
 	}
@@ -68,8 +68,8 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// Send the output to the user.
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(p)
-	if err != nil {
+	err4 := json.NewEncoder(w).Encode(p)
+	if err4 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
