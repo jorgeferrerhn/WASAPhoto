@@ -18,7 +18,7 @@ export default {
     async refresh() {
       this.loading = true;
       this.errormsg = null;
-      this.$router.push("/doLogin");
+      this.$router.push("/");
       this.loading = false;
     },
 

@@ -6,7 +6,8 @@ export default {
       loading: false,
       token: 0,
       tokenUser:{},
-      users:[]
+      users:[],
+      imgSrc: '/default-profile-photo.jpeg'
     }
   },
   methods: {
@@ -21,17 +22,12 @@ export default {
       this.loading = false;
     },
 
-
-
-
-    getUser: async function() {
+    updateLogged: async function(){
+      // Update logged user. This function is used on mounted() to check if the logged user has changed
 
       this.loading = true;
       this.errormsg = null;
       try {
-        // The first thing we will do is save the token user object
-
-        // Let's get the cookie
         this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
         let tokenUrl = "/users/"+this.token+"/getUserProfile";
         const userToken = await this.$axios.get(tokenUrl,{
@@ -39,6 +35,28 @@ export default {
             }
         );
         this.tokenUser = userToken.data;
+        for (let i = 0; i < this.users.length; i++){
+          if (this.users[i] == this.token){
+            console.log(this.tokenUser); // Updating logged user
+          }
+        }
+      } catch (e) {
+        console.log("Error")
+        this.errormsg = e.toString();
+      }
+
+      this.loading = false;
+
+
+    },
+
+
+    getUser: async function() {
+
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        await this.updateLogged();
 
         // Then, we search for the requested user
         let url = "/users/"+this.id+"/getUserProfile";
@@ -193,11 +211,9 @@ export default {
       // Method to check if token user has banned the parameter user
 
       let user = JSON.parse(JSON.stringify(u))
-      console.log("User to search: ",user)
       let tokenIsBanned = false;
 
       let banned = JSON.parse(this.tokenUser["Banned"]);
-      console.log("Banned: ",banned)
       for (let j = 0; j < banned.length; j++) {
         if (banned[j] == user["Id"]) {
           tokenIsBanned = true
@@ -209,31 +225,31 @@ export default {
 
     },
 
-    getProfilePic: function(u){
+
+    getProfilePic: async function(u){
       // Function that returns the profile pic path
-      let user = JSON.parse(JSON.stringify(u))
-      console.log("getting pic,",user)
+      let user = JSON.parse(JSON.stringify(u));
+      let finalPath = "";
+      console.log("getting pic,",user);
 
       if (user["ProfilePic"] != 0){
         // Profile picture is not empty
         try {
           let tokenUrl = "/images/"+user["ProfilePic"];
-          const image = this.$axios.get(tokenUrl, {
+          const data = await this.$axios.get(tokenUrl, {
                 headers: {"Authorization": this.token}
               }
-          );
-          console.log(image)
+          ).then((image)=>{return image.data});
 
-          let finalpath = string(image.data['path'])
-          console.log(finalpath)
-          return finalpath
+          console.log(data["path"]);
+          return data["path"];
 
         }catch (e) {
           this.errormsg = e.toString();
         }
       }
-      console.log("Va a devovler la imagen de prueba")
-      return "default-profile-photo.jpeg"
+      finalPath = "default-profile-photo.jpeg";
+      return finalPath;
     }
 
 
@@ -241,9 +257,9 @@ export default {
 
   },
 
-  computed: {
-
-
+  async mounted() {
+    this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
+    const profilePic = await getProfilePic(this.tokenUser)
 
 
   }
@@ -289,8 +305,11 @@ export default {
 
 
               <h5 class="m-3 p-3">{{ u["Name"]}}</h5>
-              <img :src="'/profilepics/'+getProfilePic(u)" v-bind:alt="getProfilePic(u)" class="avatar img-fluid m-3"
+            <template>
+              <img :src="imgSrc" v-bind:alt="getProfilePic(u)" class="avatar img-fluid m-3"
                    style="border-radius: 10px; width: 100px; height: 100px;">
+
+            </template>
 
 
 

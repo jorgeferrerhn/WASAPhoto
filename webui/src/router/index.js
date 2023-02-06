@@ -18,7 +18,7 @@ import deletePhoto from '../views/deletePhoto.vue'
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes: [
-		{path: '/doLogin', component: doLogin},
+		{path: '/', component: doLogin},
 		{path: '/getUserProfile', component: getUserProfile},
 		{path: '/getMyStream', component: getMyStream},
 		{path: '/uploadPhoto', component: uploadPhoto},

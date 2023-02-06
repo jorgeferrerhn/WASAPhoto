@@ -26,7 +26,7 @@ export default {}
 					<ul class="nav flex-column">
 
             <li class="nav-item">
-              <RouterLink to="/doLogin" class="nav-link">
+              <RouterLink to="/" class="nav-link">
                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
                 Login
               </RouterLink>
