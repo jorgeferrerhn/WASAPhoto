@@ -21,40 +21,40 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 
 	for rows.Next() {
 
-		err = rows.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+		err2 := rows.Scan(&userNameTarget, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
-		if err != nil {
-			return u, err
+		if err2 != nil {
+			return u, err2
 		}
 
 	}
-	err = rows.Err()
-	if err != nil {
-		return u, err
+	err3 := rows.Err()
+	if err3 != nil {
+		return u, err3
 	}
 
 	if userNameTarget == "" { // invalid user id
 		return u, errors.New("This user doesn't exist!")
 	}
 	// Then, we have to check if the username has been already taken by everyone else
-	rows2, err2 := db.c.Query(`select id from users where name=?`, u.Name)
+	rows2, err4 := db.c.Query(`select id from users where name=?`, u.Name)
 
-	if err2 != nil {
-		return u, err2
+	if err4 != nil {
+		return u, err4
 	}
 
 	for rows2.Next() {
 
-		err = rows2.Scan(&searchId)
+		err5 := rows2.Scan(&searchId)
 
-		if err != nil {
-			return u, err
+		if err5 != nil {
+			return u, err5
 		}
 
 	}
-	err = rows.Err()
-	if err != nil {
-		return u, err
+	err6 := rows.Err()
+	if err6 != nil {
+		return u, err6
 	}
 
 	if searchId != 0 { // There's someone with that username already
