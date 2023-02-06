@@ -16,17 +16,17 @@ func (db *appdbimpl) GetImage(p Photo) (Photo, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
+		err2 := rows.Scan(&p.UserId, &p.Path, &p.Likes, &p.Comments, &p.Date)
 
-		if err != nil {
-			return p, err
+		if err2 != nil {
+			return p, err2
 		}
 
 	}
 
-	err = rows.Err()
-	if err != nil {
-		return p, err
+	err3 := rows.Err()
+	if err3 != nil {
+		return p, err3
 	}
 
 	if p.Path == "" {
