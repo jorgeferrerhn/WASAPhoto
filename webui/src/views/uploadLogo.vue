@@ -103,9 +103,9 @@ export default {
       return false
     }
   },
-  mounted() {
+  async mounted() {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
-    this.getUser();
+    await this.getUser();
   }
 }
 </script>
@@ -136,12 +136,12 @@ export default {
       <div class="card-body">
 
 
-        <h3 class="h3">Select your new profile picture, {{userToken["Name"]}}...: </h3>
-        <input type="file" @change="onFileChange"/>
+        <h3 class="h3 m-3">Select your new profile picture, {{userToken["Name"]}}...: </h3>
+        <input class="m-3" type="file" @change="onFileChange"/>
 
         <!-- User information -->
       <template v-if="userNotEmpty">
-        <div class="col col-md-9 col-lg-7 col-xl-5" >
+        <div class="col m-3 col-md-9 col-lg-7 col-xl-5" >
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-4">
               <div class="d-flex text-black">
@@ -161,7 +161,8 @@ export default {
 
 
                 </div>
-                <div class="flex-grow-1 ms-3">
+                <!-- User information -->
+                <div v-if="userNotEmpty" class="flex-grow-1 ms-3">
                   <h5 class="mb-1">{{ userToken["Name"]}}</h5>
                   <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                        style="background-color: #efefef;">
