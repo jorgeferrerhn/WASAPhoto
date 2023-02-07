@@ -580,7 +580,7 @@ paths:
 
 
 
-  /users/{userId}/uploadPhoto:
+  /users/{userId}/photo:
     post:
       parameters:
         - name: userId

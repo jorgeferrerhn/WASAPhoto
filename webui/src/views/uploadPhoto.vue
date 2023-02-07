@@ -49,7 +49,7 @@ export default {
         formData.append('file', this.imageData);
         this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         console.log(this.path)
-        let url = "/users/" + this.token + "/uploadPhoto";
+        let url = "/users/" + this.token + "/photo";
         const response = await this.$axios.post(url, this.path, {
           headers: {"Authorization": this.token}
         });
@@ -88,7 +88,7 @@ export default {
           // Let's get the cookie
           this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
           console.log(this.path)
-          let url = "/users/"+this.token+"/uploadPhoto";
+          let url = "/users/"+this.token+"/photo";
           const response = await this.$axios.post(url,this.path,{
             headers:{"Authorization": this.token}
           });
