@@ -29,7 +29,7 @@ export default {
       this.errormsg = null;
       try {
         this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
-        let tokenUrl = "/users/"+this.token+"/getUserProfile";
+        let tokenUrl = "/users/"+this.token+"/profile";
         const userToken = await this.$axios.get(tokenUrl,{
               headers:{"Authorization": this.token}
             }
@@ -62,7 +62,7 @@ export default {
         try {
 
           // Then, we search for the requested user
-          let url = "/users/"+this.search+"/getUserProfile";
+          let url = "/users/"+this.search+"/profile";
           const response = await this.$axios.get(url,{
                 headers:{"Authorization": this.token}
               }

@@ -24,7 +24,7 @@ export default {
 
     getUser: async function(){
       // Getting user information
-      let tokenUrl = "/users/"+this.token+"/getUserProfile";
+      let tokenUrl = "/users/"+this.token+"/profile";
       let userToken = await this.$axios.get(tokenUrl,{
             headers:{"Authorization": this.token}
           }
@@ -83,7 +83,7 @@ export default {
 
       this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
       console.log(this.token)
-      let tokenUrl = "/users/"+this.token+"/getUserProfile";
+      let tokenUrl = "/users/"+this.token+"/profile";
       const userToken = await this.$axios.get(tokenUrl,{
             headers:{"Authorization": this.token}
           }

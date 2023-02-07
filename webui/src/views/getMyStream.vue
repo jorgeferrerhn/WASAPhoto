@@ -124,7 +124,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+i+"/getUserProfile";
+        let url = "/users/"+i+"/profile";
         const user = await this.$axios.get(url,{
           headers:{"Authorization": this.token}});
 

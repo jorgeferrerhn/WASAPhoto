@@ -43,7 +43,7 @@ export default {
 
     getUser: async function(){
       // Getting user information
-      let tokenUrl = "/users/"+this.token+"/getUserProfile";
+      let tokenUrl = "/users/"+this.token+"/profile";
       let userToken = await this.$axios.get(tokenUrl,{
             headers:{"Authorization": this.token}
           }

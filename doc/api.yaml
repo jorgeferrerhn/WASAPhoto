@@ -171,7 +171,7 @@ paths:
 
 
 
-  /users/{userId}/getUserProfile:
+  /users/{userId}/profile:
     parameters:
       - name: userId
         schema:
@@ -184,7 +184,7 @@ paths:
 
     get:
       summary: user searched by its userId
-      operationId: getUserProfile
+      operationId: profile
       description: |
         Obtains an user by its userId. It returns a list with the attributes of the user, or -1 if not found.
 
