@@ -77,7 +77,11 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		castLikes = append(castLikes, u.ID)
 	}
 
-	p.Likes = json.Marshal(castLikes)
+	result, errMarshal := json.Marshal(castLikes)
+	if errMarshal != nil {
+		return p, u, errMarshal
+	}
+	p.Likes = string(result)
 
 	// We update the user's photos and the photos' stream
 

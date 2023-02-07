@@ -1,13 +1,14 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
 )
 
 func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 
+	var castFollowers []int
 	// search for the user that follows
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
 
@@ -62,30 +63,24 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("Followed not found")
 	}
 
-	followed := strings.Contains(user2.Followers, fmt.Sprint(user1.ID))
-
-	if !followed {
-		return user2, errors.New("User2 wasn't previously followed by user1")
+	in := []byte(user2.Followers)
+	errFollowers := json.Unmarshal(in, &castFollowers)
+	if errFollowers != nil {
+		return user2, errFollowers
 	}
 
-	newList := "["
-	counter := 1
-	// Updating the followers' list
-	for i := 1; i < len(user2.Followers)-1; i++ { // Chapuza: a ver si puedo cambiarlo
-		c := string(user2.Followers[i]) // rune to string
-		if c == "," {
-			number := user2.Followers[counter:i] // takes up to that position
-			if number != fmt.Sprint(user1.ID) {
-				newList += number + ","
-			}
+	var newFollowers []int
+	for i := 0; i < len(castFollowers); i++ {
+		if castFollowers[i] != user1.ID {
+			newFollowers = append(newFollowers, castFollowers[i])
 		}
 	}
-	newList = newList[:len(newList)-1] + "]" // extract the last comma and add the last bracket
-	if newList == "]" {
-		// It was empty
-		newList = "[]"
+
+	result, errMarshal := json.Marshal(newFollowers)
+	if errMarshal != nil {
+		return user2, errMarshal
 	}
-	user2.Followers = newList
+	user2.Followers = string(result)
 
 	res, err7 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		user2.Name, user2.ProfilePic, user2.Followers, user2.Banned, user2.Photos, user2.ID)

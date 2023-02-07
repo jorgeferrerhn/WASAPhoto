@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -9,6 +10,7 @@ import (
 
 func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 
+	var castBanned []int
 	// search for the user that follows
 	rows, err := db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user1.ID)
 
@@ -63,19 +65,23 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 		return user1, errors.New("User 2 not found")
 	}
 
+	in := []byte(user1.Banned)
+	errBanned := json.Unmarshal(in, &castBanned)
+	if errBanned != nil {
+		return user1, errBanned
+	}
+
 	banned := strings.Contains(user1.Banned, fmt.Sprint(user2.ID))
 
 	if !banned {
-		var add string
-		newList := user1.Banned[0 : len(user1.Banned)-1]
-		if user1.Banned == "[]" {
-			add = fmt.Sprint(user2.ID) + "]"
-		} else {
-			add = "," + fmt.Sprint(user2.ID) + "]"
-		}
-		newList += add
-		user1.Banned = newList
+		castBanned = append(castBanned, user2.ID)
 	}
+
+	result, errMarshal := json.Marshal(castBanned)
+	if errMarshal != nil {
+		return user2, errMarshal
+	}
+	user1.Banned = string(result)
 
 	var res sql.Result
 	var err7 error

@@ -1,12 +1,13 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
 )
 
 func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
+	var castBanned []int
 
 	// search for the user that follows
 	rows, err := db.c.Query(`SELECT name,profilepic,followers,banned,photos FROM users WHERE id=?`, user1.ID)
@@ -62,31 +63,24 @@ func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
 		return user1, errors.New("User 2 not found")
 	}
 
-	banned := strings.Contains(user1.Banned, fmt.Sprint(user2.ID))
-	if !banned {
-		return user1, errors.New("User2 wasn't previously banned by user1")
+	in := []byte(user1.Banned)
+	errFollowers := json.Unmarshal(in, &castBanned)
+	if errFollowers != nil {
+		return user1, errFollowers
 	}
-	// We cast to list the string
-	newList := "["
-	counter := 1
-	// Updating the followers' list
-	for i := 1; i < len(user1.Banned)-1; i++ { // Chapuza: esto hay que cambiarlo
-		c := string(user1.Banned[i]) // rune to string
-		if c == "," {
-			number := user1.Banned[counter:i] // takes up to that position
-			if number != fmt.Sprint(user1.ID) {
-				newList += number + ","
-			}
+
+	var newBanned []int
+	for i := 0; i < len(castBanned); i++ {
+		if castBanned[i] != user1.ID {
+			newBanned = append(newBanned, castBanned[i])
 		}
 	}
 
-	newList = newList[:len(newList)-1] + "]" // extract the last comma and add the last bracket
-	if newList == "]" {
-		// It was empty
-		newList = "[]"
+	result, errMarshal := json.Marshal(newBanned)
+	if errMarshal != nil {
+		return user1, errMarshal
 	}
-
-	user1.Banned = newList
+	user1.Banned = string(result)
 
 	res, err7 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		user1.Name, user1.ProfilePic, user1.Followers, user1.Banned, user1.Photos, user1.ID)

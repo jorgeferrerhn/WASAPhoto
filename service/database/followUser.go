@@ -76,7 +76,11 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		castFollowers = append(castFollowers, user1.ID)
 	}
 
-	user2.Followers = fmt.Sprint(castFollowers)
+	result, errMarshal := json.Marshal(castFollowers)
+	if errMarshal != nil {
+		return user2, errMarshal
+	}
+	user2.Followers = string(result)
 
 	res2, err7 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		user2.Name, user2.ProfilePic, user2.Followers, user2.Banned, user2.Photos, user2.ID)
