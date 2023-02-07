@@ -303,6 +303,10 @@ paths:
             The request was not compliant with the documentation
             (eg. missing fields, etc). 
 
+        "404":
+          description: |
+            Missing resource or not found
+
         '405':
           description: Method not allowed.
           content:
