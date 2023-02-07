@@ -2,15 +2,12 @@
 export default {
   data: function() {
     return {
-      file:null,
       errormsg: null,
       previewImage:null,
       loading: false,
       token: 0,
-      photo: {},
       photos:[],
-      selectedFile:null,
-      serverFile:null
+      selectedFile:null
     }
   },
   methods: {
@@ -27,58 +24,8 @@ export default {
 
 
 
-    selectImage () {
-      this.$refs.fileInput.click()
-    },
-    pickFile () {
-      let input = this.$refs.fileInput
-      let file = input.files
-      if (file && file[0]) {
-        let reader = new FileReader
-        reader.onload = e => {
-          this.previewImage = e.target.result
-        }
-        reader.readAsDataURL(file[0])
-        this.$emit('input', file[0])
-      }
-    },
-
-    onUpload: async function() {
-      this.loading = true;
-      this.errormsg = null;
-      try {
-        let formData = new FormData();
-        formData.append('file', this.imageData);
-        this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-        console.log(this.path)
-        let url = "/users/" + this.token + "/photo";
-        const response = await this.$axios.post(url, this.path, {
-          headers: {"Authorization": this.token}
-        });
-
-      } catch (e) {
-        this.errormsg = e.toString();
-      }
-      this.loading = false;
-
-    },
 
 
-    onFileSelected(event){
-      this.selectedFile = event.target.files[0]
-      console.log(this.selectedFile)
-
-      let reader = new FileReader();
-      let imgtag = document.getElementById("myimg");
-      imgtag.title = this.selectedFile.name;
-
-      reader.onload = function(event) {
-        imgtag.src = event.target.result;
-      };
-
-      console.log(imgtag.src)
-
-    },
     onChangeFileUpload: async function (e) {
       let file = e.target.files[0]
       this.serverFile = file
@@ -136,117 +83,11 @@ export default {
     },
 
 
-    likePhoto: async function(p) {
-
-      this.loading = true;
-      this.errormsg = null;
-      try {
-        let url = "/users/"+this.token+"/likePhoto/"+p["id"];
-        const response = await this.$axios.put(url, "",{
-          headers:{"Authorization": this.token,
-          }
-        });
-        let photo = response.data;
 
 
-        // update this.photos list to update likes
-        for (let i = 0; i < this.photos.length; i++) {
-          if (this.photos[i]["id"] == photo["id"]){
-
-            // update likes list
-            this.photos[i]["likes"] = photo["likes"]
-          }
-        }
-
-      } catch (e) {
-        this.errormsg = e.toString();
-      }
 
 
-      this.loading = false;
-    },
-    unlikePhoto: async function(p) {
 
-      this.loading = true;
-      this.errormsg = null;
-      try {
-        let url = "/users/"+this.token+"/unlikePhoto/"+p["id"];
-        const response = await this.$axios.delete(url,{
-          headers:{"Authorization": this.token,
-          }
-        });
-        let photo = response.data;
-
-
-        // update this.photos list to update likes
-        for (let i = 0; i < this.photos.length; i++) {
-          if (this.photos[i]["id"] == photo["id"]) {
-            // update likes list
-            this.photos[i]["likes"] = photo["likes"]
-          }
-        }
-
-      } catch (e) {
-        this.errormsg = e.toString();
-      }
-      this.loading = false;
-    },
-
-    isLiked(p){
-      // Method to check if token user liked the searched photo
-
-      let photo = JSON.parse(JSON.stringify(p))
-      let photos = JSON.parse(JSON.stringify(this.photos))
-
-      console.log(photos)
-
-      let tokenLiked = false;
-      for (let i = 0; i < photos.length; i++){
-        if (photos[i]["id"] == photo["id"]){
-          let likes = JSON.parse(photos[i]["likes"]);
-          console.log(likes)
-          for (let j = 0; j < likes.length; j++) {
-            if (likes[j] == this.token) {
-              tokenLiked = true;
-            }
-          }
-        }
-      }
-      return tokenLiked
-
-    },
-
-    commentPhoto: async function(p) {
-
-      console.log("Commenting")
-      this.loading = true;
-      this.errormsg = null;
-      try {
-        let url = "/users/"+this.token+"/commentPhoto/"+p["id"];
-        const response = await this.$axios.post(url, this.comment,{
-          headers:{"Authorization": this.token,
-          }
-        });
-        let photo = response.data;
-        console.log(photo)
-
-
-        // update this.photos list to update likes
-        for (let i = 0; i < this.photos.length; i++) {
-          if (this.photos[i]["id"] == photo["id"]){
-
-            // update likes list
-            this.photos[i]["comments"] = photo["comments"]
-          }
-        }
-
-      } catch (e) {
-        this.errormsg = e.toString();
-      }
-
-
-      this.loading = false;
-    },
 
 
 

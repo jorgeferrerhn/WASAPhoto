@@ -6,8 +6,7 @@ export default {
       loading: false,
       token: 0,
       tokenUser:{},
-      users:[],
-      imgSrc: '/default-profile-photo.jpeg'
+      users:[]
     }
   },
   methods: {

@@ -9,11 +9,6 @@ import commentPhoto from '../views/commentPhoto.vue'
 import likePhoto from '../views/likePhoto.vue'
 import setMyUserName from '../views/setMyUserName.vue'
 import followUser from '../views/followUser.vue'
-import banUser from '../views/banUser.vue'
-import unfollowUser from '../views/unfollowUser.vue'
-import unbanUser from '../views/unbanUser.vue'
-import unlikePhoto from '../views/unlikePhoto.vue'
-import uncommentPhoto from '../views/uncommentPhoto.vue'
 import deletePhoto from '../views/deletePhoto.vue'
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),

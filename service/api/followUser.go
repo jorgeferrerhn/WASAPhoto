@@ -64,6 +64,12 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
+	if u1.ID == u2.ID {
+		// A user can't follow himself
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// update info from database
 	dbuser2, err3 := rt.db.FollowUser(u1.ToDatabase(), u2.ToDatabase())
 	if err3 != nil {
