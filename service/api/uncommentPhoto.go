@@ -14,7 +14,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	token, errTok := strconv.Atoi(reqToken)
 	if errTok != nil {
 		// id was not properly cast
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 

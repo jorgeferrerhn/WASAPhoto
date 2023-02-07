@@ -825,6 +825,10 @@ paths:
         '400':
           description: Bad Request. Error parsing data or information not valid.
 
+        '401':
+          description: Unauthorized. Missing or invalid Authentication token.
+
+
 
         '405':
           description: Method not allowed.
@@ -936,6 +940,10 @@ paths:
         '400':
           description: Bad Request. Error parsing data or information not valid.
 
+        '401':
+          description: Unauthorized. Missing or invalid Authentication token.
+
+
 
         '405':
           description: Method not allowed.
@@ -1041,6 +1049,10 @@ paths:
 
         '400':
           description: Bad Request. Error parsing data or information not valid.
+
+        '401':
+          description: Unauthorized. Missing or invalid Authentication token.
+
 
 
         '405':
@@ -1153,6 +1165,10 @@ paths:
                     format: date-time
         '400':
           description: Bad Request. Error parsing data or information not valid.
+
+
+        '401':
+          description: Unauthorized. Missing or invalid Authentication token.
 
 
         '405':
@@ -1311,6 +1327,10 @@ paths:
 
         '400':
           description: Bad Request. Error parsing data or information not valid.
+
+        '401':
+          description: Unauthorized. Missing or invalid Authentication token.
+
 
 
         '405':
@@ -1576,7 +1596,8 @@ paths:
                 description: Successful operation
 
         '401':
-          description: Access token is missing or invalid
+          description: Unauthorized. Missing or invalid Authentication token.
+
         '404':
           description: Resource not found.
           content:
@@ -1632,7 +1653,8 @@ paths:
                 description: Successful operation
 
         '401':
-          description: Access token is missing or invalid
+          description: Unauthorized. Missing or invalid Authentication token.
+
         '404':
           description: Resource not found.
           content:
@@ -1688,7 +1710,8 @@ paths:
                 description: Successful operation
 
         '401':
-          description: Access token is missing or invalid
+          description: Unauthorized. Missing or invalid Authentication token.
+
         '404':
           description: Resource not found.
           content:
@@ -1745,6 +1768,10 @@ paths:
 
         '400':
           description: Access token is missing or invalid
+
+        '401':
+          description: Unauthorized. Missing or invalid Authentication token.
+
         '404':
           description: Resource not found.
           content:

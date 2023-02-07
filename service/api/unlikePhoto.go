@@ -15,7 +15,7 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	token, errTok := strconv.Atoi(reqToken)
 	if errTok != nil {
 		// id was not properly cast
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 

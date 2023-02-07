@@ -17,7 +17,7 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 	token, errTok := strconv.Atoi(reqToken)
 	if errTok != nil {
 		// id was not properly cast
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
