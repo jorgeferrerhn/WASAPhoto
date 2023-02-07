@@ -57,45 +57,50 @@ export default {
 
       this.loading = true;
       this.errormsg = null;
-      try {
 
-        // Then, we search for the requested user
-        let url = "/users/"+this.search+"/getUserProfile";
-        const response = await this.$axios.get(url,{
-          headers:{"Authorization": this.token}
-            }
-        );
-        let user = response.data;
-        let contains = false
+      if (this.search != undefined){
+        try {
 
-        let users = JSON.parse(JSON.stringify(this.users));
+          // Then, we search for the requested user
+          let url = "/users/"+this.search+"/getUserProfile";
+          const response = await this.$axios.get(url,{
+                headers:{"Authorization": this.token}
+              }
+          );
+          let user = response.data;
+          let contains = false
 
-        /* Getting logo information
-        let urlogo = "/users/"+this.token+"/getLogo";
-        let logo = await this.$axios.get(urlogo,{
-              headers:{"Authorization": this.token}
-            }
-        );*/
+          let users = JSON.parse(JSON.stringify(this.users));
+
+          /* Getting logo information
+          let urlogo = "/users/"+this.token+"/getLogo";
+          let logo = await this.$axios.get(urlogo,{
+                headers:{"Authorization": this.token}
+              }
+          );*/
 
 
 
-        for (let i = 0; i < users.length; i++){
-          if (users[i]["Id"] == user["Id"]){
-            contains = true
-          } // contains
+          for (let i = 0; i < users.length; i++){
+            if (users[i]["Id"] == user["Id"]){
+              contains = true
+            } // contains
+          }
+          if (!contains){
+            users.push(user);
+          }
+
+          this.users = users;
+          console.log(this.users)
+
+
+
+        } catch (e) {
+          this.errormsg = e.toString();
         }
-        if (!contains){
-          users.push(user);
-        }
 
-        this.users = users;
-        console.log(this.users)
-
-
-
-      } catch (e) {
-        this.errormsg = e.toString();
       }
+
       this.loading = false;
     },
     followUser: async function(u) {
