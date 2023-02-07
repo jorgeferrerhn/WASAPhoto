@@ -317,6 +317,152 @@ paths:
                 description: Error description
 
 
+  /users/{userName}:
+    parameters:
+      - name: userName
+        schema:
+          type: integer
+          description: User name
+
+        in: path
+        required: true
+        description: User name
+
+    get:
+      summary: user searched by its username
+      operationId: getUserByName
+      description: |
+        Obtains an user by its username. It returns a list with the attributes of the user, or 404 if not found
+
+      tags: [ "User" ]
+
+      responses:
+        "200":
+          description: Information related to the user
+          content:
+            application/json:
+              schema:
+                description: Information of the user; username, profile pic, followers,photos
+                type: object
+                properties:
+
+                  id:
+                    description: User identifier
+                    type: integer
+                    example: 9013213
+
+                  name:
+                    type: string
+                    example: "Maria"
+                    minLength: 3
+                    maxLength: 16
+                    pattern: ^[a-zA-Z0-9]{1,20}$
+                    description: Username
+
+                  profilePictureID:
+                    description: Profile picture identifier
+                    type: integer
+                    example: 123912
+
+                  followers:
+                    type: array
+                    description: An array with the followers. We only store the followers, not the followed.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: integer
+                      description: ID of the user that follows
+
+                  banned:
+                    type: array
+                    description: An array with the bannedUsers.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: string
+                      minLength: 3
+                      maxLength: 16
+
+                  photos:
+                    type: array
+                    description: An array with the stream of photos.
+                    minItems: 0
+                    maxItems: 100
+                    items:
+                      type: object
+                      properties:
+
+                        imagePath:
+                          description: path to the image
+                          type: string
+                          minLength: 3
+                          maxLength: 100
+
+
+                        photoID:
+                          description: ID of the photo
+                          type: integer
+
+                        likes:
+                          type: array
+                          description: A sub-array with the likes of each photo.
+                          minItems: 0
+                          maxItems: 100
+                          items:
+                            type: string
+                            minLength: 3
+                            maxLength: 16
+
+
+                        comments:
+                          type: array
+                          description: A sub-array with the comments of each photo.
+                          minItems: 0
+                          maxItems: 100
+                          items:
+                            type: object
+                            properties:
+
+                              user:
+                                type: integer
+                                description: userId
+
+
+                              comment:
+                                type: string
+                                minLength: 3
+                                maxLength: 16
+                                description: comment
+
+
+                        date:
+                          type: string
+                          minLength: 3
+                          maxLength: 16
+                          format: date-time
+                          description: Creation date and time
+
+
+
+        "400":
+          description: |
+            The request was not compliant with the documentation
+            (eg. missing fields, etc). 
+
+        "404":
+          description: |
+            Missing resource or not found
+
+        '405':
+          description: Method not allowed.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Method Not Allowed"
+                description: Error description
+
+
 
 
   /users/{userId}/stream:

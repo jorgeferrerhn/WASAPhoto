@@ -61,37 +61,43 @@ export default {
       if (this.search != undefined){
         try {
 
-          // Then, we search for the requested user
-          let url = "/users/"+this.search+"/profile";
-          const response = await this.$axios.get(url,{
-                headers:{"Authorization": this.token}
-              }
-          );
-          let user = response.data;
-          let contains = false
+          // To search a user for its name with our current endpoints, we have to log-in with the user, retrieve the user and log-out
+          // We have to search first for the
+          let sessionUrl = "/users/"+this.search;
+          const response = await this.$axios.get(sessionUrl,
+          ).then(res => res);
 
-          let users = JSON.parse(JSON.stringify(this.users));
+          let userId = response.data["Id"];
+          // After doing this, we will be able to retrieve the user by its id
 
-          /* Getting logo information
-          let urlogo = "/users/"+this.token+"/logo";
-          let logo = await this.$axios.get(urlogo,{
-                headers:{"Authorization": this.token}
-              }
-          );*/
+          if (userId != undefined){
 
+            let user = response.data;
+            let contains = false
 
+            let users = JSON.parse(JSON.stringify(this.users));
 
-          for (let i = 0; i < users.length; i++){
-            if (users[i]["Id"] == user["Id"]){
-              contains = true
-            } // contains
+            for (let i = 0; i < users.length; i++){
+              if (users[i]["Id"] == user["Id"]){
+                contains = true
+              } // contains
+            }
+            if (!contains){
+              users.push(user);
+            }
+
+            this.users = users;
+            console.log(this.users)
+
           }
-          if (!contains){
-            users.push(user);
-          }
 
-          this.users = users;
-          console.log(this.users)
+
+
+
+
+
+
+
 
 
 
@@ -318,7 +324,7 @@ export default {
     <div class="card">
       <div class="card-body">
 
-        <h3 class="h3 mb-3 mt-3">Introduce user ID to search: </h3>
+        <h3 class="h3 mb-3 mt-3">Introduce user name to search: </h3>
         <input class="mb-3 mt-3" v-model="search" placeholder=" Search for a user...">
         <a href="javascript:" class="btn btn-primary m-3" @click="getUser">Search for user</a>
 
@@ -331,9 +337,9 @@ export default {
             <div class="flex-shrink-0">
 
               <template >
-                <img :src="'/img/'+getProfilePic(index)"
+                <!--img :src="'/img/'+getProfilePic(index)"
                      alt="Generic placeholder image" class="img-fluid"
-                     style="width: 180px; border-radius: 10px;">
+                     style="width: 180px; border-radius: 10px;"-->
               </template>
 
 
