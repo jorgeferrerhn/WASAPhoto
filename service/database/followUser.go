@@ -1,12 +1,15 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
 )
 
 func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
+
+	var castFollowers []int
 	// search for the user that follows
 	rows, err := db.c.Query(`SELECT name FROM users WHERE id=?`, user1.ID)
 
@@ -61,20 +64,19 @@ func (db *appdbimpl) FollowUser(user1 User, user2 User) (User, error) {
 		return user2, errors.New("Followed not found")
 	}
 
+	in := []byte(user2.Followers)
+	errFollowers := json.Unmarshal(in, &castFollowers)
+	if errFollowers != nil {
+		return user2, errFollowers
+	}
+
 	followed := strings.Contains(user2.Followers, fmt.Sprint(user1.ID))
 
-	if !followed { // Chapuza: esto hay que cambiarlo
-		var add string
-		newList := user2.Followers[0 : len(user2.Followers)-1]
-		if user2.Followers == "[]" {
-			add = fmt.Sprint(user1.ID) + "]"
-		} else {
-			add = "," + fmt.Sprint(user1.ID) + "]"
-		}
-		newList += add
-		user2.Followers = newList
-
+	if !followed {
+		castFollowers = append(castFollowers, user1.ID)
 	}
+
+	user2.Followers = fmt.Sprint(castFollowers)
 
 	res2, err7 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		user2.Name, user2.ProfilePic, user2.Followers, user2.Banned, user2.Photos, user2.ID)
