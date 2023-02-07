@@ -324,36 +324,40 @@ export default {
 
 
         <!-- User information -->
-        <div v-for="(u,index) in users" :key="index" v-if="users.length > 0" class="flex-grow-1 ms-3">
-          <h5 class="mb-1">{{ u["Name"]}}</h5>
+        <template v-if="users.length > 0">
+          <div v-for="(u,index) in users" :key="index"  class="flex-grow-1 ms-3">
+            <h5 class="mb-1">{{ u["Name"]}}</h5>
 
-          <div class="flex-shrink-0">
+            <div class="flex-shrink-0">
 
-            <template >
-              <img :src="'/img/'+getProfilePic(index)"
-                   alt="Generic placeholder image" class="img-fluid"
-                   style="width: 180px; border-radius: 10px;">
-            </template>
+              <template >
+                <img :src="'/img/'+getProfilePic(index)"
+                     alt="Generic placeholder image" class="img-fluid"
+                     style="width: 180px; border-radius: 10px;">
+              </template>
 
 
 
+
+            </div>
+
+
+            <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                 style="background-color: #efefef;">
+              <div>
+                <p class="small text-muted mb-1">Photos uploaded</p>
+                <p class="mb-0">{{ JSON.parse(u["Photos"]).length }}</p>
+              </div>
+              <div class="px-3">
+                <p class="small text-muted mb-1">Followers </p>
+                <p class="mb-0">{{ JSON.parse(u["Followers"]).length }}</p>
+              </div>
+            </div>
 
           </div>
 
+        </template>
 
-          <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-               style="background-color: #efefef;">
-            <div>
-              <p class="small text-muted mb-1">Photos uploaded</p>
-              <p class="mb-0">{{ JSON.parse(u["Photos"]).length }}</p>
-            </div>
-            <div class="px-3">
-              <p class="small text-muted mb-1">Followers </p>
-              <p class="mb-0">{{ JSON.parse(u["Followers"]).length }}</p>
-            </div>
-          </div>
-
-        </div>
 
 
 
