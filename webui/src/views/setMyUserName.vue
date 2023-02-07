@@ -24,20 +24,28 @@ export default {
 
       this.loading = true;
       this.errormsg = null;
-      try {
-        let url = "/users/"+this.id+"/setMyUserName";
-        const response = await this.$axios.put(url, this.name);
-        this.user = response.data;
+      if (this.name != undefined){
+        try {
+          let url = "/users/"+this.token+"/setMyUserName";
+          const response = await this.$axios.put(url, this.name,{
+                headers:{"Authorization": this.token}
 
-      } catch (e) {
-        this.errormsg = e.toString();
+          }
+          );
+          this.user = response.data;
+
+        } catch (e) {
+          this.errormsg = e.toString();
+        }
+
       }
+
       this.loading = false;
     },
 
   },
-  mounted() {
-    this.refresh()
+  async mounted() {
+    this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
   }
 }
 </script>
@@ -66,11 +74,6 @@ export default {
 
     <div class="card">
       <div class="card-body">
-
-        <h3 class="h3">Introduce user id...: </h3>
-        <input v-model="id" placeholder="1">
-
-
 
         <h3 class="h3">Introduce your new user name...: </h3>
         <input v-model="name" placeholder="jose">
