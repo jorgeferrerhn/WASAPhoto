@@ -42,7 +42,7 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	if u.ID != token {
 		// Error: the authorization header is not valid
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 

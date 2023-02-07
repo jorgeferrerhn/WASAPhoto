@@ -26,7 +26,7 @@ export default {
       this.errormsg = null;
       try {
         let url = "/users/"+this.id+"/deletePhoto/"+this.photo;
-        const response = await this.$axios.delete(url);
+      const response = await this.$axios.delete(url).then(res => res);
         this.user = response.data;
 
       } catch (e) {

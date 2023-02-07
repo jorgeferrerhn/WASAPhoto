@@ -28,7 +28,7 @@ export default {
       this.errormsg = null;
       try {
         let url = "/session"
-        const response = await this.$axios.post(url, this.name);
+        const response = await this.$axios.post(url, this.name).then(res => res);
         this.user = response.data;
         this.token = response.data["Id"];
 
@@ -47,7 +47,7 @@ export default {
       let userToken = await this.$axios.get(tokenUrl,{
             headers:{"Authorization": this.token}
           }
-      );
+      ).then(res => res);;
       console.log(userToken);
       this.user = userToken.data;
 

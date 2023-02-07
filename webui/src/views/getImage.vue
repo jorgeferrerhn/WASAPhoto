@@ -27,7 +27,7 @@ export default {
       this.errormsg = null;
       try {
         let url = "/images/"+this.id;
-        const response = await this.$axios.get(url);
+        const response = await this.$axios.get(url).then(res => res);;
         console.log(response)
 
         this.photo = response.data;

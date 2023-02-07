@@ -28,7 +28,7 @@ export default {
       let userToken = await this.$axios.get(tokenUrl,{
             headers:{"Authorization": this.token}
           }
-      );
+      ).then(res => res);;
       console.log(userToken);
       this.userToken = userToken.data;
 
@@ -37,7 +37,7 @@ export default {
       let logo = await this.$axios.get(url,{
             headers:{"Authorization": this.token}
           }
-      );
+      ).then(res => res);;
 
       console.log(userToken);
       this.path = logo.data["path"];
@@ -62,7 +62,7 @@ export default {
 
           const response = await this.$axios.post(url, this.path,{
             headers:{"Authorization": this.token}
-          });
+          }).then(res => res);;
           console.log(response.data)
           this.userToken = response.data; // update the userToken
           this.userToken = JSON.parse(JSON.stringify(this.userToken))
@@ -87,7 +87,7 @@ export default {
       const userToken = await this.$axios.get(tokenUrl,{
             headers:{"Authorization": this.token}
           }
-      );
+      ).then(res => res);;
       this.userToken = userToken;
       let name = event.target.files[0]["name"];
       this.path=name

@@ -62,8 +62,10 @@ export default {
 
           // We have to search first for the user by its username
           let sessionUrl = "/users/"+this.search;
-          const response = await this.$axios.get(sessionUrl,
-          ).then(res => res);
+          const response = await this.$axios.get(sessionUrl,{
+            headers:{"Authorization": this.token,
+            }
+          }).then(res => res);
 
           let userId = response.data["Id"];
           // After doing this, we will be able to retrieve the user by its id
@@ -109,7 +111,7 @@ export default {
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
-        });
+        }).then(res => res);;
         let user = response.data;
 
 
@@ -138,7 +140,7 @@ export default {
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
-        });
+        }).then(res => res);;
         let user = response.data;
 
 
@@ -188,7 +190,7 @@ export default {
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
-        });
+        }).then(res => res);;
         let user = response.data; // In this case, this returns the user 1
 
         this.tokenUser["Banned"] = user["Banned"];
@@ -210,7 +212,7 @@ export default {
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
-        });
+        }).then(res => res);;
         let user = response.data; // In this case, this returns the user 1
 
 
@@ -228,9 +230,9 @@ export default {
       let user = JSON.parse(JSON.stringify(u))
       let tokenIsBanned = false;
 
-      let banned = JSON.parse(this.tokenUser["Banned"]);
+      let banned = JSON.parse(this.user["Banned"]);
       for (let j = 0; j < banned.length; j++) {
-        if (banned[j] == user["Id"]) {
+        if (banned[j] == this.token) {
           tokenIsBanned = true
         }
       }
@@ -254,7 +256,7 @@ export default {
           const data = await this.$axios.get(tokenUrl, {
                 headers: {"Authorization": this.token}
               }
-          );
+          ).then(res => res);;
 
           console.log(data)
 
@@ -321,7 +323,7 @@ export default {
 
 
         <!-- User information -->
-        <template v-if="users.length > 0">
+        <template v-if="users.length > 0 && token != 0">
           <div v-for="(u,index) in users" :key="index"  class="flex-grow-1 ms-3">
             <h5 class="mb-1">{{ u["Name"]}}</h5>
 
@@ -367,7 +369,7 @@ export default {
               <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
 
               <template v-if="isBanned(u)">
-                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unbanUser(u)">Unban</button>
+                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" style="background-color:red" @click="unbanUser(u)">Unban</button>
               </template>
 
               <template v-else>

@@ -5,9 +5,18 @@ import (
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"strconv"
 )
 
 func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+
+	reqToken := r.Header.Get("Authorization")
+	token, errTok := strconv.Atoi(reqToken)
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	intId, err := checkId(ps)
 	if err != nil {
@@ -18,6 +27,12 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	// Searchs for the user to get the profile and returns the information
 	var user User
 	user.ID = intId
+
+	if user.ID != token {
+		// Error: the authorization header is not valid
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	dbuser, err2 := rt.db.GetUserProfile(user.ToDatabase())
 

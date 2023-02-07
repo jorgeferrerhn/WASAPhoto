@@ -31,5 +31,7 @@ func (db *appdbimpl) GetUserProfile(u User) (User, error) {
 		return u, errors.New("User not found")
 	}
 
+	// Check if the user is banned
+
 	return u, nil
 }

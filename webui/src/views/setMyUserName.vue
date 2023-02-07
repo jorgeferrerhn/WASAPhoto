@@ -31,7 +31,7 @@ export default {
                 headers:{"Authorization": this.token}
 
           }
-          );
+          ).then(res => res);;
           this.user = response.data;
 
         } catch (e) {
