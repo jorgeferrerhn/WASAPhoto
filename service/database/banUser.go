@@ -54,7 +54,7 @@ func (db *appdbimpl) BanUser(user1 User, user2 User) (User, error) {
 		}
 	}
 
-	err6 := rows.Err()
+	err6 := rows2.Err()
 	if err6 != nil {
 		return user1, err6
 	}

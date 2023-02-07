@@ -52,7 +52,7 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 		}
 
 	}
-	err6 := rows.Err()
+	err6 := rows2.Err()
 	if err6 != nil {
 		return u, err6
 	}

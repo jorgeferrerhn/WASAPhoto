@@ -12,8 +12,6 @@ func (db *appdbimpl) GetLogo(p Photo, u User) (Photo, User, error) {
 		return p, u, err
 	}
 
-	defer rows.Close()
-
 	for rows.Next() {
 		err2 := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
@@ -52,6 +50,8 @@ func (db *appdbimpl) GetLogo(p Photo, u User) (Photo, User, error) {
 	if err6 != nil {
 		return p, u, err6
 	}
+
+	defer rows2.Close()
 
 	return p, u, nil
 }
