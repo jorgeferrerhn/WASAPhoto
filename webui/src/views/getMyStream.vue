@@ -218,52 +218,56 @@ export default {
         <button class="btn btn-primary m-3" @click="getUserStream">Search</button>
       </div>
 
-      <div class="m-3" v-for="(p,index) in photos" :key="index" v-if="photos.length > 0">
-        <div class="card m-3" style="border-radius: 15px;">
-          <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
-            <div class="m-3">
-              <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3"
-                   style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
-            </div>
-
-            <div class="m-3">
-              <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
-
-              <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
-                <p class="">{{getName(c['UserId'])}} : {{c['Content']}}</p>
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="d-flex align-items-center">
-            <div class="m-3">
-              <input v-model="comment" placeholder="Add a comment..." class="form-control">
-              <div class="d-flex align-items-center">
-                <button class="btn btn-primary m-3" @click="commentPhoto(p)">Comment</button>
-
-                <template v-if="!isLiked(p)">
-                  <button class="btn btn-primary m-3" @click="likePhoto(p)">Like</button>
-                </template>
-                <template v-else>
-                  <button class="btn btn-primary m-3" @click="unlikePhoto(p)">Unlike</button>
-                </template>
-              </div>
-
-
-            </div>
-            <div class="m-3">
+      <template v-if="photos.length > 0">
+        <div class="m-3" v-for="(p,index) in photos" :key="index">
+          <div class="card m-3" style="border-radius: 15px;">
+            <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
               <div class="m-3">
-                <h6 class="mb-1 ">Photo ID: {{ p["id"]}}</h6>
-                <p class="mb-1">Likes: {{ JSON.parse(p["likes"]).length }}</p>
-                <p class="mb-1">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+                <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3"
+                     style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+              </div>
+
+              <div class="m-3">
+                <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
+
+                <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
+                  <p class="">{{getName(c['UserId'])}} : {{c['Content']}}</p>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="d-flex align-items-center">
+              <div class="m-3">
+                <input v-model="comment" placeholder="Add a comment..." class="form-control">
+                <div class="d-flex align-items-center">
+                  <button class="btn btn-primary m-3" @click="commentPhoto(p)">Comment</button>
+
+                  <template v-if="!isLiked(p)">
+                    <button class="btn btn-primary m-3" @click="likePhoto(p)">Like</button>
+                  </template>
+                  <template v-else>
+                    <button class="btn btn-primary m-3" @click="unlikePhoto(p)">Unlike</button>
+                  </template>
+                </div>
+
+
+              </div>
+              <div class="m-3">
+                <div class="m-3">
+                  <h6 class="mb-1 ">Photo ID: {{ p["id"]}}</h6>
+                  <p class="mb-1">Likes: {{ JSON.parse(p["likes"]).length }}</p>
+                  <p class="mb-1">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+                </div>
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
-      </div>
+
+      </template>
+
     </div>
 
 

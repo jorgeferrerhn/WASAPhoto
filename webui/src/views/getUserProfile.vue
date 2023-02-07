@@ -280,8 +280,10 @@ export default {
 
   async mounted() {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
-    console.log(this.search)
-    await this.updateLogged()
+    if (this.token != 0){
+      await this.updateLogged()
+
+    }
 
 
 
