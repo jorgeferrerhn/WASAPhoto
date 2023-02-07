@@ -224,15 +224,39 @@ export default {
       this.loading = false;
     },
 
-    isBanned(u){
-      // Method to check if token user has banned the parameter user
+    tokenIsBanned(u){
+      // Method to check if user has banned token user
 
       let user = JSON.parse(JSON.stringify(u))
       let tokenIsBanned = false;
 
-      let banned = JSON.parse(this.user["Banned"]);
+      console.log(user)
+
+      let banned = JSON.parse(user["Banned"]);
+      console.log(banned)
       for (let j = 0; j < banned.length; j++) {
         if (banned[j] == this.token) {
+          tokenIsBanned = true
+        }
+      }
+
+
+      return tokenIsBanned
+
+    },
+
+    userIsBanned(u){
+      // Method to check if token user has banned a user
+
+      let user = JSON.parse(JSON.stringify(u))
+      let tokenIsBanned = false;
+
+      console.log(user)
+
+      let banned = JSON.parse(this.tokenUser["Banned"]);
+      console.log(banned)
+      for (let j = 0; j < banned.length; j++) {
+        if (banned[j] == user["Id"]) {
           tokenIsBanned = true
         }
       }
@@ -325,58 +349,63 @@ export default {
         <!-- User information -->
         <template v-if="users.length > 0 && token != 0">
           <div v-for="(u,index) in users" :key="index"  class="flex-grow-1 ms-3">
-            <h5 class="mb-1">{{ u["Name"]}}</h5>
 
-            <div class="flex-shrink-0">
+            <template v-if="!tokenIsBanned(u)">
+              <h5 class="mb-1">{{ u["Name"]}}</h5>
 
-              <template >
-                <!--img :src="'/img/'+getProfilePic(index)"
-                     alt="Generic placeholder image" class="img-fluid"
-                     style="width: 180px; border-radius: 10px;"-->
-              </template>
+              <div class="flex-shrink-0">
 
-
-
-
-            </div>
+                <template >
+                  <!--img :src="'/img/'+getProfilePic(index)"
+                       alt="Generic placeholder image" class="img-fluid"
+                       style="width: 180px; border-radius: 10px;"-->
+                </template>
 
 
-            <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                 style="background-color: #efefef;">
-              <div>
-                <p class="small text-muted mb-1">Photos uploaded</p>
-                <p class="mb-0">{{ JSON.parse(u["Photos"]).length }}</p>
+
+
               </div>
-              <div class="px-3">
-                <p class="small text-muted mb-1">Followers </p>
-                <p class="mb-0">{{ JSON.parse(u["Followers"]).length }}</p>
+
+
+              <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                   style="background-color: #efefef;">
+                <div>
+                  <p class="small text-muted mb-1">Photos uploaded</p>
+                  <p class="mb-0">{{ JSON.parse(u["Photos"]).length }}</p>
+                </div>
+                <div class="px-3">
+                  <p class="small text-muted mb-1">Followers </p>
+                  <p class="mb-0">{{ JSON.parse(u["Followers"]).length }}</p>
+                </div>
               </div>
-            </div>
 
 
-            <div class="d-flex pt-1">
+              <div class="d-flex pt-1">
 
-              <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
+                <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
 
-              <template v-if="isFollower(u)">
-                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unfollowUser(u)">Unfollow</button>
-              </template>
+                <template v-if="isFollower(u)">
+                  <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unfollowUser(u)">Unfollow</button>
+                </template>
 
-              <template v-else>
-                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="followUser(u)">Follow</button>
-              </template>
+                <template v-else>
+                  <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="followUser(u)">Follow</button>
+                </template>
 
-              <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
+                <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
 
-              <template v-if="isBanned(u)">
-                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" style="background-color:red" @click="unbanUser(u)">Unban</button>
-              </template>
+                <template v-if="userIsBanned(u)">
+                  <button type="button" class="btn btn-primary flex-grow-1 mx-auto" style="background-color:red" @click="unbanUser(u)">Unban</button>
+                </template>
 
-              <template v-else>
-                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="banUser(u)">Ban</button>
-              </template>
+                <template v-else>
+                  <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="banUser(u)">Ban</button>
+                </template>
 
-            </div>
+              </div>
+
+            </template>
+
 
           </div>
 
