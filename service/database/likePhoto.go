@@ -9,6 +9,7 @@ import (
 
 func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	var castPhotos []Photo
+	var castLikes []int
 
 	// search for the user
 	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
@@ -64,22 +65,19 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, errors.New("Photo not found")
 	}
 
-	var liked bool
-
-	// We check that the photo hasn't been liked before
-	liked = strings.Contains(p.Likes, fmt.Sprint(u.ID))
-
-	if !liked { // Chapucero: a ver si puedo cambiarlo
-		var add string
-		new_list := p.Likes[0 : len(p.Likes)-1]
-		if p.Likes == "[]" {
-			add = fmt.Sprint(u.ID) + "]"
-		} else {
-			add = "," + fmt.Sprint(u.ID) + "]"
-		}
-		new_list += add
-		p.Likes = new_list
+	in := []byte(p.Likes)
+	errLikes := json.Unmarshal(in, &castLikes)
+	if errLikes != nil {
+		return p, u, errLikes
 	}
+
+	liked := strings.Contains(p.Likes, fmt.Sprint(u.ID))
+
+	if !liked {
+		castLikes = append(castLikes, u.ID)
+	}
+
+	p.Likes = json.Marshal(castLikes)
 
 	// We update the user's photos and the photos' stream
 
