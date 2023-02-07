@@ -62,6 +62,7 @@ export default {
           }
         }
 
+
       } catch (e) {
         this.errormsg = e.toString();
       }
@@ -101,8 +102,7 @@ export default {
 
       let photo = JSON.parse(JSON.stringify(p))
       let photos = JSON.parse(JSON.stringify(this.photos))
-
-      console.log(photos)
+      
 
       let tokenLiked = false;
       for (let i = 0; i < photos.length; i++){
@@ -123,20 +123,17 @@ export default {
     getName: async function(i){
       this.loading = true;
       this.errormsg = null;
+      let user = null;
       try {
         let url = "/users/"+i+"/profile";
-        const user = await this.$axios.get(url,{
-          headers:{"Authorization": this.token}});
-
-        console.log(user.data["Name"])
-        user.data["Name"]
-
+        user = await this.$axios.get(url,{
+          headers:{"Authorization": this.token}}).then(res => res);
 
       } catch (e) {
         this.errormsg = e.toString();
       }
       this.loading = false;
-
+      return user.data["Name"]
     },
 
     commentPhoto: async function(p) {
@@ -144,6 +141,9 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
+
+        console.log(this.photos.length)
+
 
         // Getting the comment
 
@@ -230,7 +230,7 @@ export default {
                 <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
 
                 <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
-                  <p class="">{{getName(c['UserId'])}} : {{c['Content']}}</p>
+                  <p class="">{{c['UserId']}} : {{c['Content']}}</p>
                 </div>
 
               </div>

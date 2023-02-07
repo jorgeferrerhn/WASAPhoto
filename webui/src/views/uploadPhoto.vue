@@ -285,14 +285,9 @@ export default {
     <div class="card">
       <div class="card-body">
         <h3 class="h3">Select new picture to upload...: </h3>
-        <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick a photo" prepend-icon="mdi-camera" v-model="imageData">Select image...</v-file-input>
 
         <input type="file" @change="onChangeFileUpload">
-        <!--img v-if="selectedFile" :src="selectedFile" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;"-->
-
         <a href="javascript:" class="btn btn-primary" @click="uploadPhoto">Upload a photo</a>
-        <!--v-file-input type="file" @change="onFileChange"/-->
-        <!--v-file-input placeholder="Upload document" v-model="file" accept="image/*" label="Image" @change="onFileChange"/-->
 
 
         <!-- Photo information -->
@@ -303,18 +298,10 @@ export default {
                 <div class="m-3">
                   <img v-if="p['path']" :src="p['path']" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
-                  <!--img :src="getImage(p)" v-bind:id="p.ID" v-bind:alt="Photo" class="img-fluid m-3"
-                       style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;"-->
-                </div>
-
-                <div class="m-3">
-                  <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
-
-                  <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
-                    <p class="">{{c['UserId']}} : {{c['Content']}}</p>
-                  </div>
 
                 </div>
+
+
 
               </div>
 
