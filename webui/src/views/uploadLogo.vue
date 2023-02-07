@@ -167,21 +167,25 @@ export default {
 
                 </div>
                 <!-- User information -->
-                <div v-if="userNotEmpty" class="flex-grow-1 ms-3">
-                  <h5 class="mb-1">{{ userToken["Name"]}}</h5>
-                  <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                       style="background-color: #efefef;">
-                    <div>
-                      <p class="small text-muted mb-1">Photos uploaded</p>
-                      <p class="mb-0">{{ JSON.parse(userToken["Photos"]).length }}</p>
+                <template v-if="userNotEmpty">
+                  <div class="flex-grow-1 ms-3">
+                    <h5 class="mb-1">{{ userToken["Name"]}}</h5>
+                    <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                         style="background-color: #efefef;">
+                      <div>
+                        <p class="small text-muted mb-1">Photos uploaded</p>
+                        <p class="mb-0">{{ JSON.parse(userToken["Photos"]).length }}</p>
+                      </div>
+                      <div class="px-3">
+                        <p class="small text-muted mb-1">Followers </p>
+                        <p class="mb-0">{{ JSON.parse(userToken["Followers"]).length }}</p>
+                      </div>
                     </div>
-                    <div class="px-3">
-                      <p class="small text-muted mb-1">Followers </p>
-                      <p class="mb-0">{{ JSON.parse(userToken["Followers"]).length }}</p>
-                    </div>
+
                   </div>
 
-                </div>
+                </template>
+
               </div>
             </div>
           </div>
