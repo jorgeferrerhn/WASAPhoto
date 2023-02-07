@@ -53,24 +53,29 @@ export default {
 
 
       // The single user of this.userToken is the logged one. Let's search for it to get its information
-      try {
-        let url = "/users/"+this.token+"/uploadLogo";
-        console.log(url)
-        console.log(this.path)
 
-        const response = await this.$axios.post(url, this.path,{
-          headers:{"Authorization": this.token}
-        });
-        console.log(response.data)
-        this.userToken = response.data; // update the userToken
-        this.userToken = JSON.parse(JSON.stringify(this.userToken))
-        console.log(this.userToken)
+      if (this.imageData != undefined){
+        try {
+          let url = "/users/"+this.token+"/uploadLogo";
+          console.log(url)
+          console.log(this.path)
+
+          const response = await this.$axios.post(url, this.path,{
+            headers:{"Authorization": this.token}
+          });
+          console.log(response.data)
+          this.userToken = response.data; // update the userToken
+          this.userToken = JSON.parse(JSON.stringify(this.userToken))
+          console.log(this.userToken)
 
 
 
-      } catch (e) {
-        this.errormsg = e.toString();
+        } catch (e) {
+          this.errormsg = e.toString();
+        }
+
       }
+
       this.loading = false;
     },
 
@@ -137,7 +142,7 @@ export default {
 
 
         <h3 class="h3 m-3">Select your new profile picture, {{userToken["Name"]}}...: </h3>
-        <input class="m-3" type="file" @change="onFileChange"/>
+        <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick a photo" prepend-icon="mdi-camera" v-model="imageData" @change="onFileChange">Select image...</v-file-input>
 
         <!-- User information -->
       <template v-if="userNotEmpty">
