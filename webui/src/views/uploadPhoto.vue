@@ -8,7 +8,8 @@ export default {
       loading: false,
       token: 0,
       photo: {},
-      photos:[]
+      photos:[],
+      selectedFile:null
     }
   },
   methods: {
@@ -62,7 +63,10 @@ export default {
     },
 
 
+    onFileSelected(event){
+      this.selectedFile = event.target.files[0]
 
+    },
     onFileChange: function(event){
       let name =event.target.files[0]["name"];
       this.path= name; // update the path here
@@ -83,18 +87,23 @@ export default {
 
       this.loading = true;
       this.errormsg = null;
-      if (this.imageData != undefined){
+
         try {
+
+          // cast the selected file to formData
+          const fd = new FormData();
+          fd.append('image',this.selectedFile,this.selectedFile.name)
+
+
           // Let's get the cookie
           this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-          console.log(this.path)
           let url = "/users/"+this.token+"/photo";
-          const response = await this.$axios.post(url,this.path,{
+          const response = await this.$axios.post(url,fd,{
             headers:{"Authorization": this.token}
-          });
-          let photo = response.data;
+          }).then(res => res);
 
-
+          console.log(response)
+          /*
           let contains = false
           for (let i = 0; i < this.photos.length; i++){
             if (this.photos[i]["id"] == photo["id"]){
@@ -106,11 +115,12 @@ export default {
           if (!contains){
             this.photos.push(photo);
           }
+          */
 
         } catch (e) {
           this.errormsg = e.toString();
         }
-      }
+
 
       this.loading = false;
     },
@@ -266,6 +276,9 @@ export default {
         <h3 class="h3">Select new picture to upload...: </h3>
         <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick a photo" prepend-icon="mdi-camera" v-model="imageData">Select image...</v-file-input>
 
+        <input type="file" @change="onFileSelected">
+
+        <a href="javascript:" class="btn btn-primary" @click="uploadPhoto">Upload a photo</a>
         <!--v-file-input type="file" @change="onFileChange"/-->
         <!--v-file-input placeholder="Upload document" v-model="file" accept="image/*" label="Image" @change="onFileChange"/-->
 
@@ -305,7 +318,7 @@ export default {
         </div>
 
 
-        <a href="javascript:" class="btn btn-primary" @click="uploadPhoto">Upload a photo</a>
+
       </div>
     </div>
 

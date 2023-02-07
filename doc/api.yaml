@@ -842,7 +842,7 @@ paths:
             schema:
               type: string
               description: Photo comment.
-              example: "Wow, such a nice picture"
+              example: "Wow such a nice picture"
               pattern: ^[A-Z][0-9]$
               minLength: 3
               maxLength: 144
