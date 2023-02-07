@@ -83,32 +83,35 @@ export default {
 
       this.loading = true;
       this.errormsg = null;
-      try {
-        // Let's get the cookie
-        this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-        console.log(this.path)
-        let url = "/users/"+this.token+"/uploadPhoto";
-        const response = await this.$axios.post(url,this.path,{
-          headers:{"Authorization": this.token}
-        });
-        let photo = response.data;
+      if (this.imageData != undefined){
+        try {
+          // Let's get the cookie
+          this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+          console.log(this.path)
+          let url = "/users/"+this.token+"/uploadPhoto";
+          const response = await this.$axios.post(url,this.path,{
+            headers:{"Authorization": this.token}
+          });
+          let photo = response.data;
 
 
-        let contains = false
-        for (let i = 0; i < this.photos.length; i++){
-          if (this.photos[i]["id"] == photo["id"]){
-            contains = true
+          let contains = false
+          for (let i = 0; i < this.photos.length; i++){
+            if (this.photos[i]["id"] == photo["id"]){
+              contains = true
+            }
           }
+
+
+          if (!contains){
+            this.photos.push(photo);
+          }
+
+        } catch (e) {
+          this.errormsg = e.toString();
         }
-
-
-        if (!contains){
-          this.photos.push(photo);
-        }
-
-      } catch (e) {
-        this.errormsg = e.toString();
       }
+
       this.loading = false;
     },
 
