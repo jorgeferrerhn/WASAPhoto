@@ -76,11 +76,20 @@ func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
 		}
 	}
 
-	result, errMarshal := json.Marshal(newBanned)
-	if errMarshal != nil {
-		return user1, errMarshal
+	var result string
+
+	if newBanned == nil {
+		result = "[]"
+	} else {
+		newRes, errMarshal := json.Marshal(newBanned)
+		if errMarshal != nil {
+			return user1, errMarshal
+		}
+		result = string(newRes)
+
 	}
-	user1.Banned = string(result)
+
+	user1.Banned = result
 
 	res, err7 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		user1.Name, user1.ProfilePic, user1.Followers, user1.Banned, user1.Photos, user1.ID)

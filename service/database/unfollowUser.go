@@ -76,11 +76,20 @@ func (db *appdbimpl) UnfollowUser(user1 User, user2 User) (User, error) {
 		}
 	}
 
-	result, errMarshal := json.Marshal(newFollowers)
-	if errMarshal != nil {
-		return user2, errMarshal
+	var result string
+
+	if newFollowers == nil {
+		result = "[]"
+	} else {
+		newRes, errMarshal := json.Marshal(newFollowers)
+		if errMarshal != nil {
+			return user2, errMarshal
+		}
+		result = string(newRes)
+
 	}
-	user2.Followers = string(result)
+
+	user2.Followers = result
 
 	res, err7 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		user2.Name, user2.ProfilePic, user2.Followers, user2.Banned, user2.Photos, user2.ID)
