@@ -80,7 +80,6 @@ export default {
 
     },
     onChangeFileUpload: async function (e) {
-
       let file = e.target.files[0]
       this.serverFile = file
       await this.encodeImage(file)
@@ -102,11 +101,6 @@ export default {
 
       try {
 
-        // cast the selected file to formData
-        console.log(this.serverFile)
-        console.log(this.selectedFile)
-        console.log(JSON.stringify(this.serverFile))
-
 
         // Let's get the cookie
         this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -117,10 +111,8 @@ export default {
 
 
         let photo = response.data
-        console.log(photo['path'])
 
-
-        // Now, it uploads a photo. We have to add it to the photo's list
+        // Now, we have to add it to the photo's list
 
         let contains = false
         for (let i = 0; i < this.photos.length; i++){
@@ -142,42 +134,6 @@ export default {
 
       this.loading = false;
     },
-
-    getImage: async function(photo){
-
-      let obj = photo['path'];
-
-      console.log(obj)
-      console.log(typeof(obj))
-
-      let reader = new FileReader()
-      reader.onload = (e) => {
-        this.selectedFile = e.target.result
-      }
-      reader.readAsDataURL(this.serverFile)
-
-
-    },
-
-
-
-
-    /*onFileChange: function(event){
-      let name =event.target.files[0]["name"];
-      this.path= name; // update the path here
-      console.log("Aquí", this.path);
-      return this.path
-
-      /*
-      const reader = new FileReader()
-      reader.readAsDataURL(this.file)
-      reader.onload = e => {
-        this.image = e.target.result
-        console.log(this.image)
-      }
-    },*/
-
-
 
 
     likePhoto: async function(p) {

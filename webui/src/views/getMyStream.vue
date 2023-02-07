@@ -223,8 +223,7 @@ export default {
           <div class="card m-3" style="border-radius: 15px;">
             <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
               <div class="m-3">
-                <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3"
-                     style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+                <img v-if="p['path']" :src="p['path']" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
               </div>
 
               <div class="m-3">
