@@ -62,7 +62,7 @@ export default {
   },
   mounted() {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
-    this.getUser();
+
   }
 }
 
