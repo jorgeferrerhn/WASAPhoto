@@ -126,7 +126,7 @@ func (db *appdbimpl) UncommentPhoto(c Comment, p Photo, u User) (Comment, Photo,
 	} else {
 		newRes, errMarshal := json.Marshal(newComments)
 		if errMarshal != nil {
-			return p, u, errMarshal
+			return c, p, u, errMarshal
 		}
 		result = string(newRes)
 
