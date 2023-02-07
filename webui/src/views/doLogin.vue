@@ -7,7 +7,8 @@ export default {
       users: [],
       token: 0,
       loggedName: "",
-      user: {}
+      user: {},
+      name : ""
     }
   },
   methods: {
@@ -28,12 +29,14 @@ export default {
       this.errormsg = null;
       try {
         let url = "/session"
+        this.name = this.search
         const response = await this.$axios.post(url, this.name).then(res => res);
         this.user = response.data;
         this.token = response.data["Id"];
 
         // Set the cookie for the logged user
         document.cookie = `token=`+this.token;
+        document.cookie = `logged=`+this.name;
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -60,10 +63,12 @@ export default {
     },
 
   },
-  mounted() {
+  async mounted() {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
+    this.name = document.cookie.replace(/(?:(?:^|.*;\s*)logged\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
 
-  }
+    }
+
 }
 
 </script>
@@ -94,7 +99,7 @@ export default {
 
       <template v-if="token == 0">
         <h3 class="h3 mx-auto mt-3">Introduce your username: </h3>
-        <input v-model="name" class="text-center mx-auto my-auto mt-3 mb-3" placeholder=" Username">
+        <input v-model="search" class="text-center mx-auto my-auto mt-3 mb-3" placeholder=" Username">
 
         <a href="javascript:" class="btn btn-primary mx-auto my-auto mb-3" @click="doLogin">Login</a>
 
@@ -110,7 +115,7 @@ export default {
 
             </div>
             <div class="card-body">
-              <h3 class="text-center">Welcome to WASAPhoto, {{ this.user["Name"]}} !</h3>
+              <h3 class="text-center">Welcome to WASAPhoto, {{ this.name}} !</h3>
               <h4 class="text-center">You can now navigate through the page.</h4>
               <h5 class="text-center">Your token is: {{ token }}</h5>
             </div>
