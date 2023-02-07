@@ -134,6 +134,7 @@ export default {
         <!-- Photo information -->
         <template v-if="photos.length > 0">
           <div class="m-3" v-for="(p,index) in photos" :key="index">
+            <h5>Photo uploaded!</h5>
             <div class="card m-3" style="border-radius: 15px;">
               <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
                 <div class="m-3">

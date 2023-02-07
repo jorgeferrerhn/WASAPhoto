@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -11,8 +10,6 @@ import (
 func (rt *_router) getUserByName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	name := ps.ByName("id") // Altough is a name, we need to cast it by id
-
-	fmt.Println(name)
 
 	if name == "" {
 		// Empty ID
