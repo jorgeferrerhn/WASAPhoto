@@ -65,8 +65,35 @@ export default {
 
     onFileSelected(event){
       this.selectedFile = event.target.files[0]
+      console.log(this.selectedFile)
+
+      let reader = new FileReader();
+      let imgtag = document.getElementById("myimg");
+      imgtag.title = this.selectedFile.name;
+
+      reader.onload = function(event) {
+        imgtag.src = event.target.result;
+      };
+
+      console.log(imgtag.src)
 
     },
+
+    getImage(photo){
+      console.log(photo);
+      return this.encodeImage(photo["path"])
+    },
+    encodeImage (input) {
+      console.log(input)
+      if (input) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.base64Img = e.target.result
+        }
+        reader.readAsDataURL(input)
+      }
+    },
+
     onFileChange: function(event){
       let name =event.target.files[0]["name"];
       this.path= name; // update the path here
@@ -102,8 +129,11 @@ export default {
             headers:{"Authorization": this.token}
           }).then(res => res);
 
-          console.log(response)
-          /*
+          let photo = response.data
+
+
+          // Now, it uploads a photo. We have to add it to the photo's list
+
           let contains = false
           for (let i = 0; i < this.photos.length; i++){
             if (this.photos[i]["id"] == photo["id"]){
@@ -115,7 +145,7 @@ export default {
           if (!contains){
             this.photos.push(photo);
           }
-          */
+
 
         } catch (e) {
           this.errormsg = e.toString();
@@ -277,6 +307,7 @@ export default {
         <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick a photo" prepend-icon="mdi-camera" v-model="imageData">Select image...</v-file-input>
 
         <input type="file" @change="onFileSelected">
+        <img src="" id="myimg" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
         <a href="javascript:" class="btn btn-primary" @click="uploadPhoto">Upload a photo</a>
         <!--v-file-input type="file" @change="onFileChange"/-->
@@ -289,7 +320,7 @@ export default {
             <div class="card m-3" style="border-radius: 15px;">
               <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
                 <div class="m-3">
-                  <img :src="'/img/'+p['path']" v-bind:alt="p['path']" class="img-fluid m-3"
+                  <img :src="getImage(p)" v-bind:id="p.ID" v-bind:alt="Photo" class="img-fluid m-3"
                        style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
                 </div>
 
