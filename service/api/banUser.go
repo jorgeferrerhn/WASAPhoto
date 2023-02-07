@@ -66,6 +66,12 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
+	if u2.ID == u1.ID {
+		// You can't ban yourself
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// update info from database
 	dbuser1, err3 := rt.db.BanUser(u1.ToDatabase(), u2.ToDatabase())
 	if err3 != nil {

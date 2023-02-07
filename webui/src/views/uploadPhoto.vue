@@ -78,21 +78,26 @@ export default {
       console.log(imgtag.src)
 
     },
+    onChangeFileUpload (e) {
+      console.log(e.target.files)
+      let file = e.target.files[0]
+      this.encodeImage(file)
+    },
+    encodeImage (input) {
+      if (input) {
+        let reader = new FileReader()
+        reader.onload = (e) => {
+          this.selectedFile = e.target.result
+        }
+        reader.readAsDataURL(input)
+      }
+    },
 
     getImage(photo){
       console.log(photo);
       return this.encodeImage(photo["path"])
     },
-    encodeImage (input) {
-      console.log(input)
-      if (input) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          this.base64Img = e.target.result
-        }
-        reader.readAsDataURL(input)
-      }
-    },
+
 
     onFileChange: function(event){
       let name =event.target.files[0]["name"];
@@ -306,8 +311,8 @@ export default {
         <h3 class="h3">Select new picture to upload...: </h3>
         <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick a photo" prepend-icon="mdi-camera" v-model="imageData">Select image...</v-file-input>
 
-        <input type="file" @change="onFileSelected">
-        <img src="" id="myimg" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+        <input type="file" @change="onChangeFileUpload">
+        <img v-if="selectedFile" :src="selectedFile" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
         <a href="javascript:" class="btn btn-primary" @click="uploadPhoto">Upload a photo</a>
         <!--v-file-input type="file" @change="onFileChange"/-->
