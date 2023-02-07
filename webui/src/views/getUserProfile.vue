@@ -61,8 +61,7 @@ export default {
       if (this.search != undefined){
         try {
 
-          // To search a user for its name with our current endpoints, we have to log-in with the user, retrieve the user and log-out
-          // We have to search first for the
+          // We have to search first for the user by its username
           let sessionUrl = "/users/"+this.search;
           const response = await this.$axios.get(sessionUrl,
           ).then(res => res);
@@ -76,6 +75,7 @@ export default {
             let contains = false
 
             let users = JSON.parse(JSON.stringify(this.users));
+            console.log(users)
 
             for (let i = 0; i < users.length; i++){
               if (users[i]["Id"] == user["Id"]){
@@ -90,14 +90,6 @@ export default {
             console.log(this.users)
 
           }
-
-
-
-
-
-
-
-
 
 
 
@@ -165,10 +157,10 @@ export default {
       this.loading = false;
     },
 
-    isFollower(u){
+    isFollower(user){
       // Method to check if token user is follower of the searched user
 
-      let user = JSON.parse(JSON.stringify(u))
+      console.log(user)
       let users = JSON.parse(JSON.stringify(this.users))
 
       let tokenIsFollower = false;
@@ -362,9 +354,31 @@ export default {
 
           </div>
 
+          <div class="d-flex pt-1">
+
+            <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
+
+            <template v-if="isFollower(u)">
+              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unfollowUser(u)">Unfollow</button>
+            </template>
+
+            <template v-else>
+              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="followUser(u)">Follow</button>
+            </template>
+
+            <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
+
+            <template v-if="isBanned(u)">
+              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unbanUser(u)">Unban</button>
+            </template>
+
+            <template v-else>
+              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="banUser(u)">Ban</button>
+            </template>
+
+          </div>
+
         </template>
-
-
 
 
 
