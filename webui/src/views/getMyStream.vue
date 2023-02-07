@@ -26,7 +26,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.search+"/getMyStream";
+        let url = "/users/"+this.token+"/getMyStream";
         const photos = await this.$axios.get(url,{
           headers:{"Authorization": this.token}});
         console.log(photos.data)
@@ -213,8 +213,8 @@ export default {
 
     <div class="card m-3">
       <div class="card-body m-3">
-        <h1 class="m-3">Introduce User ID...</h1>
-        <input class="m-3 form-control" v-model="search" placeholder="Enter user ID">
+        <h1 class="m-3">Press button to search your stream...</h1>
+
         <button class="btn btn-primary m-3" @click="getUserStream">Search</button>
       </div>
 
