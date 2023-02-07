@@ -26,7 +26,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/getMyStream";
+        let url = "/users/"+this.token+"/stream";
         const photos = await this.$axios.get(url,{
           headers:{"Authorization": this.token}});
         console.log(photos.data)

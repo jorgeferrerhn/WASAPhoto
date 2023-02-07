@@ -184,7 +184,7 @@ paths:
 
     get:
       summary: user searched by its userId
-      operationId: profile
+      operationId: getUserProfile
       description: |
         Obtains an user by its userId. It returns a list with the attributes of the user, or -1 if not found.
 
@@ -319,7 +319,7 @@ paths:
 
 
 
-  /users/{userId}/getMyStream:
+  /users/{userId}/stream:
     get:
       parameters:
         - name: userId

@@ -17,7 +17,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.PUT("/users/:id/followUser/:id2", rt.wrap(rt.followUser))
 	rt.router.PUT("/users/:id/banUser/:id2", rt.wrap(rt.banUser))
 	rt.router.GET("/users/:id/profile", rt.wrap(rt.getUserProfile))
-	rt.router.GET("/users/:id/getMyStream", rt.wrap(rt.getMyStream))
+	rt.router.GET("/users/:id/stream", rt.wrap(rt.getMyStream))
 	rt.router.GET("/users/:id/getLogo", rt.wrap(rt.getLogo))
 	rt.router.GET("/images/:id", rt.wrap(rt.getImage))
 	rt.router.DELETE("/users/:id/unfollowUser/:id2", rt.wrap(rt.unfollowUser))
