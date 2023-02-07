@@ -80,11 +80,20 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 		}
 	}
 
-	result, errMarshal := json.Marshal(newLikes)
-	if errMarshal != nil {
-		return p, u, errMarshal
+	var result string
+
+	if newLikes == nil {
+		result = "[]"
+	} else {
+		newRes, errMarshal := json.Marshal(newLikes)
+		if errMarshal != nil {
+			return p, u, errMarshal
+		}
+		result = string(newRes)
+
 	}
-	p.Likes = string(result)
+
+	p.Likes = result
 
 	in := []byte(u.Photos)
 	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
