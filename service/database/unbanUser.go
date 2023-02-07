@@ -71,7 +71,7 @@ func (db *appdbimpl) UnbanUser(user1 User, user2 User) (User, error) {
 
 	var newBanned []int
 	for i := 0; i < len(castBanned); i++ {
-		if castBanned[i] != user1.ID {
+		if castBanned[i] != user2.ID {
 			newBanned = append(newBanned, castBanned[i])
 		}
 	}
