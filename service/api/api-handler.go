@@ -13,7 +13,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/users/:id/uploadLogo", rt.wrap(rt.uploadLogo))
 	rt.router.POST("/users/:id/commentPhoto/:photoId", rt.wrap(rt.commentPhoto))
 	rt.router.PUT("/users/:id/likePhoto/:photoId", rt.wrap(rt.likePhoto))
-	rt.router.PUT("/users/:id/setMyUserName", rt.wrap(rt.setMyUserName))
+	rt.router.PUT("/users/:id/username", rt.wrap(rt.setMyUserName))
 	rt.router.PUT("/users/:id/followUser/:id2", rt.wrap(rt.followUser))
 	rt.router.PUT("/users/:id/banUser/:id2", rt.wrap(rt.banUser))
 	rt.router.GET("/users/:id/profile", rt.wrap(rt.getUserProfile))

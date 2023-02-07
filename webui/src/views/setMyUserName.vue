@@ -26,7 +26,7 @@ export default {
       this.errormsg = null;
       if (this.name != undefined){
         try {
-          let url = "/users/"+this.token+"/setMyUserName";
+          let url = "/users/"+this.token+"/username";
           const response = await this.$axios.put(url, this.name,{
                 headers:{"Authorization": this.token}
 

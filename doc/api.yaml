@@ -1021,7 +1021,7 @@ paths:
 
 
 
-  /users/{userId}/setMyUserName:
+  /users/{userId}/username:
     put:
       parameters:
         - name: userId
