@@ -73,7 +73,7 @@ export default {
           let users = JSON.parse(JSON.stringify(this.users));
 
           /* Getting logo information
-          let urlogo = "/users/"+this.token+"/getLogo";
+          let urlogo = "/users/"+this.token+"/logo";
           let logo = await this.$axios.get(urlogo,{
                 headers:{"Authorization": this.token}
               }
@@ -253,7 +253,7 @@ export default {
       if (user["ProfilePic"] != 0){
         // Profile picture is not empty
         try {
-          let tokenUrl = "/users/"+user["Id"]+"/getLogo";
+          let tokenUrl = "/users/"+user["Id"]+"/logo";
           const data = await this.$axios.get(tokenUrl, {
                 headers: {"Authorization": this.token}
               }

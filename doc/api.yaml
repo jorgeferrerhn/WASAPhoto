@@ -542,7 +542,7 @@ paths:
 
 
 
-  /users/{userId}/getLogo:
+  /users/{userId}/logo:
     get:
       parameters:
         - name: userId

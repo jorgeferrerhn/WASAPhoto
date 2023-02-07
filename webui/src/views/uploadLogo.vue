@@ -33,7 +33,7 @@ export default {
       this.userToken = userToken.data;
 
       // Getting logo information
-      let url = "/users/"+this.token+"/getLogo";
+      let url = "/users/"+this.token+"/logo";
       let logo = await this.$axios.get(url,{
             headers:{"Authorization": this.token}
           }
