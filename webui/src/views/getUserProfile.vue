@@ -33,7 +33,7 @@ export default {
         const userToken = await this.$axios.get(tokenUrl,{
               headers:{"Authorization": this.token}
             }
-        );
+        ).then(res => res);
         this.tokenUser = userToken.data;
         for (let i = 0; i < this.users.length; i++){
           if (this.users[i] == this.token){
@@ -352,31 +352,34 @@ export default {
               </div>
             </div>
 
+
+            <div class="d-flex pt-1">
+
+              <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
+
+              <template v-if="isFollower(u)">
+                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unfollowUser(u)">Unfollow</button>
+              </template>
+
+              <template v-else>
+                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="followUser(u)">Follow</button>
+              </template>
+
+              <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
+
+              <template v-if="isBanned(u)">
+                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unbanUser(u)">Unban</button>
+              </template>
+
+              <template v-else>
+                <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="banUser(u)">Ban</button>
+              </template>
+
+            </div>
+
           </div>
 
-          <div class="d-flex pt-1">
 
-            <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
-
-            <template v-if="isFollower(u)">
-              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unfollowUser(u)">Unfollow</button>
-            </template>
-
-            <template v-else>
-              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="followUser(u)">Follow</button>
-            </template>
-
-            <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
-
-            <template v-if="isBanned(u)">
-              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unbanUser(u)">Unban</button>
-            </template>
-
-            <template v-else>
-              <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="banUser(u)">Ban</button>
-            </template>
-
-          </div>
 
         </template>
 
