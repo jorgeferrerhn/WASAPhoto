@@ -9,7 +9,8 @@ export default {
       token: 0,
       photo: {},
       photos:[],
-      selectedFile:null
+      selectedFile:null,
+      serverFile:null
     }
   },
   methods: {
@@ -78,12 +79,13 @@ export default {
       console.log(imgtag.src)
 
     },
-    onChangeFileUpload (e) {
-      console.log(e.target.files)
+    onChangeFileUpload: async function (e) {
+
       let file = e.target.files[0]
-      this.encodeImage(file)
+      this.serverFile = file
+      await this.encodeImage(file)
     },
-    encodeImage (input) {
+    encodeImage: async function(input) {
       if (input) {
         let reader = new FileReader()
         reader.onload = (e) => {
@@ -93,13 +95,74 @@ export default {
       }
     },
 
-    getImage(photo){
-      console.log(photo);
-      return this.encodeImage(photo["path"])
+    uploadPhoto: async function() {
+
+      this.loading = true;
+      this.errormsg = null;
+
+      try {
+
+        // cast the selected file to formData
+        console.log(this.serverFile)
+        console.log(this.selectedFile)
+        console.log(JSON.stringify(this.serverFile))
+
+
+        // Let's get the cookie
+        this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        let url = "/users/"+this.token+"/photo";
+        const response = await this.$axios.post(url,this.selectedFile,{
+          headers:{"Authorization": this.token}
+        }).then(res => res);
+
+
+        let photo = response.data
+        console.log(photo['path'])
+
+
+        // Now, it uploads a photo. We have to add it to the photo's list
+
+        let contains = false
+        for (let i = 0; i < this.photos.length; i++){
+          if (this.photos[i]["id"] == photo["id"]){
+            contains = true
+          }
+        }
+
+
+        if (!contains){
+          this.photos.push(photo);
+        }
+
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+
+
+      this.loading = false;
+    },
+
+    getImage: async function(photo){
+
+      let obj = photo['path'];
+
+      console.log(obj)
+      console.log(typeof(obj))
+
+      let reader = new FileReader()
+      reader.onload = (e) => {
+        this.selectedFile = e.target.result
+      }
+      reader.readAsDataURL(this.serverFile)
+
+
     },
 
 
-    onFileChange: function(event){
+
+
+    /*onFileChange: function(event){
       let name =event.target.files[0]["name"];
       this.path= name; // update the path here
       console.log("Aquí", this.path);
@@ -111,54 +174,11 @@ export default {
       reader.onload = e => {
         this.image = e.target.result
         console.log(this.image)
-      }*/
-    },
+      }
+    },*/
 
 
-    uploadPhoto: async function() {
 
-      this.loading = true;
-      this.errormsg = null;
-
-        try {
-
-          // cast the selected file to formData
-          const fd = new FormData();
-          fd.append('image',this.selectedFile,this.selectedFile.name)
-
-
-          // Let's get the cookie
-          this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-          let url = "/users/"+this.token+"/photo";
-          const response = await this.$axios.post(url,fd,{
-            headers:{"Authorization": this.token}
-          }).then(res => res);
-
-          let photo = response.data
-
-
-          // Now, it uploads a photo. We have to add it to the photo's list
-
-          let contains = false
-          for (let i = 0; i < this.photos.length; i++){
-            if (this.photos[i]["id"] == photo["id"]){
-              contains = true
-            }
-          }
-
-
-          if (!contains){
-            this.photos.push(photo);
-          }
-
-
-        } catch (e) {
-          this.errormsg = e.toString();
-        }
-
-
-      this.loading = false;
-    },
 
     likePhoto: async function(p) {
 
@@ -312,7 +332,7 @@ export default {
         <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick a photo" prepend-icon="mdi-camera" v-model="imageData">Select image...</v-file-input>
 
         <input type="file" @change="onChangeFileUpload">
-        <img v-if="selectedFile" :src="selectedFile" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+        <!--img v-if="selectedFile" :src="selectedFile" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;"-->
 
         <a href="javascript:" class="btn btn-primary" @click="uploadPhoto">Upload a photo</a>
         <!--v-file-input type="file" @change="onFileChange"/-->
@@ -325,8 +345,10 @@ export default {
             <div class="card m-3" style="border-radius: 15px;">
               <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
                 <div class="m-3">
-                  <img :src="getImage(p)" v-bind:id="p.ID" v-bind:alt="Photo" class="img-fluid m-3"
-                       style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+                  <img v-if="p['path']" :src="p['path']" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+
+                  <!--img :src="getImage(p)" v-bind:id="p.ID" v-bind:alt="Photo" class="img-fluid m-3"
+                       style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;"-->
                 </div>
 
                 <div class="m-3">
