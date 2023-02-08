@@ -242,6 +242,11 @@ export default {
 
               </div>
 
+              <div class="m-3">
+                <h5 class="mb-1 m-3 p-3">Updated at: </h5>
+                <h5 class="mb-1 m-3 p-3">{{ p.Date }}</h5>
+              </div>
+
             </div>
 
             <div class="d-flex align-items-center">
