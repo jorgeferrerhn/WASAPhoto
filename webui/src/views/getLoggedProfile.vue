@@ -224,7 +224,7 @@ export default {
 
                 <div class="m-3 d-flex align-items-center">
                   <div class="m-3 d-flex align-items-center">
-                    <h6 class="m-3 ">Photo ID: {{ p.Id}}</h6>
+                    <h6 class="m-3 ">Photo ID: {{ p.ID}}</h6>
                     <p class="m-3">Likes: {{ JSON.parse(p.Likes).length }}</p>
                     <p class="m-3">Comments: {{ JSON.parse(p.Comments).length }}</p>
 

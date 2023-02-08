@@ -522,7 +522,59 @@ paths:
                 description: Error description
 
 
+  /users/following/{userId}:
+    parameters:
+      - name: userId
+        schema:
+          type: integer
+          description: User ID
 
+        in: path
+        required: true
+        description: User ID
+
+    get:
+      summary: get the total number of following users given a user ID
+      operationId: getFollowing
+      description: |
+        Obtains number of following users by its ID. 
+
+      tags: [ "User" ]
+
+      responses:
+        "200":
+          description: Following users number
+          content:
+            application/json:
+              schema:
+                description: Following users
+                type: object
+                properties:
+
+
+                  following:
+                    type: integer
+                    example: 18
+                    description: Total number of users
+
+
+        "400":
+          description: |
+            The request was not compliant with the documentation
+            (eg. missing fields, etc). 
+
+        "404":
+          description: |
+            Missing resource or not found
+
+        '405':
+          description: Method not allowed.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Method Not Allowed"
+                description: Error description
 
 
   /users/{userId}/stream:
