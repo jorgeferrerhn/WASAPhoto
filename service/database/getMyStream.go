@@ -3,7 +3,6 @@ package database
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 )
 
 func contains(s []int, integer int) bool {
@@ -93,9 +92,6 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 	// we use bubble sort
 	for i := len(newPhotos); i > 0; i-- {
 		for j := 1; j < i; j++ {
-			fmt.Println(newPhotos[j-1].ID)
-			fmt.Println(newPhotos[j].ID)
-			fmt.Println("----------------------------")
 
 			if newPhotos[j-1].ID < newPhotos[j].ID {
 				intermediate := newPhotos[j]

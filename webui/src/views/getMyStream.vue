@@ -136,23 +136,7 @@ export default {
 
     },
 
-    getName: async function(i){
-      this.loading = true;
-      this.errormsg = null;
-      try {
-        let userId = this.photos[i].UserId
-        let url = "/username/"+userId;
-        let name = await this.$axios.get(url,{
-          headers:{"Authorization": userId}}).then(res => name.data);
 
-
-        return name.data
-      } catch (e) {
-        this.errormsg = e.toString();
-      }
-      this.loading = false;
-
-    },
 
     commentPhoto: async function(p) {
 

@@ -26,6 +26,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       if (this.name != undefined){
+        console.log(this.name)
         try {
           let url = "/users/"+this.token+"/username";
           const response = await this.$axios.put(url, this.name,{
@@ -33,6 +34,7 @@ export default {
 
           }
           ).then(res => res);
+          console.log(response)
           this.user = response.data;
           console.log(this.user)
 
@@ -133,7 +135,9 @@ export default {
         <!-- User information -->
         <template v-if="1">
           <div class="col m-3 col-md-9 col-lg-7 col-xl-5" >
+            <template v-if="this.user.length > 0">
             <div class="card" style="border-radius: 15px;">
+
               <div class="card-body p-4">
                 <!-- User information -->
                 <div class="d-flex text-black">
@@ -142,9 +146,9 @@ export default {
 
                   <div class="flex-shrink-0">
 
-                    <template v-if="user['ProfilePic'] != 0">
+
                       <img v-if="getProfilePic()" :src="this.path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
-                    </template>
+
 
                   </div>
                   <div class="flex-grow-1 ms-3">
@@ -167,7 +171,10 @@ export default {
 
                 </div>
               </div>
+
+
             </div>
+            </template>
           </div>
         </template>
 
