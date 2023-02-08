@@ -3,6 +3,7 @@ package database
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 )
 
 func contains(s []int, integer int) bool {
@@ -84,6 +85,24 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 
 		}
 
+	}
+
+	// Now that we have the list, we should order it in inverse cronological order
+
+	// To order with inverse cronological inverse order, we must take into account that the photos with the biggest IDs are the first ones. So we order the photos based on their IDs (from bigger to smaller)
+	// we use bubble sort
+	for i := len(newPhotos); i > 0; i-- {
+		for j := 1; j < i; j++ {
+			fmt.Println(newPhotos[j-1].ID)
+			fmt.Println(newPhotos[j].ID)
+			fmt.Println("----------------------------")
+
+			if newPhotos[j-1].ID < newPhotos[j].ID {
+				intermediate := newPhotos[j]
+				newPhotos[j] = newPhotos[j-1]
+				newPhotos[j-1] = intermediate
+			}
+		}
 	}
 
 	return newPhotos, nil
