@@ -56,15 +56,22 @@ export default {}
 
             <li class="nav-item">
               <RouterLink to="/getMyStream" class="nav-link">
-                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#camera"/></svg>
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
                 Search for Photos
               </RouterLink>
             </li>
 
             <li class="nav-item">
               <RouterLink to="/uploadLogo" class="nav-link">
-                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#camera"/></svg>
                 Change profile picture
+              </RouterLink>
+            </li>
+
+            <li class="nav-item">
+              <RouterLink to="/getLoggedProfile" class="nav-link">
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
+                My profile
               </RouterLink>
             </li>
 

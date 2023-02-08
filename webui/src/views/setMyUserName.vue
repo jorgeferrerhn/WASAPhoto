@@ -32,7 +32,7 @@ export default {
                 headers:{"Authorization": this.token}
 
           }
-          ).then(res => res);;
+          ).then(res => res);
           this.user = response.data;
           console.log(this.user)
 
@@ -62,7 +62,7 @@ export default {
           const logo = await this.$axios.get(logoUrl, {
                 headers: {"Authorization": this.token}
               }
-          ).then(res => res);;
+          ).then(res => res);
 
           console.log(logo.data)
           this.path = logo.data["path"];

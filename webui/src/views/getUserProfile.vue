@@ -114,7 +114,7 @@ export default {
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
-        }).then(res => res);;
+        }).then(res => res);
         let user = response.data;
 
 
@@ -143,7 +143,7 @@ export default {
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
-        }).then(res => res);;
+        }).then(res => res);
         let user = response.data;
 
 
@@ -193,7 +193,7 @@ export default {
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
-        }).then(res => res);;
+        }).then(res => res);
         let user = response.data; // In this case, this returns the user 1
 
         this.tokenUser["Banned"] = user["Banned"];
@@ -215,7 +215,7 @@ export default {
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
-        }).then(res => res);;
+        }).then(res => res);
         let user = response.data; // In this case, this returns the user 1
 
 

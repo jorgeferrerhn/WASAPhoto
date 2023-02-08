@@ -28,10 +28,10 @@ export default {
       try {
         let url = "/users/"+this.token+"/stream";
         const photos = await this.$axios.get(url,{
-          headers:{"Authorization": this.token}}).then(res => res);;
-        console.log(photos.data)
+          headers:{"Authorization": this.token}}).then(res => res);
+
         this.photos = photos.data
-        console.log(this.photos)
+
 
 
       } catch (e) {
@@ -49,7 +49,7 @@ export default {
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
-        }).then(res => res);;
+        }).then(res => res);
         let photo = response.data;
 
 
@@ -79,7 +79,7 @@ export default {
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
-        }).then(res => res);;
+        }).then(res => res);
         let photo = response.data;
 
 
@@ -151,7 +151,7 @@ export default {
         const response = await this.$axios.post(url, this.comment,{
           headers:{"Authorization": this.token,
           }
-        }).then(res => res);;
+        }).then(res => res);
         let photo = response.data;
         console.log(photo)
 
@@ -165,8 +165,7 @@ export default {
           }
         }
 
-        // The last thing we have to do is update the information
-        await this.getUserStream();
+
 
       } catch (e) {
         this.errormsg = e.toString();

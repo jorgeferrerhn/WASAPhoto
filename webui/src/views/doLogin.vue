@@ -50,7 +50,7 @@ export default {
       let userToken = await this.$axios.get(tokenUrl,{
             headers:{"Authorization": this.token}
           }
-      ).then(res => res);;
+      ).then(res => res);
       console.log(userToken);
       this.user = userToken.data;
 
