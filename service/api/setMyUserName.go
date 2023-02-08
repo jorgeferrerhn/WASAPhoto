@@ -70,7 +70,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	if err3 != nil {
 
 		ctx.Logger.WithError(err3).Error("can't update the username")
-		w.WriteHeader(http.StatusUnauthorized) // 401. Here unauthorized because probably you're changing to a username already picked
+		w.WriteHeader(http.StatusForbidden) // 401. Here forbidden because probably you're changing to a username already picked
 		return
 	}
 

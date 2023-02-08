@@ -365,7 +365,13 @@ export default {
 
             <template v-if="!tokenIsBanned(u)">
               <h5 class="mb-1">{{ u["Name"]}}</h5>
-              <img v-if="getProfilePic(index) && logopaths[index].length > 0" :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+              <template v-if="getProfilePic(index) && logopaths[index].length > 0">
+                <img :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
+              </template>
+
+              <template v-else >
+                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
+              </template>
 
               <div class="flex-shrink-0">
 
