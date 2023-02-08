@@ -108,7 +108,7 @@ export default {
         console.log(JSON.parse(this.tokenUser["Photos"]).length)
         // First, we have to search for the logo
         if (this.tokenUser["ProfilePic"] != undefined){
-          let logoUrl = "/images/"+this.tokenUser["ProfilePic"];
+          let logoUrl = "/users/"+this.tokenUser["Id"]+"/logo";
           const logo = await this.$axios.get(logoUrl, {
                 headers: {"Authorization": this.token}
               }

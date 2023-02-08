@@ -43,12 +43,6 @@ func (rt *_router) getUserByName(w http.ResponseWriter, r *http.Request, ps http
 
 	user.FromDatabase(dbuser)
 
-	if token != user.ID {
-		// Unauthorized request
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
 	defer r.Body.Close()
 
 	w.Header().Set("Content-Type", "application/json")
