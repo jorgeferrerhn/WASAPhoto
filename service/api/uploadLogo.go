@@ -86,7 +86,7 @@ func (rt *_router) uploadLogo(w http.ResponseWriter, r *http.Request, ps httprou
 	// Send the output to the user.
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	err5 := json.NewEncoder(w).Encode(u)
+	err5 := json.NewEncoder(w).Encode(p)
 	if err5 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

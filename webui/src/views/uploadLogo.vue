@@ -6,8 +6,9 @@ export default {
       loading: false,
       token: 0,
       logo: {},
-      path: "",
-      userToken:{}
+      path: {} ,
+      userToken:{},
+      selectedFile:null
     }
   },
   methods: {
@@ -32,41 +33,41 @@ export default {
       console.log(userToken);
       this.userToken = userToken.data;
 
-      // Getting logo information
-      let url = "/users/"+this.token+"/logo";
-      let logo = await this.$axios.get(url,{
-            headers:{"Authorization": this.token}
-          }
-      ).then(res => res);;
-
-      console.log(userToken);
-      this.path = logo.data["path"];
 
     },
 
+    onChangeFileUpload: async function (e) {
+      let file = e.target.files[0]
+      this.serverFile = file
+      await this.encodeImage(file)
+    },
+    encodeImage: async function(input) {
+      if (input) {
+        let reader = new FileReader()
+        reader.onload = (e) => {
+          this.selectedFile = e.target.result
+        }
+        reader.readAsDataURL(input)
+      }
+    },
 
 
     uploadLogo: async function() {
       this.loading = true;
       this.errormsg = null;
 
-
-
       // The single user of this.userToken is the logged one. Let's search for it to get its information
 
-      if (this.imageData != undefined){
         try {
-          let url = "/users/"+this.token+"/uploadLogo";
+          let url = "/users/"+this.token+"/newlogo";
           console.log(url)
-          console.log(this.path)
 
-          const response = await this.$axios.post(url, this.path,{
+          const response = await this.$axios.post(url, this.selectedFile,{
             headers:{"Authorization": this.token}
-          }).then(res => res);;
-          console.log(response.data)
-          this.userToken = response.data; // update the userToken
-          this.userToken = JSON.parse(JSON.stringify(this.userToken))
-          console.log(this.userToken)
+          }).then(res => res);
+
+          this.path = response.data['path']
+          console.log(this.path)
 
 
 
@@ -74,25 +75,12 @@ export default {
           this.errormsg = e.toString();
         }
 
-      }
+
 
       this.loading = false;
     },
 
-    onFileChange: async function(event) {
 
-      this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
-      console.log(this.token)
-      let tokenUrl = "/users/"+this.token+"/profile";
-      const userToken = await this.$axios.get(tokenUrl,{
-            headers:{"Authorization": this.token}
-          }
-      ).then(res => res);;
-      this.userToken = userToken;
-      let name = event.target.files[0]["name"];
-      this.path=name
-
-    }
 
 
 
@@ -142,7 +130,7 @@ export default {
 
 
         <h3 class="h3 m-3">Select your new profile picture, {{userToken["Name"]}}...: </h3>
-        <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick a photo" prepend-icon="mdi-camera" v-model="imageData" @change="onFileChange">Select image...</v-file-input>
+        <input type="file" @change="onChangeFileUpload">
 
         <!-- User information -->
       <template v-if="userNotEmpty">
@@ -152,18 +140,9 @@ export default {
               <div class="d-flex text-black">
                 <div class="flex-shrink-0">
 
-                  <template v-if="userToken['ProfilePic'] == 0">
-                    <img :src="'/profilepics/default-profile-photo.jpeg'"
-                         alt="Generic placeholder image" class="img-fluid"
-                         style="width: 180px; border-radius: 10px;">
+                  <template v-if="userToken['ProfilePic'] != 0">
+                    <img v-if="this.path" :src="this.path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
                   </template>
-
-                  <template v-else>
-                    <img :src="'/profilepics/'+this.path"
-                         alt="Generic placeholder image" class="img-fluid"
-                         style="width: 180px; border-radius: 10px;">
-                  </template>
-
 
                 </div>
                 <!-- User information -->

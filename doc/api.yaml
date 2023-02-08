@@ -841,7 +841,7 @@ paths:
 
 
 
-  /users/{userId}/uploadLogo:
+  /users/{userId}/newlogo:
     post:
       parameters:
         - name: userId

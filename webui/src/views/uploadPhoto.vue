@@ -83,16 +83,6 @@ export default {
     },
 
 
-
-
-
-
-
-
-
-
-
-
   },
   mounted() {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -126,7 +116,6 @@ export default {
     <div class="card">
       <div class="card-body">
         <h3 class="h3">Select new picture to upload...: </h3>
-
         <input type="file" @change="onChangeFileUpload">
         <a href="javascript:" class="btn btn-primary" @click="uploadPhoto">Upload a photo</a>
 

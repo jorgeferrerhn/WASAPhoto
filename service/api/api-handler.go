@@ -10,7 +10,7 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/session", rt.wrap(rt.doLogin))
 	rt.router.POST("/users/:id/photo", rt.wrap(rt.uploadPhoto))
-	rt.router.POST("/users/:id/uploadLogo", rt.wrap(rt.uploadLogo))
+	rt.router.POST("/users/:id/newlogo", rt.wrap(rt.uploadLogo))
 	rt.router.POST("/users/:id/commentPhoto/:photoId", rt.wrap(rt.commentPhoto))
 	rt.router.PUT("/users/:id/likePhoto/:photoId", rt.wrap(rt.likePhoto))
 	rt.router.PUT("/users/:id/username", rt.wrap(rt.setMyUserName))
