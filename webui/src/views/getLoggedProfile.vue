@@ -204,6 +204,12 @@ export default {
                     <h6 class="m-3 ">Photo ID: {{ p.Id}}</h6>
                     <p class="m-3">Likes: {{ JSON.parse(p.Likes).length }}</p>
                     <p class="m-3">Comments: {{ JSON.parse(p.Comments).length }}</p>
+
+
+                      <h5 class="m-3">Updated at: {{ p.Date }} </h5>
+
+
+
                     <button type="button" @click="deletePhoto(index)" class="btn btn-primary" style="background-color:red; border-color: red"><span class="bi bi-trash">Delete photo</span> </button>
                   </div>
                 </div>
