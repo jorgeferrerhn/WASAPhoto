@@ -59,7 +59,10 @@ export default {
     logOut: async function() {
       console.log("Logging out")
       document.cookie = `token=0`; // reset the cookie
+      document.cookie = `logged=`; // reset the cookie
       this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
+      this.token = document.cookie.replace(/(?:(?:^|.*;\s*)logged\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // update logged user
+
     },
 
   },

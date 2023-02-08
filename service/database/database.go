@@ -73,8 +73,11 @@ type AppDatabase interface {
 	// getUserProfile gets the information of an user from its ID
 	GetUserProfile(User) (User, error)
 
-	// getUserProfile gets the information of an user from its name
+	// getUserByName gets the information of an user from its name
 	GetUserByName(User) (User, error)
+
+	// getUserName gets the username of a user
+	GetUserName(User) (User, error)
 
 	// getMyStream gets the stream of photos of the user searched from its ID
 	GetMyStream(User) ([]Photo, error)

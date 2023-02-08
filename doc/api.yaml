@@ -321,7 +321,7 @@ paths:
     parameters:
       - name: userName
         schema:
-          type: integer
+          type: string
           description: User name
 
         in: path
@@ -461,6 +461,66 @@ paths:
                 type: string
                 example: "Method Not Allowed"
                 description: Error description
+
+
+  /username/{userId}:
+    parameters:
+      - name: userId
+        schema:
+          type: integer
+          description: User ID
+
+        in: path
+        required: true
+        description: User ID
+
+    get:
+      summary: username searched by ID
+      operationId: getUserName
+      description: |
+        Obtains an username by its ID. 
+
+      tags: [ "User" ]
+
+      responses:
+        "200":
+          description: User name
+          content:
+            application/json:
+              schema:
+                description: Username
+                type: object
+                properties:
+
+
+
+                  name:
+                    type: string
+                    example: "Maria"
+                    minLength: 3
+                    maxLength: 16
+                    pattern: ^[a-zA-Z0-9]{1,20}$
+                    description: Username
+
+
+        "400":
+          description: |
+            The request was not compliant with the documentation
+            (eg. missing fields, etc). 
+
+        "404":
+          description: |
+            Missing resource or not found
+
+        '405':
+          description: Method not allowed.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Method Not Allowed"
+                description: Error description
+
 
 
 

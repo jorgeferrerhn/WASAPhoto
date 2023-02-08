@@ -5,6 +5,7 @@ export default {
       errormsg: null,
       loading: false,
       photos:[],
+      usernames:[],
       token: 0
     }
   },
@@ -23,14 +24,25 @@ export default {
 
     getUserStream: async function() {
 
+
+
       this.loading = true;
       this.errormsg = null;
       try {
         let url = "/users/"+this.token+"/stream";
         const photos = await this.$axios.get(url,{
           headers:{"Authorization": this.token}}).then(res => res);
-
         this.photos = photos.data
+
+        for (let i = 0; i < this.photos.length; i++){
+          // petition
+          let url = "/username/"+this.photos[i].UserId;
+          const name = await this.$axios.get(url,{
+            headers:{"Authorization": this.photos[i].UserId}}).then(res => res.data);
+          this.usernames.push(name)
+        }
+
+        console.log(this.photos)
 
 
 
@@ -45,7 +57,9 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/like/"+p["id"];
+        let castPhoto = JSON.parse(JSON.stringify(p))
+        let url = "/users/"+this.token+"/like/"+castPhoto.ID;
+
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
@@ -85,9 +99,9 @@ export default {
 
         // update this.photos list to update likes
         for (let i = 0; i < this.photos.length; i++) {
-          if (this.photos[i]["id"] == photo["id"]) {
+          if (this.photos[i].ID == photo.ID) {
             // update likes list
-            this.photos[i]["likes"] = photo["likes"]
+            this.photos[i].Likes = photo.Likes
           }
         }
 
@@ -102,13 +116,15 @@ export default {
 
       let photo = JSON.parse(JSON.stringify(p))
       let photos = JSON.parse(JSON.stringify(this.photos))
-      
+
+
 
       let tokenLiked = false;
       for (let i = 0; i < photos.length; i++){
-        if (photos[i]["id"] == photo["id"]){
-          let likes = JSON.parse(photos[i]["likes"]);
-          console.log(likes)
+        if (photos[i].Id == photo["id"]){
+
+          let likes = JSON.parse(photos[i].Likes);
+
           for (let j = 0; j < likes.length; j++) {
             if (likes[j] == this.token) {
               tokenLiked = true;
@@ -123,17 +139,19 @@ export default {
     getName: async function(i){
       this.loading = true;
       this.errormsg = null;
-      let user = null;
       try {
-        let url = "/users/"+i+"/profile";
-        user = await this.$axios.get(url,{
-          headers:{"Authorization": this.token}}).then(res => res);
+        let userId = this.photos[i].UserId
+        let url = "/username/"+userId;
+        let name = await this.$axios.get(url,{
+          headers:{"Authorization": userId}}).then(res => name.data);
 
+
+        return name.data
       } catch (e) {
         this.errormsg = e.toString();
       }
       this.loading = false;
-      return user.data["Name"]
+
     },
 
     commentPhoto: async function(p) {
@@ -146,8 +164,9 @@ export default {
 
 
         // Getting the comment
-
-        let url = "/users/"+this.token+"/comment/"+p["id"];
+        let castPhoto = JSON.parse(JSON.stringify(p))
+        console.log(castPhoto);
+        let url = "/users/"+this.token+"/comment/"+castPhoto.ID;
         const response = await this.$axios.post(url, this.comment,{
           headers:{"Authorization": this.token,
           }
@@ -171,7 +190,7 @@ export default {
         this.errormsg = e.toString();
       }
 
-
+      await this.getUserStream();
       this.loading = false;
     }
 
@@ -180,10 +199,7 @@ export default {
   },
   async mounted() {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    if (this.search != undefined){
-      await this.getUserStream()
-    }
-
+    await this.getUserStream()
   }
 }
 </script>
@@ -211,26 +227,29 @@ export default {
 
 
     <div class="card m-3">
-      <div class="card-body m-3">
-        <h1 class="m-3">Press button to search your stream...</h1>
 
-        <button class="btn btn-primary m-3" @click="getUserStream">Search</button>
-      </div>
 
-      <template v-if="photos.length > 0">
+      <template v-if="photos != null && photos.length > 0">
         <div class="m-3" v-for="(p,index) in photos" :key="index">
           <div class="card m-3" style="border-radius: 15px;">
             <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
               <div class="m-3">
-                <img v-if="p['path']" :src="p['path']" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+
+
+                <h5>User: {{ usernames[index] }} </h5>
+                <img v-if="p.Path" :src="p.Path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
               </div>
 
               <div class="m-3">
                 <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
 
-                <div v-for="(c,index) in JSON.parse(p['comments'])" :key="index" >
-                  <p class="">{{c['UserId']}} : {{c['Content']}}</p>
-                </div>
+                <template v-if="JSON.parse(p.Comments).length > 0">
+                  <div v-for="(c,index) in JSON.parse(p.Comments)" :key="index" >
+                    <p class="">{{c['UserId']}} : {{c['Content']}}</p>
+                  </div>
+
+                </template>
+
 
               </div>
 
@@ -254,14 +273,23 @@ export default {
               </div>
               <div class="m-3">
                 <div class="m-3">
-                  <h6 class="mb-1 ">Photo ID: {{ p["id"]}}</h6>
-                  <p class="mb-1">Likes: {{ JSON.parse(p["likes"]).length }}</p>
-                  <p class="mb-1">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+                  <h6 class="mb-1 ">Photo ID: {{ p.ID }}</h6>
+                  <p class="mb-1">Likes: {{ JSON.parse(p.Likes).length }}</p>
+                  <p class="mb-1">Comments: {{ JSON.parse(p.Comments).length }}</p>
                 </div>
               </div>
             </div>
 
           </div>
+        </div>
+
+      </template>
+
+      <template v-else>
+
+        <div class="card-body m-3">
+          <h1 class="m-3">We're sorry, your followed users didn't upload anything yet.</h1>
+
         </div>
 
       </template>
