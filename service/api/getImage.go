@@ -13,6 +13,16 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 
 	var imageId int
 
+	reqToken := r.Header.Get("Authorization")
+
+	token, errTok := strconv.Atoi(reqToken)
+
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	// This function receives an image ID and returns the image.
 
 	i := ps.ByName("id")
@@ -45,6 +55,12 @@ func (rt *_router) getImage(w http.ResponseWriter, r *http.Request, ps httproute
 
 	// Here we can re-use `photo` as FromDatabase is overwriting every variable in the structure.
 	p.FromDatabase(dbphoto)
+
+	if token != p.UserId {
+		// Unauthorized request
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
