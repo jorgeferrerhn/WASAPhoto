@@ -161,7 +161,7 @@ export default {
             </div>
 
 
-
+              <!--Photo information-->
               <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                    style="background-color: #efefef;">
                 <div>
@@ -172,6 +172,10 @@ export default {
                   <p class="small text-muted mb-1">Followers </p>
                   <p class="mb-0">{{ JSON.parse(this.tokenUser.Followers).length }}</p>
                 </div>
+
+
+
+
               </div>
 
 
@@ -193,6 +197,25 @@ export default {
                 <div class="m-3">
                   <img v-if="p.Path" :src="p.Path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
                 </div>
+
+                <div class="m-3">
+                  <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
+
+                  <template v-if="JSON.parse(p.Comments).length > 0">
+                    <div v-for="(c,index2) in JSON.parse(p.Comments)" :key="index2" class="d-inline-flex p-3">
+                      <h6 class="m-3">{{c['UserId']}} : {{c['Content']}}</h6>
+                      <div>
+                        <button type="button" @click="deleteComment(index2)"  class="btn btn-secondary" style="background-color:red; border-color: red"><span class="bi bi-trash">Remove</span> </button>
+                      </div>
+
+                    </div>
+
+                  </template>
+
+
+                </div>
+
+
               </div>
 
               <div class="d-flex align-items-center">

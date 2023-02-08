@@ -3,7 +3,6 @@ package database
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 )
 
 func contains(s []int, integer int) bool {
@@ -101,8 +100,6 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 			}
 		}
 	}
-
-	fmt.Println(newPhotos)
 
 	return newPhotos, nil
 }

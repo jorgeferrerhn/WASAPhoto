@@ -78,6 +78,8 @@ export default {
           }
         }
 
+        await this.getUserStream();
+
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -138,6 +140,43 @@ export default {
 
     },
 
+
+    deleteComment: async function (index,index2){
+      let comment = JSON.parse(this.photos[index].Comments)[index2];
+      console.log(comment)
+
+      this.loading = true;
+      this.errormsg = null;
+      try {
+
+        // Getting the comment
+
+        let url = "/users/"+this.token+"/uncomment/"+comment.ID;
+        const response = await this.$axios.delete(url,{
+          headers:{"Authorization": this.token,
+          }
+        }).then(res => res);
+        let photo = response.data;
+        console.log(photo)
+        // update this.photos list to update likes
+
+        let updatedPhoto = JSON.parse(JSON.stringify(this.photos[index]))
+        console.log(JSON.parse(photo.comments))
+        updatedPhoto.Comments = JSON.parse(photo.comments)
+        this.photos[index] = updatedPhoto
+
+
+        console.log(this.photos[index])
+        await this.getUserStream();
+
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
+
+
+      this.loading = false;
+
+    },
 
 
     commentPhoto: async function(p) {
@@ -233,8 +272,12 @@ export default {
                 <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
 
                 <template v-if="JSON.parse(p.Comments).length > 0">
-                  <div v-for="(c,index) in JSON.parse(p.Comments)" :key="index" >
-                    <p class="">{{c['UserId']}} : {{c['Content']}}</p>
+                  <div v-for="(c,index2) in JSON.parse(p.Comments)" :key="index2" class="d-inline-flex p-3">
+                    <h6 class="m-3">{{c['UserId']}} : {{c['Content']}}</h6>
+                    <div>
+                      <button type="button" @click="deleteComment(index,index2)"  class="btn btn-secondary" style="background-color:red; border-color: red"><span class="bi bi-trash">Remove</span> </button>
+                    </div>
+
                   </div>
 
                 </template>

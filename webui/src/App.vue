@@ -57,7 +57,7 @@ export default {}
             <li class="nav-item">
               <RouterLink to="/getMyStream" class="nav-link">
                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
-                Search for Photos
+                My Stream
               </RouterLink>
             </li>
 
