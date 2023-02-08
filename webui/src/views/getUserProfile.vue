@@ -6,7 +6,8 @@ export default {
       loading: false,
       token: 0,
       tokenUser:{},
-      users:[]
+      users:[],
+      logopaths:[]
     }
   },
   methods: {
@@ -85,6 +86,7 @@ export default {
             }
             if (!contains){
               users.push(user);
+              this.logopaths.push("");
             }
 
             this.users = users;
@@ -267,32 +269,29 @@ export default {
     },
 
 
-    getProfilePic: async function(u){
+    getProfilePic: async function(i){
       // Function that returns the profile pic path
-      let user = JSON.parse(JSON.stringify(u));
-      let finalPath = "";
+      let user = JSON.parse(JSON.stringify(this.users[i]));
       console.log("getting pic,",user);
 
-      if (user["ProfilePic"] != 0){
-        // Profile picture is not empty
-        try {
-          let tokenUrl = "/users/"+user["Id"]+"/logo";
-          const data = await this.$axios.get(tokenUrl, {
-                headers: {"Authorization": this.token}
-              }
-          ).then(res => res);;
+      // Profile picture is not empty
+      try {
+        // First, we have to search for the logo
+        let logoUrl = "/images/"+user["ProfilePic"];
+        const logo = await this.$axios.get(logoUrl, {
+              headers: {"Authorization": this.token}
+            }
+        ).then(res => res);;
 
-          console.log(data)
+        console.log(logo.data)
+        this.logopaths[i] = logo.data["path"];
+        return logo.data["path"];
 
-          console.log(data["path"]);
-          return data["path"];
-
-        }catch (e) {
-          this.errormsg = e.toString();
-        }
+      }catch (e) {
+        this.errormsg = e.toString();
       }
-      finalPath = "default-profile-photo.jpeg";
-      return finalPath;
+
+
     },
 
 
@@ -352,13 +351,12 @@ export default {
 
             <template v-if="!tokenIsBanned(u)">
               <h5 class="mb-1">{{ u["Name"]}}</h5>
+              <img v-if="logopaths[index]" :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
               <div class="flex-shrink-0">
 
                 <template >
-                  <!--img :src="'/img/'+getProfilePic(index)"
-                       alt="Generic placeholder image" class="img-fluid"
-                       style="width: 180px; border-radius: 10px;"-->
+
                 </template>
 
 

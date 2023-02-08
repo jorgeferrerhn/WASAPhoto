@@ -60,10 +60,6 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 		return p, u, err6
 	}
 
-	if photoId == u.ProfilePic && photoId != 0 {
-		return p, u, errors.New("This is the current profile picture!")
-	}
-
 	if p.Path == "" {
 		return p, u, errors.New("Request body Empty")
 	}
@@ -72,26 +68,24 @@ func (db *appdbimpl) UploadLogo(p Photo, u User) (Photo, User, error) {
 	p.Comments = "[]"
 	p.Date = time.Now()
 
-	// We upload the photo and insert it to the photo's database
-	res, e := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
-		p.UserId, p.Path, p.Likes, p.Comments, p.Date)
-	if e != nil {
-		return p, u, errors.New("Error in: " + fmt.Sprint(res))
-	}
+	if photoId == 0 { // if it's new, we will have to insert it
+		// We upload the photo and insert it to the photo's database
+		res, e := db.c.Exec(`INSERT INTO photos (id,userid,path,likes,comments,date) VALUES (NULL,?,?,?,?,?)`,
+			p.UserId, p.Path, p.Likes, p.Comments, p.Date)
+		if e != nil {
+			return p, u, errors.New("Error in: " + fmt.Sprint(res))
+		}
 
-	lastInsertID, err7 := res.LastInsertId()
-	if err7 != nil {
-		return p, u, err7
-	}
+		lastInsertID, err7 := res.LastInsertId()
+		if err7 != nil {
+			return p, u, err7
+		}
 
-	p.ID = int(lastInsertID)
+		p.ID = int(lastInsertID)
+	}
 
 	// We also have to update the profile picture ID
 	u.ProfilePic = p.ID
-
-	if err7 != nil {
-		return p, u, err7
-	}
 
 	res2, err8 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
 		u.Name, u.ProfilePic, u.Followers, u.Banned, u.Photos, u.ID)
