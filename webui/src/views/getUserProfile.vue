@@ -373,16 +373,6 @@ export default {
                 <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
               </template>
 
-              <div class="flex-shrink-0">
-
-                <template >
-
-                </template>
-
-
-
-
-              </div>
 
 
               <div class="d-flex justify-content-start rounded-3 p-2 mb-2"

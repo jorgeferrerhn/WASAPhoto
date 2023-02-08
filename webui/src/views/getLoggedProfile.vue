@@ -161,7 +161,7 @@ export default {
             </div>
 
 
-            <template v-if="logo.length > 0">
+
               <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                    style="background-color: #efefef;">
                 <div>
@@ -174,7 +174,7 @@ export default {
                 </div>
               </div>
 
-            </template>
+
 
 
 
@@ -185,9 +185,9 @@ export default {
         </template>
 
         <!-- Photo information -->
-        <template v-if="1">
+
           <div class="m-3" v-for="(p,index) in photos" :key="index">
-            <h5>Photo uploaded!</h5>
+
             <div class="card m-3" style="border-radius: 15px;">
               <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
                 <div class="m-3">
@@ -197,7 +197,7 @@ export default {
 
               <div class="d-flex align-items-center">
 
-                <template v-if="p.Likes.length > 0">
+
 
                 <div class="m-3 d-flex align-items-center">
                   <div class="m-3 d-flex align-items-center">
@@ -207,13 +207,13 @@ export default {
                     <button type="button" @click="deletePhoto(index)" class="btn btn-primary" style="background-color:red; border-color: red"><span class="bi bi-trash">Delete photo</span> </button>
                   </div>
                 </div>
-                </template>
+
               </div>
 
             </div>
           </div>
 
-        </template>
+
 
 
 
