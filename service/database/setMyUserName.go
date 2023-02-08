@@ -57,7 +57,7 @@ func (db *appdbimpl) SetMyUserName(u User) (User, error) {
 		return u, err6
 	}
 
-	if searchId != 0 { // There's someone with that username already
+	if searchId != u.ID && searchId != 0 { // There's someone with that username already but is not itself
 		return u, errors.New("This username is already picked!")
 	}
 

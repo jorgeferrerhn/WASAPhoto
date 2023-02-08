@@ -33,17 +33,19 @@ export default {
         const photos = await this.$axios.get(url,{
           headers:{"Authorization": this.token}}).then(res => res);
         this.photos = photos.data
-
-        for (let i = 0; i < this.photos.length; i++){
-          // petition
-          let url = "/username/"+this.photos[i].UserId;
-          const name = await this.$axios.get(url,{
-            headers:{"Authorization": this.photos[i].UserId}}).then(res => res.data);
-          this.usernames.push(name)
-        }
-
         console.log(this.photos)
 
+        if (this.photos != null){
+          for (let i = 0; i < this.photos.length; i++){
+            // petition
+            let url = "/username/"+this.photos[i].UserId;
+            const name = await this.$axios.get(url,{
+              headers:{"Authorization": this.photos[i].UserId}}).then(res => res.data);
+            this.usernames.push(name)
+          }
+
+
+        }
 
 
       } catch (e) {
@@ -183,7 +185,10 @@ export default {
   },
   async mounted() {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    await this.getUserStream()
+    if (this.token != 0){
+      await this.getUserStream()
+
+    }
   }
 }
 </script>

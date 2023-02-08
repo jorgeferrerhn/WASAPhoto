@@ -25,11 +25,10 @@ export default {
 
       this.loading = true;
       this.errormsg = null;
-      if (this.name != undefined){
-        console.log(this.name)
+      if (this.search != undefined){
         try {
           let url = "/users/"+this.token+"/username";
-          const response = await this.$axios.put(url, this.name,{
+          const response = await this.$axios.put(url, this.search,{
                 headers:{"Authorization": this.token}
 
           }
@@ -60,7 +59,7 @@ export default {
       if (this.user != undefined && user["ProfilePic"] != undefined){
         try {
           // First, we have to search for the logo
-          let logoUrl = "/images/"+user["ProfilePic"];
+          let logoUrl = "/users/"+this.token+"/logo";
           const logo = await this.$axios.get(logoUrl, {
                 headers: {"Authorization": this.token}
               }
@@ -129,13 +128,13 @@ export default {
       <div class="card-body">
 
         <h3 class="h3">Introduce your new user name...: </h3>
-        <input v-model="name" placeholder="jose">
+        <input v-model="search" placeholder="jose">
 
 
         <!-- User information -->
         <template v-if="1">
           <div class="col m-3 col-md-9 col-lg-7 col-xl-5" >
-            <template v-if="this.user.length > 0">
+            <template v-if="this.name">
             <div class="card" style="border-radius: 15px;">
 
               <div class="card-body p-4">
@@ -147,22 +146,22 @@ export default {
                   <div class="flex-shrink-0">
 
 
-                      <img v-if="getProfilePic()" :src="this.path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+                      <img v-if="this.path" :src="this.path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
 
                   </div>
                   <div class="flex-grow-1 ms-3">
-                    <h5 class="mb-1">{{ user["Name"]}}</h5>
+                    <h5 class="mb-1">{{ user.Name }}</h5>
                     <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                          style="background-color: #efefef;">
-                      <!--div>
+                      <div>
                         <p class="small text-muted mb-1">Photos</p>
-                        <p class="mb-0">{{ JSON.parse(user["Photos"]).length }}</p>
+                        <p class="mb-0">{{ JSON.parse(user.Photos).length }}</p>
                       </div>
                       <div class="px-3">
                         <p class="small text-muted mb-1">Followers </p>
-                        <p class="mb-0">{{ JSON.parse(user["Followers"]).length }}</p>
-                      </div-->
+                        <p class="mb-0">{{ JSON.parse(user.Followers).length }}</p>
+                      </div>
                     </div>
 
                   </div>

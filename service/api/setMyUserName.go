@@ -68,10 +68,9 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	dbuser, err3 := rt.db.SetMyUserName(user.ToDatabase())
 
 	if err3 != nil {
-		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
+
 		ctx.Logger.WithError(err3).Error("can't update the username")
-		w.WriteHeader(http.StatusBadRequest) // 400
+		w.WriteHeader(http.StatusUnauthorized) // 401. Here unauthorized because probably you're changing to a username already picked
 		return
 	}
 
