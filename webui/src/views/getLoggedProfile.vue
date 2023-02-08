@@ -22,6 +22,10 @@ export default {
       this.loading = false;
     },
 
+    deletePhoto: async function(i){
+      console.log(this.photos[i])
+    },
+
     updateLogged: async function(){
       // Update logged user. This function is used on mounted() to check if the logged user has changed
 
@@ -77,6 +81,8 @@ export default {
 
       // Profile picture is not empty
       try {
+
+        console.log(JSON.parse(this.tokenUser["Photos"]).length)
         // First, we have to search for the logo
         if (this.tokenUser["ProfilePic"] != undefined){
           let logoUrl = "/images/"+this.tokenUser["ProfilePic"];
@@ -111,6 +117,7 @@ export default {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"); // get token
     if (this.token != 0){
       await this.updateLogged()
+      await this.getProfilePic()
       await this.getUserStream()
     }
   }
@@ -151,23 +158,27 @@ export default {
           <div  class="flex-grow-1 ms-3">
             <h2 class="mb-1">Your profile information, {{ this.tokenUser["Name"]}} </h2>
 
-            <img v-if="getProfilePic() && this.logo.length > 0" :src="this.logo" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+            <img v-if="this.logo.length > 0" :src="this.logo" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
             <div class="flex-shrink-0">
             </div>
 
 
-            <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                 style="background-color: #efefef;">
-              <div>
-                <p class="small text-muted mb-1">Photos uploaded</p>
-                <p class="mb-0">{{ JSON.parse(this.tokenUser["Photos"]).length }}</p>
+            <template v-if="this.logo.length > 0">
+              <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                   style="background-color: #efefef;">
+                <div>
+                  <p class="small text-muted mb-1">Photos uploaded</p>
+                  <p class="mb-0">{{ JSON.parse(this.tokenUser["Photos"]).length }}</p>
+                </div>
+                <div class="px-3">
+                  <p class="small text-muted mb-1">Followers </p>
+                  <p class="mb-0">{{ JSON.parse(this.tokenUser["Followers"]).length }}</p>
+                </div>
               </div>
-              <div class="px-3">
-                <p class="small text-muted mb-1">Followers </p>
-                <p class="mb-0">{{ JSON.parse(this.tokenUser["Followers"]).length }}</p>
-              </div>
-            </div>
+
+            </template>
+
 
 
           </div>
@@ -194,13 +205,17 @@ export default {
 
               <div class="d-flex align-items-center">
 
+                <template v-if="p['likes'].length > 0">
+
                 <div class="m-3 d-flex align-items-center">
                   <div class="m-3 d-flex align-items-center">
                     <h6 class="m-3 ">Photo ID: {{ p["id"]}}</h6>
                     <p class="m-3">Likes: {{ JSON.parse(p["likes"]).length }}</p>
                     <p class="m-3">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+                    <button type="button" @click="deletePhoto(index)" class="btn btn-primary" style="background-color:red; border-color: red"><span class="bi bi-trash">Delete photo</span> </button>
                   </div>
                 </div>
+                </template>
               </div>
 
             </div>

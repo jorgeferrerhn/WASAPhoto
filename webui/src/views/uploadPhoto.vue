@@ -129,11 +129,7 @@ export default {
                 <div class="m-3">
                   <img v-if="p['path']" :src="p['path']" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
-
                 </div>
-
-
-
               </div>
 
               <div class="d-flex align-items-center">
@@ -143,6 +139,8 @@ export default {
                     <h6 class="m-3 ">Photo ID: {{ p["id"]}}</h6>
                     <p class="m-3">Likes: {{ JSON.parse(p["likes"]).length }}</p>
                     <p class="m-3">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+
+
                   </div>
                 </div>
               </div>
