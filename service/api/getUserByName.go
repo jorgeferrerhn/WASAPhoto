@@ -5,9 +5,18 @@ import (
 	"github.com/jorgeferrerhn/WASAPhoto/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"strconv"
 )
 
 func (rt *_router) getUserByName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+
+	reqToken := r.Header.Get("Authorization")
+	token, errTok := strconv.Atoi(reqToken)
+	if errTok != nil {
+		// id was not properly cast
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	name := ps.ByName("id") // Altough is a name, we need to cast it by id
 
@@ -33,6 +42,12 @@ func (rt *_router) getUserByName(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	user.FromDatabase(dbuser)
+
+	if token != user.ID {
+		// Unauthorized request
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	defer r.Body.Close()
 

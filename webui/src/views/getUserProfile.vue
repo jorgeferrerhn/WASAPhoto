@@ -279,21 +279,31 @@ export default {
       // Profile picture is not empty
       try {
         // First, we have to search for the logo
-        let logoUrl = "/images/"+user["ProfilePic"];
-        const logo = await this.$axios.get(logoUrl, {
-              headers: {"Authorization": this.token}
-            }
-        ).then(res => res);;
+        if (user["ProfilePic"] != 0){
+          let logoUrl = "/images/"+user["ProfilePic"];
+          const logo = await this.$axios.get(logoUrl, {
+                headers: {"Authorization": this.token}
+              }
+          ).then(res => res);
 
-        console.log(logo.data)
-        this.logopaths[i] = logo.data["path"];
+          this.logopaths[i] = logo.data["path"];
 
-        console.log(this.logopaths)
-        return logo.data["path"];
+          console.log(this.logopaths)
+          return logo.data["path"];
+
+        }
+        else{
+          console.log("False")
+          return 0
+        }
+
+
 
       }catch (e) {
         this.errormsg = e.toString();
       }
+
+      return 0
 
 
     },
@@ -355,7 +365,7 @@ export default {
 
             <template v-if="!tokenIsBanned(u)">
               <h5 class="mb-1">{{ u["Name"]}}</h5>
-              <img v-if="getProfilePic(index)" :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+              <img v-if="getProfilePic(index) && logopaths[index].length > 0" :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
               <div class="flex-shrink-0">
 
