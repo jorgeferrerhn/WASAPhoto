@@ -133,26 +133,28 @@ export default {
         <input type="file" @change="onChangeFileUpload">
 
         <!-- User information -->
-      <template v-if="userNotEmpty">
+      <template v-if="userNotEmpty && this.path.length" >
         <div class="col m-3 col-md-9 col-lg-7 col-xl-5" >
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-4">
+              <!-- User information -->
               <div class="d-flex text-black">
-                <div class="flex-shrink-0">
 
-                  <template v-if="userToken['ProfilePic'] != 0">
-                    <img v-if="this.path" :src="this.path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
-                  </template>
 
-                </div>
-                <!-- User information -->
-                <template v-if="userNotEmpty">
+
+                  <div class="flex-shrink-0">
+
+                    <template v-if="userToken['ProfilePic'] != 0">
+                      <img v-if="this.path" :src="this.path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+                    </template>
+
+                  </div>
                   <div class="flex-grow-1 ms-3">
                     <h5 class="mb-1">{{ userToken["Name"]}}</h5>
                     <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                          style="background-color: #efefef;">
                       <div>
-                        <p class="small text-muted mb-1">Photos uploaded</p>
+                        <p class="small text-muted mb-1">Photos</p>
                         <p class="mb-0">{{ JSON.parse(userToken["Photos"]).length }}</p>
                       </div>
                       <div class="px-3">
@@ -163,7 +165,7 @@ export default {
 
                   </div>
 
-                </template>
+
 
               </div>
             </div>
