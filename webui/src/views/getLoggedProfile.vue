@@ -23,7 +23,30 @@ export default {
     },
 
     deletePhoto: async function(i){
-      console.log(this.photos[i])
+      this.loading = true;
+      this.errormsg = null;
+      try {
+        let tokenUrl = "/users/"+this.token+"/deletePhoto/"+this.photos[i]["id"];
+        const userToken = await this.$axios.delete(tokenUrl,{
+              headers:{"Authorization": this.token}
+            }
+        ).then(res => res);
+        this.tokenUser = userToken.data;
+        console.log(this.tokenUser)
+
+        await this.getUserStream()
+
+
+
+
+
+      } catch (e) {
+        console.log("Error")
+        this.errormsg = e.toString();
+      }
+
+      this.loading = false;
+
     },
 
     updateLogged: async function(){
@@ -154,11 +177,11 @@ export default {
 
 
         <!-- User information -->
-        <template v-if="token != 0">
+        <template v-if="this.token != 0">
           <div  class="flex-grow-1 ms-3">
             <h2 class="mb-1">Your profile information, {{ this.tokenUser["Name"]}} </h2>
 
-            <img v-if="this.logo.length > 0" :src="this.logo" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+            <img v-if="logo != null" :src="this.logo" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
             <div class="flex-shrink-0">
             </div>
@@ -188,7 +211,7 @@ export default {
         </template>
 
         <!-- Photo information -->
-        <template v-if="photos.length > 0">
+        <template v-if="photos != null">
           <div class="m-3" v-for="(p,index) in photos" :key="index">
             <h5>Photo uploaded!</h5>
             <div class="card m-3" style="border-radius: 15px;">

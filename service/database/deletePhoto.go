@@ -81,11 +81,19 @@ func (db *appdbimpl) DeletePhoto(p Photo, u User) (Photo, User, error) {
 			newPhotos = append(newPhotos, castPhotos[i])
 		}
 	}
-	savePhotos, err8 := json.Marshal(newPhotos)
-	if err8 != nil {
-		return p, u, err8
+
+	var result string
+	if newPhotos == nil {
+		result = "[]"
+	} else {
+		newRes, errMarshal := json.Marshal(newPhotos)
+		if errMarshal != nil {
+			return p, u, errMarshal
+		}
+		result = string(newRes)
+
 	}
-	u.Photos = string(savePhotos)
+	u.Photos = result
 
 	// SQL Statements
 	res, err9 := db.c.Exec(`UPDATE users SET name=?,profilepic=?,followers=?,banned=?,photos=? WHERE id=?`,
