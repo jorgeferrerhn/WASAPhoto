@@ -26,13 +26,15 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let tokenUrl = "/users/"+this.token+"/photo/"+this.photos[i]["id"];
+        let tokenUrl = "/users/"+this.token+"/photo/"+this.photos[i].ID;
         const userToken = await this.$axios.delete(tokenUrl,{
               headers:{"Authorization": this.token}
             }
         ).then(res => res);
         this.tokenUser = userToken.data;
         console.log(this.tokenUser)
+
+        await this.updateLogged()
 
 
 
