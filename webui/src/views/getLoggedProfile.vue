@@ -7,6 +7,7 @@ export default {
       token: 0,
       tokenUser:{},
       photos:[],
+      following:0,
       logo:""
     }
   },
@@ -65,6 +66,14 @@ export default {
 
         // we have to update this.photos to show the uplaoded photos
         this.photos = JSON.parse(userToken.data["Photos"])
+
+        // finally, we get the following users
+        let followingUrl = "/users/"+this.token+"/following";
+        const following = await this.$axios.get(followingUrl,{
+              headers:{"Authorization": this.token}
+            }
+        ).then(res => res);
+        this.following = following.data
 
       } catch (e) {
         console.log("Error")
@@ -173,17 +182,13 @@ export default {
                   <p class="mb-0">{{ JSON.parse(this.tokenUser.Followers).length }}</p>
                 </div>
 
-
-
+                <div class="px-3">
+                  <p class="small text-muted mb-1">Following </p>
+                  <p class="mb-0">{{ this.following }}</p>
+                </div>
 
               </div>
-
-
-
-
-
           </div>
-
 
 
         </template>

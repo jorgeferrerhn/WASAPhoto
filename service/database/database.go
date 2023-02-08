@@ -79,6 +79,9 @@ type AppDatabase interface {
 	// getUserName gets the username of a user
 	GetUserName(User) (User, error)
 
+	// getFollowingUsers gets the number of following users of a user
+	GetFollowingUsers(User) (int, error)
+
 	// getMyStream gets the stream of photos of the user searched from its ID
 	GetMyStream(User) ([]Photo, error)
 
