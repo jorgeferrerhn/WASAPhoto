@@ -34,10 +34,6 @@ export default {
         this.tokenUser = userToken.data;
         console.log(this.tokenUser)
 
-        await this.getUserStream()
-
-
-
 
 
       } catch (e) {
@@ -61,10 +57,12 @@ export default {
               headers:{"Authorization": this.token}
             }
         ).then(res => res);
+        console.log(JSON.parse(userToken.data["Photos"]))
         this.tokenUser = userToken.data;
-        console.log(this.tokenUser)
+        console.log(userToken.data)
 
-
+        // we have to update this.photos to show the uplaoded photos
+        this.photos = JSON.parse(userToken.data["Photos"])
 
       } catch (e) {
         console.log("Error")
@@ -75,27 +73,6 @@ export default {
 
 
     },
-
-    getUserStream: async function() {
-
-      this.loading = true;
-      this.errormsg = null;
-      try {
-        let url = "/users/"+this.token+"/stream";
-        const photos = await this.$axios.get(url,{
-          headers:{"Authorization": this.token}}).then(res => res);
-        this.photos = photos.data
-
-
-
-      } catch (e) {
-        this.errormsg = e.toString();
-      }
-      this.loading = false;
-    },
-
-
-
 
 
     getProfilePic: async function(){
@@ -131,7 +108,6 @@ export default {
     if (this.token != 0){
       await this.updateLogged()
       await this.getProfilePic()
-      await this.getUserStream()
     }
   }
 
@@ -183,16 +159,16 @@ export default {
             </div>
 
 
-            <template v-if="this.logo.length > 0">
+            <template v-if="logo.length > 0">
               <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                    style="background-color: #efefef;">
                 <div>
                   <p class="small text-muted mb-1">Photos uploaded</p>
-                  <p class="mb-0">{{ JSON.parse(this.tokenUser["Photos"]).length }}</p>
+                  <p class="mb-0">{{ JSON.parse(this.tokenUser.Photos).length }}</p>
                 </div>
                 <div class="px-3">
                   <p class="small text-muted mb-1">Followers </p>
-                  <p class="mb-0">{{ JSON.parse(this.tokenUser["Followers"]).length }}</p>
+                  <p class="mb-0">{{ JSON.parse(this.tokenUser.Followers).length }}</p>
                 </div>
               </div>
 
@@ -207,30 +183,25 @@ export default {
         </template>
 
         <!-- Photo information -->
-        <template v-if="photos != null">
+        <template v-if="1">
           <div class="m-3" v-for="(p,index) in photos" :key="index">
             <h5>Photo uploaded!</h5>
             <div class="card m-3" style="border-radius: 15px;">
               <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
                 <div class="m-3">
-                  <img v-if="p['path']" :src="p['path']" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
-
-
+                  <img v-if="p.Path" :src="p.Path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
                 </div>
-
-
-
               </div>
 
               <div class="d-flex align-items-center">
 
-                <template v-if="p['likes'].length > 0">
+                <template v-if="p.Likes.length > 0">
 
                 <div class="m-3 d-flex align-items-center">
                   <div class="m-3 d-flex align-items-center">
-                    <h6 class="m-3 ">Photo ID: {{ p["id"]}}</h6>
-                    <p class="m-3">Likes: {{ JSON.parse(p["likes"]).length }}</p>
-                    <p class="m-3">Comments: {{ JSON.parse(p["comments"]).length }}</p>
+                    <h6 class="m-3 ">Photo ID: {{ p.Id}}</h6>
+                    <p class="m-3">Likes: {{ JSON.parse(p.Likes).length }}</p>
+                    <p class="m-3">Comments: {{ JSON.parse(p.Comments).length }}</p>
                     <button type="button" @click="deletePhoto(index)" class="btn btn-primary" style="background-color:red; border-color: red"><span class="bi bi-trash">Delete photo</span> </button>
                   </div>
                 </div>
