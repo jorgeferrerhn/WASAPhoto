@@ -98,33 +98,23 @@ export default {
 
 
 
-    getProfilePic: async function(i){
+    getProfilePic: async function(){
       // Function that returns the profile pic path
-      let user = JSON.parse(JSON.stringify(this.tokenUser));
 
-      // Profile picture is not empty
       try {
-
-        console.log(JSON.parse(this.tokenUser["Photos"]).length)
         // First, we have to search for the logo
-        if (this.tokenUser["ProfilePic"] != undefined){
-          let logoUrl = "/users/"+this.tokenUser["Id"]+"/logo";
-          const logo = await this.$axios.get(logoUrl, {
-                headers: {"Authorization": this.token}
-              }
-          ).then(res => res);
+        let user = JSON.parse(JSON.stringify(this.tokenUser))
+        console.log(user)
 
-          this.logo = logo.data["path"];
+        let logoUrl = "/users/"+user.Id+"/logo";
+        const logo = await this.$axios.get(logoUrl, {
+              headers: {"Authorization": this.token}
+            }
+        ).then(res => res);
 
-          return logo.data["path"];
+        console.log(logo.data)
 
-        }
-        else{
-          console.log("False")
-          return 0
-        }
-
-
+        this.logo = logo.data.path
 
       }catch (e) {
         this.errormsg = e.toString();
@@ -181,7 +171,13 @@ export default {
           <div  class="flex-grow-1 ms-3">
             <h2 class="mb-1">Your profile information, {{ this.tokenUser["Name"]}} </h2>
 
-            <img v-if="logo != null" :src="this.logo" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+            <template v-if="logo.length > 0">
+              <img :src="this.logo" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
+            </template>
+
+            <template v-else >
+              <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
+            </template>
 
             <div class="flex-shrink-0">
             </div>
