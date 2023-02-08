@@ -1,15 +1,29 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 )
 
-func (db *appdbimpl) GetMyStream(u User) (User, error) {
+func contains(s []int, integer int) bool {
+	for _, v := range s {
+		if v == integer {
+			return true
+		}
+	}
 
-	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, u.ID) // Here photos will be a string, then cast to json
+	return false
+}
+
+func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
+
+	var newPhotos []Photo
+
+	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, u.ID)
 
 	if err != nil {
-		return u, err
+		return newPhotos, err
 	}
 
 	defer rows.Close()
@@ -18,18 +32,62 @@ func (db *appdbimpl) GetMyStream(u User) (User, error) {
 		err2 := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
 
 		if err2 != nil {
-			return u, err2
+			return newPhotos, err2
 		}
 
 	}
 	err3 := rows.Err()
 	if err3 != nil {
-		return u, err3
+		return newPhotos, err3
 	}
 
 	if u.Name == "" || u.ID == 0 {
-		return u, errors.New("User not found")
+		return newPhotos, errors.New("User not found")
 	}
 
-	return u, nil
+	// 1) buscar en la tabla de users cada usuario menos el actual
+	rows2, err4 := db.c.Query(`select followers,photos from users where NOT (id=?)`, u.ID)
+	if err4 != nil {
+		return newPhotos, err4
+	}
+
+	defer rows2.Close()
+
+	for rows2.Next() {
+		var thisFollowers, thisPhotos string
+		err5 := rows2.Scan(&thisFollowers, &thisPhotos)
+
+		if err5 != nil {
+			return newPhotos, err5
+		}
+		fmt.Println(thisFollowers)
+		fmt.Println(thisPhotos)
+
+		// cast the followers string to int list
+		var castFollowers []int
+		in := []byte(thisFollowers)
+		errFollowers := json.Unmarshal(in, &castFollowers)
+		if errFollowers != nil {
+			return newPhotos, errFollowers
+		}
+
+		if contains(castFollowers, u.ID) {
+			// cast the photos string to []Photo
+			var castPhotos []Photo
+			in2 := []byte(thisPhotos)
+			errPhotos := json.Unmarshal(in2, &castPhotos)
+			if errPhotos != nil {
+				return newPhotos, errPhotos
+			}
+
+			// We have to append to the list of photos the searched user's photo
+			for i := 0; i < len(castPhotos); i++ {
+				newPhotos = append(newPhotos, castPhotos[i])
+			}
+
+		}
+
+	}
+
+	return newPhotos, nil
 }

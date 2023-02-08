@@ -15,7 +15,7 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	reqToken := r.Header.Get("Authorization")
 	token, errTok := strconv.Atoi(reqToken)
-	if errTok != nil {
+	if errTok != nil || token == 0 {
 		// id was not properly cast
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -39,12 +39,6 @@ func (rt *_router) getLogo(w http.ResponseWriter, r *http.Request, ps httprouter
 	var p Photo
 	var u User
 	u.ID = i
-
-	if u.ID != token {
-		// Error: the authorization header is not valid
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
 
 	dbphoto, dbuser, err := rt.db.GetLogo(p.ToDatabase(), u.ToDatabase())
 

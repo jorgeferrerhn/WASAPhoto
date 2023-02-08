@@ -26,7 +26,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let tokenUrl = "/users/"+this.token+"/deletePhoto/"+this.photos[i]["id"];
+        let tokenUrl = "/users/"+this.token+"/photo/"+this.photos[i]["id"];
         const userToken = await this.$axios.delete(tokenUrl,{
               headers:{"Authorization": this.token}
             }

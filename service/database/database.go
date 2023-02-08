@@ -77,7 +77,7 @@ type AppDatabase interface {
 	GetUserByName(User) (User, error)
 
 	// getMyStream gets the stream of photos of the user searched from its ID
-	GetMyStream(User) (User, error)
+	GetMyStream(User) ([]Photo, error)
 
 	// getLogo gets the profile picture of a user given its ID
 	GetLogo(Photo, User) (Photo, User, error)

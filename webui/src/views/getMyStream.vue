@@ -147,7 +147,7 @@ export default {
 
         // Getting the comment
 
-        let url = "/users/"+this.token+"/commentPhoto/"+p["id"];
+        let url = "/users/"+this.token+"/comment/"+p["id"];
         const response = await this.$axios.post(url, this.comment,{
           headers:{"Authorization": this.token,
           }

@@ -110,7 +110,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/followUser/"+u["Id"];
+        let url = "/users/"+this.token+"/follower/"+u["Id"];
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
@@ -139,7 +139,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/unfollowUser/"+u["Id"];
+        let url = "/users/"+this.token+"/unfollower/"+u["Id"];
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
@@ -189,7 +189,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/banUser/"+u["Id"];
+        let url = "/users/"+this.token+"/ban/"+u["Id"];
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
@@ -211,7 +211,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/unbanUser/"+u["Id"];
+        let url = "/users/"+this.token+"/unban/"+u["Id"];
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
@@ -280,7 +280,7 @@ export default {
       try {
         // First, we have to search for the logo
         if (user["ProfilePic"] != 0){
-          let logoUrl = "/images/"+user["ProfilePic"];
+          let logoUrl = "/users/"+user["Id"]+"/logo";
           const logo = await this.$axios.get(logoUrl, {
                 headers: {"Authorization": this.token}
               }

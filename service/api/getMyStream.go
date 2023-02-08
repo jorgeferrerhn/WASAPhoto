@@ -37,24 +37,15 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	dbuser, err2 := rt.db.GetMyStream(user.ToDatabase())
+	photos, err2 := rt.db.GetMyStream(user.ToDatabase())
 	if err2 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 
 	}
 
-	user.FromDatabase(dbuser)
-
-	in := []byte(user.Photos)
-	var castPhotos []Photo
-	err3 := json.Unmarshal(in, &castPhotos)
-	if err3 != nil {
-
-	}
-
 	w.Header().Set("Content-Type", "application/json")
-	err4 := json.NewEncoder(w).Encode(castPhotos)
+	err4 := json.NewEncoder(w).Encode(photos)
 	if err4 != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

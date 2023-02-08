@@ -25,7 +25,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.id+"/deletePhoto/"+this.photo;
+        let url = "/users/"+this.id+"/photo/"+this.photo;
       const response = await this.$axios.delete(url).then(res => res);
         this.user = response.data;
 
