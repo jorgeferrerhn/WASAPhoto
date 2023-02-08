@@ -1,6 +1,7 @@
 package database
 
 import (
+	"encoding/json"
 	"errors"
 )
 
@@ -31,7 +32,34 @@ func (db *appdbimpl) GetUserProfile(u User) (User, error) {
 		return u, errors.New("User not found")
 	}
 
-	// Check if the user is banned
+	// We have to return the photos in chronological inverse order
+	// That's like getMyStream --> bubble sorting by the photo ID
+
+	// First, we cast the photos to photo array
+
+	var castPhotos []Photo
+	in2 := []byte(u.Photos)
+	errPhotos := json.Unmarshal(in2, &castPhotos)
+	if errPhotos != nil {
+		return u, errPhotos
+	}
+
+	// Bubble sort
+	for i := len(castPhotos); i > 0; i-- {
+		for j := 1; j < i; j++ {
+			if castPhotos[j-1].ID < castPhotos[j].ID {
+				intermediate := castPhotos[j]
+				castPhotos[j] = castPhotos[j-1]
+				castPhotos[j-1] = intermediate
+			}
+		}
+	}
+	// finally, we cast the photos to string
+	savePhotos, err9 := json.Marshal(castPhotos)
+	if err9 != nil {
+		return u, err9
+	}
+	u.Photos = string(savePhotos)
 
 	return u, nil
 }
