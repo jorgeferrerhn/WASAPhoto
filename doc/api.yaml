@@ -1016,7 +1016,7 @@ paths:
 
 
 
-  /users/{userId}/commentPhoto/{photoId}:
+  /users/{userId}/comment/{photoId}:
     post:
       parameters:
         - name: userId
@@ -1126,7 +1126,7 @@ paths:
 
 
 
-  /users/{userId}/likePhoto/{photoId}:
+  /users/{userId}/like/{photoId}:
     put:
       parameters:
         - name: userId
@@ -1404,7 +1404,7 @@ paths:
 
 
 
-  /users/{userId}/followUser/{userFollowed}:
+  /users/{userId}/follower/{userFollowed}:
     put:
       parameters:
         - name: userId
@@ -1558,7 +1558,7 @@ paths:
 
 
 
-  /users/{userId}/banUser/{userBanned}:
+  /users/{userId}/ban/{userBanned}:
     put:
       parameters:
         - name: userId
@@ -1611,7 +1611,7 @@ paths:
 
 
 
-  /users/{userId}/unfollowUser/{unfollowedUserId}:
+  /users/{userId}/unfollower/{unfollowedUserId}:
     delete:
       parameters:
         - name: userId
@@ -1668,7 +1668,7 @@ paths:
 
 
 
-  /users/{userId}/unbanUser/{bannedUserId}:
+  /users/{userId}/unban/{bannedUserId}:
     delete:
       parameters:
         - name: userId
@@ -1724,7 +1724,7 @@ paths:
 
 
 
-  /users/{userId}/unlikePhoto/{photoId}:
+  /users/{userId}/dislike/{photoId}:
     delete:
       parameters:
         - name: userId
@@ -1781,7 +1781,7 @@ paths:
 
 
 
-  /users/{userId}/uncommentPhoto/{photoId}:
+  /users/{userId}/uncomment/{photoId}:
     delete:
       parameters:
         - name: userId
@@ -1840,7 +1840,7 @@ paths:
                 description: Non successful operation
 
 
-  /users/{userId}/deletePhoto/{photoId}:
+  /users/{userId}/photo/{photoId}:
     delete:
       parameters:
         - name: userId

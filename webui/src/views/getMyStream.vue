@@ -45,7 +45,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/likePhoto/"+p["id"];
+        let url = "/users/"+this.token+"/like/"+p["id"];
         const response = await this.$axios.put(url, "",{
           headers:{"Authorization": this.token,
           }
@@ -75,7 +75,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/unlikePhoto/"+p["id"];
+        let url = "/users/"+this.token+"/dislike/"+p["id"];
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
