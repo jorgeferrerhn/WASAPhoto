@@ -92,6 +92,7 @@ export default {
             this.users = users;
             console.log(this.users)
 
+
           }
 
 
@@ -272,6 +273,7 @@ export default {
     getProfilePic: async function(i){
       // Function that returns the profile pic path
       let user = JSON.parse(JSON.stringify(this.users[i]));
+      console.log(user)
       console.log("getting pic,",user);
 
       // Profile picture is not empty
@@ -285,6 +287,8 @@ export default {
 
         console.log(logo.data)
         this.logopaths[i] = logo.data["path"];
+
+        console.log(this.logopaths)
         return logo.data["path"];
 
       }catch (e) {
@@ -351,7 +355,7 @@ export default {
 
             <template v-if="!tokenIsBanned(u)">
               <h5 class="mb-1">{{ u["Name"]}}</h5>
-              <img v-if="logopaths[index]" :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
+              <img v-if="getProfilePic(index)" :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
               <div class="flex-shrink-0">
 
