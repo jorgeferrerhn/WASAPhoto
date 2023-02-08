@@ -12,7 +12,7 @@ func (rt *_router) getUserByName(w http.ResponseWriter, r *http.Request, ps http
 
 	reqToken := r.Header.Get("Authorization")
 	token, errTok := strconv.Atoi(reqToken)
-	if errTok != nil {
+	if token == 0 || errTok != nil {
 		// id was not properly cast
 		w.WriteHeader(http.StatusUnauthorized)
 		return
