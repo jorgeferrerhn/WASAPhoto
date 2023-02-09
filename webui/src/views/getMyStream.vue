@@ -133,22 +133,30 @@ export default {
 
       let photo = JSON.parse(JSON.stringify(p))
       let photos = JSON.parse(JSON.stringify(this.photos))
+      console.log(photo.ID)
 
 
 
       let tokenLiked = false;
       for (let i = 0; i < photos.length; i++){
-        if (photos[i].Id == photo["id"]){
+        console.log(photos[i].ID)
+
+        if (photos[i].ID == photo.ID){
 
           let likes = JSON.parse(photos[i].Likes);
+          console.log(likes)
 
           for (let j = 0; j < likes.length; j++) {
+            console.log(likes[j])
+            console.log(this.token)
+            console.log(likes[j] == this.token)
             if (likes[j] == this.token) {
               tokenLiked = true;
             }
           }
         }
       }
+      console.log(tokenLiked)
       return tokenLiked
 
     },
