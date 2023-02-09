@@ -3,7 +3,6 @@ package database
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 )
 
 func contains(s []int, integer int) bool {
@@ -57,9 +56,6 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 		var id, thisFollowers, thisPhotos string
 		err5 := rows2.Scan(&id, &thisFollowers, &thisPhotos)
 
-		fmt.Println(u.ID, ": ", thisFollowers)
-		fmt.Println(thisPhotos)
-
 		if err5 != nil {
 			return newPhotos, err5
 		}
@@ -73,14 +69,13 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 		}
 
 		containsFollower := contains(castFollowers, u.ID)
-		fmt.Println("Contains follower: ", containsFollower)
+
 		if containsFollower {
 			// cast the photos string to []Photo
 			var castPhotos []Photo
 			in2 := []byte(thisPhotos)
 			errPhotos := json.Unmarshal(in2, &castPhotos)
 
-			fmt.Println("Cast photos: ", castPhotos)
 			if errPhotos != nil {
 				return newPhotos, errPhotos
 			}
@@ -108,8 +103,6 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 			}
 		}
 	}
-
-	fmt.Println(newPhotos)
 
 	return newPhotos, nil
 }

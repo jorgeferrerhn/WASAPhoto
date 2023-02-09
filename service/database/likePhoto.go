@@ -81,7 +81,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, errMarshal
 	}
 	p.Likes = string(result)
-	fmt.Println(p.Likes)
+
 	// We update the user's photos and the photos' stream
 
 	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
@@ -90,8 +90,6 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	if err7 != nil {
 		return p, u, err7
 	}
-
-	fmt.Println(castPhotos)
 
 	for i := 0; i < len(castPhotos); i++ {
 		if castPhotos[i].ID == p.ID { // this is the one who gets liked
@@ -106,8 +104,6 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	if err8 != nil {
 		return p, u, err8
 	}
-
-	fmt.Println(string(savePhotos))
 
 	u.Photos = string(savePhotos)
 
