@@ -348,78 +348,91 @@ export default {
 
 
     <div class="card">
-      <div class="card-body">
 
-        <h3 class="h3 mb-3 mt-3">Introduce user name to search: </h3>
-        <input class="mb-3 mt-3" v-model="search" placeholder=" Search for a user...">
-        <a href="javascript:" class="btn btn-primary m-3" @click="getUser">Search for user</a>
+      <template v-if="this.token!= 0">
+        <div class="card-body">
+
+          <h3 class="h3 mb-3 mt-3">Introduce user name to search: </h3>
+          <input class="mb-3 mt-3" v-model="search" placeholder=" Search for a user...">
+          <a href="javascript:" class="btn btn-primary m-3" @click="getUser">Search for user</a>
 
 
-        <!-- User information -->
-        <template v-if="users.length > 0 && token != 0">
-          <div v-for="(u,index) in users" :key="index"  class="flex-grow-1 ms-3">
+          <!-- User information -->
+          <template v-if="users.length > 0 && token != 0">
+            <div v-for="(u,index) in users" :key="index"  class="flex-grow-1 ms-3">
 
-            <template v-if="!tokenIsBanned(u)">
-              <h5 class="mb-1">{{ u["Name"]}}</h5>
-              <template v-if="getProfilePic(index) && logopaths[index].length > 0">
-                <img :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
+              <template v-if="!tokenIsBanned(u)">
+                <h5 class="mb-1">{{ u["Name"]}}</h5>
+                <template v-if="getProfilePic(index) && logopaths[index].length > 0">
+                  <img :src="logopaths[index]" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
+                </template>
+
+                <template v-else >
+                  <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
+                </template>
+
+
+
+                <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                     style="background-color: #efefef;">
+                  <div>
+                    <p class="small text-muted mb-1">Photos uploaded</p>
+                    <p class="mb-0">{{ JSON.parse(u["Photos"]).length }}</p>
+                  </div>
+                  <div class="px-3">
+                    <p class="small text-muted mb-1">Followers </p>
+                    <p class="mb-0">{{ JSON.parse(u["Followers"]).length }}</p>
+                  </div>
+                </div>
+
+
+                <div class="d-flex pt-1">
+
+                  <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
+
+                  <template v-if="isFollower(u)">
+                    <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unfollowUser(u)">Unfollow</button>
+                  </template>
+
+                  <template v-else>
+                    <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="followUser(u)">Follow</button>
+                  </template>
+
+                  <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
+
+                  <template v-if="userIsBanned(u)">
+                    <button type="button" class="btn btn-primary flex-grow-1 mx-auto" style="background-color:red" @click="unbanUser(u)">Unban</button>
+                  </template>
+
+                  <template v-else>
+                    <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="banUser(u)">Ban</button>
+                  </template>
+
+                </div>
+
               </template>
 
-              <template v-else >
-                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" v-bind:alt="Logo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 200px; height: 200px;">
-              </template>
+
+            </div>
 
 
 
-              <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                   style="background-color: #efefef;">
-                <div>
-                  <p class="small text-muted mb-1">Photos uploaded</p>
-                  <p class="mb-0">{{ JSON.parse(u["Photos"]).length }}</p>
-                </div>
-                <div class="px-3">
-                  <p class="small text-muted mb-1">Followers </p>
-                  <p class="mb-0">{{ JSON.parse(u["Followers"]).length }}</p>
-                </div>
-              </div>
-
-
-              <div class="d-flex pt-1">
-
-                <!--If the user doesn't follow the target, a "Follow" button must be displayed. Otherwise, an "Unfollow" button will be displayed -->
-
-                <template v-if="isFollower(u)">
-                  <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="unfollowUser(u)">Unfollow</button>
-                </template>
-
-                <template v-else>
-                  <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="followUser(u)">Follow</button>
-                </template>
-
-                <!--If the user has not banned the target, a "Ban" button must be displayed. Otherwise, an "Unban" button will be displayed -->
-
-                <template v-if="userIsBanned(u)">
-                  <button type="button" class="btn btn-primary flex-grow-1 mx-auto" style="background-color:red" @click="unbanUser(u)">Unban</button>
-                </template>
-
-                <template v-else>
-                  <button type="button" class="btn btn-primary flex-grow-1 mx-auto" @click="banUser(u)">Ban</button>
-                </template>
-
-              </div>
-
-            </template>
-
-
-          </div>
+          </template>
 
 
 
-        </template>
+        </div>
+      </template>
 
+      <template v-else>
 
+        <div class="card-body m-3">
+          <h1 class="m-3">To see other profiles, you must first log-in into WASAPhoto!.</h1>
 
-      </div>
+        </div>
+
+      </template>
+
 
     </div>
 

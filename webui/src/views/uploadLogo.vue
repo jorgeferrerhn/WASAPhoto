@@ -120,7 +120,7 @@ export default {
     <LoadingSpinner v-if="loading"></LoadingSpinner>
 
 
-
+  <template v-if="this.token != 0">
     <div class="card">
       <div class="card-body">
 
@@ -129,12 +129,12 @@ export default {
         <input type="file" @change="onChangeFileUpload">
 
         <!-- User information -->
-      <template v-if="userNotEmpty && this.path.length" >
-        <div class="col m-3 col-md-9 col-lg-7 col-xl-5" >
-          <div class="card" style="border-radius: 15px;">
-            <div class="card-body p-4">
-              <!-- User information -->
-              <div class="d-flex text-black">
+        <template v-if="userNotEmpty && this.path.length" >
+          <div class="col m-3 col-md-9 col-lg-7 col-xl-5" >
+            <div class="card" style="border-radius: 15px;">
+              <div class="card-body p-4">
+                <!-- User information -->
+                <div class="d-flex text-black">
 
 
 
@@ -163,16 +163,26 @@ export default {
 
 
 
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </template>
+        </template>
 
 
         <a href="javascript:" class="btn btn-primary" @click="uploadLogo">Upload logo for the user</a>
       </div>
     </div>
+  </template>
+
+    <template v-else>
+
+      <div class="card-body m-3">
+        <h1 class="m-3">To change your profile picture, you must first log-in into WASAPhoto!.</h1>
+
+      </div>
+
+    </template>
 
 
   </div>

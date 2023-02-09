@@ -119,66 +119,78 @@ export default {
     <LoadingSpinner v-if="loading"></LoadingSpinner>
 
 
+    <template v-if="this.token != 0">
+      <div class="card">
+        <div class="card-body">
 
-    <div class="card">
-      <div class="card-body">
-
-        <h3 class="h3">Introduce your new user name...: </h3>
-        <input v-model="search" placeholder="jose">
+          <h3 class="h3">Introduce your new user name...: </h3>
+          <input v-model="search" placeholder="jose">
 
 
-        <!-- User information -->
-        <template v-if="1">
+          <!-- User information -->
+
           <div class="col m-3 col-md-9 col-lg-7 col-xl-5" >
             <template v-if="this.name">
-            <div class="card" style="border-radius: 15px;">
+              <div class="card" style="border-radius: 15px;">
 
-              <div class="card-body p-4">
-                <!-- User information -->
-                <div class="d-flex text-black">
+                <div class="card-body p-4">
+                  <!-- User information -->
+                  <div class="d-flex text-black">
 
 
 
-                  <div class="flex-shrink-0">
+                    <div class="flex-shrink-0">
 
 
                       <img v-if="this.path" :src="this.path" v-bind:alt="Photo" class="img-fluid m-3" style="border-radius: 10px; max-width: 100%; width: 300px; height: 200px;">
 
 
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    <h5 class="mb-1">{{ user.Name }}</h5>
-                    <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                         style="background-color: #efefef;">
-                      <div>
-                        <p class="small text-muted mb-1">Photos</p>
-                        <p class="mb-0">{{ JSON.parse(user.Photos).length }}</p>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                      <h5 class="mb-1">{{ user.Name }}</h5>
+                      <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                           style="background-color: #efefef;">
+                        <div>
+                          <p class="small text-muted mb-1">Photos</p>
+                          <p class="mb-0">{{ JSON.parse(user.Photos).length }}</p>
+                        </div>
+                        <div class="px-3">
+                          <p class="small text-muted mb-1">Followers </p>
+                          <p class="mb-0">{{ JSON.parse(user.Followers).length }}</p>
+                        </div>
                       </div>
-                      <div class="px-3">
-                        <p class="small text-muted mb-1">Followers </p>
-                        <p class="mb-0">{{ JSON.parse(user.Followers).length }}</p>
-                      </div>
+
                     </div>
 
+
+
                   </div>
-
-
-
                 </div>
+
+
               </div>
-
-
-            </div>
             </template>
-          </div>
-        </template>
 
-        <a href="javascript:" class="btn btn-primary" @click="setMyUserName">Set new username</a>
+          </div>
+
+    <a href="javascript:" class="btn btn-primary" @click="setMyUserName">Set new username</a>
+  </div>
+  </div>
+
+
+    </template>
+
+    <template v-else>
+      <div class="card-body m-3">
+        <h1 class="m-3">To set your username, you must first log-in into WASAPhoto!.</h1>
+
       </div>
-    </div>
+    </template>
+
 
 
   </div>
+
 </template>
 
 <style scoped>

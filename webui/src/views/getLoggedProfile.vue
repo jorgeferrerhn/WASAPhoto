@@ -189,7 +189,16 @@ export default {
 
         </template>
 
-        <!-- Photo information -->
+        <template v-else>
+
+          <div class="card-body m-3">
+            <h1 class="m-3">To see your user profile, you must first log-in into WASAPhoto!.</h1>
+
+          </div>
+
+        </template>
+
+          <!-- Photo information -->
 
           <div class="m-3" v-for="(p,index) in photos" :key="index">
 

@@ -108,7 +108,7 @@ export default {
     <LoadingSpinner v-if="loading"></LoadingSpinner>
 
 
-
+  <template v-if="this.token != 0">
     <div class="card">
       <div class="card-body">
         <h3 class="h3">Select new picture to upload...: </h3>
@@ -151,6 +151,16 @@ export default {
 
       </div>
     </div>
+
+  </template>
+
+  <template v-else>
+    <div class="card-body m-3">
+      <h1 class="m-3">To upload a photo, you must first log-in into WASAPhoto!.</h1>
+
+    </div>
+  </template>
+
 
 
   </div>
