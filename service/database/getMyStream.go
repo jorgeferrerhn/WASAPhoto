@@ -3,6 +3,7 @@ package database
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 )
 
 func contains(s []int, integer int) bool {
@@ -45,7 +46,7 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 	}
 
 	// 1) buscar en la tabla de users cada usuario menos el actual
-	rows2, err4 := db.c.Query(`select followers,photos from users where NOT (id=?)`, u.ID)
+	rows2, err4 := db.c.Query(`select id,followers,photos from users where NOT (id=?)`, u.ID)
 	if err4 != nil {
 		return newPhotos, err4
 	}
@@ -53,8 +54,11 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 	defer rows2.Close()
 
 	for rows2.Next() {
-		var thisFollowers, thisPhotos string
-		err5 := rows2.Scan(&thisFollowers, &thisPhotos)
+		var id, thisFollowers, thisPhotos string
+		err5 := rows2.Scan(&id, &thisFollowers, &thisPhotos)
+
+		fmt.Println(u.ID, ": ", thisFollowers)
+		fmt.Println(thisPhotos)
 
 		if err5 != nil {
 			return newPhotos, err5
@@ -68,11 +72,15 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 			return newPhotos, errFollowers
 		}
 
-		if contains(castFollowers, u.ID) {
+		containsFollower := contains(castFollowers, u.ID)
+		fmt.Println("Contains follower: ", containsFollower)
+		if containsFollower {
 			// cast the photos string to []Photo
 			var castPhotos []Photo
 			in2 := []byte(thisPhotos)
 			errPhotos := json.Unmarshal(in2, &castPhotos)
+
+			fmt.Println("Cast photos: ", castPhotos)
 			if errPhotos != nil {
 				return newPhotos, errPhotos
 			}
@@ -100,6 +108,8 @@ func (db *appdbimpl) GetMyStream(u User) ([]Photo, error) {
 			}
 		}
 	}
+
+	fmt.Println(newPhotos)
 
 	return newPhotos, nil
 }

@@ -4,40 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
 )
 
 func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	var castPhotos []Photo
 	var castLikes []int
-
-	// search for the user
-	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
-
-	if err != nil {
-
-		return p, u, err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-
-		err2 := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
-
-		if err2 != nil {
-			return p, u, err2
-		}
-	}
-
-	if u.Name == "" {
-		// el usuario no existía
-		return p, u, errors.New("User not found")
-	}
-	err3 := rows.Err()
-	if err3 != nil {
-		return p, u, err3
-	}
 
 	// search the photo
 	rows2, err4 := db.c.Query(`select userId,path,likes,comments,date from photos where id=?`, p.ID)
@@ -65,13 +36,41 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, errors.New("Photo not found")
 	}
 
+	// search for the user who get its photo commented
+	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
+
+	if err != nil {
+
+		return p, u, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+
+		err2 := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+
+		if err2 != nil {
+			return p, u, err2
+		}
+	}
+
+	if u.Name == "" {
+		// el usuario no existía
+		return p, u, errors.New("User not found")
+	}
+	err3 := rows.Err()
+	if err3 != nil {
+		return p, u, err3
+	}
+
 	in := []byte(p.Likes)
 	errLikes := json.Unmarshal(in, &castLikes)
 	if errLikes != nil {
 		return p, u, errLikes
 	}
 
-	liked := strings.Contains(p.Likes, fmt.Sprint(u.ID))
+	liked := contains(castLikes, u.ID)
 
 	if !liked {
 		castLikes = append(castLikes, u.ID)
@@ -82,7 +81,7 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, errMarshal
 	}
 	p.Likes = string(result)
-
+	fmt.Println(p.Likes)
 	// We update the user's photos and the photos' stream
 
 	// Here we update the information of the photo on "raw format" { 1 Content ...} --> json.Unmarshal
@@ -92,8 +91,10 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 		return p, u, err7
 	}
 
+	fmt.Println(castPhotos)
+
 	for i := 0; i < len(castPhotos); i++ {
-		if castPhotos[i].ID == p.ID { // this is the one who gets commented
+		if castPhotos[i].ID == p.ID { // this is the one who gets liked
 			castPhotos[i].Likes = p.Likes
 		}
 	}
@@ -105,6 +106,9 @@ func (db *appdbimpl) LikePhoto(p Photo, u User) (Photo, User, error) {
 	if err8 != nil {
 		return p, u, err8
 	}
+
+	fmt.Println(string(savePhotos))
+
 	u.Photos = string(savePhotos)
 
 	// SQL Statements

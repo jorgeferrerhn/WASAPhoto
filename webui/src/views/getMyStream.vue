@@ -26,18 +26,16 @@ export default {
     getUserStream: async function() {
 
 
+
       this.loading = true;
       this.errormsg = null;
       try {
         let url = "/users/"+this.token+"/stream";
-        const response = await this.$axios.get(url,{
+        const photos = await this.$axios.get(url,{
           headers:{"Authorization": this.token}}).then(res => res);
+        this.photos = photos.data
 
-
-        this.photos = response.data
-
-
-
+        console.log(this.photos)
 
         if (this.photos != null){
           for (let i = 0; i < this.photos.length; i++){
@@ -59,14 +57,14 @@ export default {
       this.loading = false;
     },
 
-    likePhoto: async function(p,index) {
+    likePhoto: async function(p) {
 
       this.loading = true;
       this.errormsg = null;
       try {
         let castPhoto = JSON.parse(JSON.stringify(p))
-
         console.log(castPhoto)
+
         let url = "/users/"+this.token+"/like/"+castPhoto.ID;
 
         const response = await this.$axios.put(url, "",{
@@ -74,13 +72,22 @@ export default {
           }
         }).then(res => res);
         let photo = response.data;
-
         console.log(photo)
+        // console.log(this.photos[castPhoto.ID])
+
+        /*
+
         // update this.photos list to update likes
-        this.photos[index]["likes"] = photo["likes"]
+        for (let i = 0; i < this.photos.length; i++) {
+          if (this.photos[i]["id"] == photo["id"]){
+
+            // update likes list
+            this.photos[i]["likes"] = photo["likes"]
+          }
+        }
 
         await this.getUserStream();
-
+        */
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -240,10 +247,8 @@ export default {
     <div class="card m-3">
 
 
-      <template v-if="photos != null">
+      <template v-if="1">
         <div class="m-3" v-for="(p,index) in photos" :key="index">
-
-
           <div class="card m-3" style="border-radius: 15px;">
             <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
               <div class="m-3">
@@ -257,13 +262,13 @@ export default {
                 <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
 
 
-                  <div v-for="(c,index2) in comments[index]" :key="index2" class="d-inline-flex p-3">
-                    <h6 class="m-3">{{c['userId']}} : {{c['content']}}</h6>
-                    <div>
-                      <button type="button" @click="deleteComment(index,index2)"  class="btn btn-secondary" style="background-color:red; border-color: red"><span class="bi bi-trash">Remove</span> </button>
-                    </div>
-
+                <div v-for="(c,index2) in comments[index]" :key="index2" class="d-inline-flex p-3">
+                  <h6 class="m-3">{{c['userId']}} : {{c['content']}}</h6>
+                  <div>
+                    <button type="button" @click="deleteComment(index,index2)"  class="btn btn-secondary" style="background-color:red; border-color: red"><span class="bi bi-trash">Remove</span> </button>
                   </div>
+
+                </div>
 
 
 
@@ -284,10 +289,10 @@ export default {
                   <button class="btn btn-primary m-3" @click="commentPhoto(p,index)">Comment</button>
 
                   <template v-if="!isLiked(p)">
-                    <button class="btn btn-primary m-3" @click="likePhoto(p,index)">Like</button>
+                    <button class="btn btn-primary m-3" @click="likePhoto(p)">Like</button>
                   </template>
                   <template v-else>
-                    <button class="btn btn-primary m-3" @click="unlikePhoto(p,index)">Unlike</button>
+                    <button class="btn btn-primary m-3" @click="unlikePhoto(p)">Unlike</button>
                   </template>
                 </div>
 
@@ -297,7 +302,7 @@ export default {
                 <div class="m-3">
                   <h6 class="mb-1 ">Photo ID: {{ p.ID }}</h6>
                   <p class="mb-1">Likes: {{ JSON.parse(p.Likes).length }}</p>
-                  <p class="mb-1">Comments: {{ this.comments[index].length }}</p>
+                  <p class="mb-1">Comments: {{ p.Comments[index].length }}</p>
                 </div>
               </div>
             </div>
