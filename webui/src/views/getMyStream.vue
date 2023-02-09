@@ -173,8 +173,9 @@ export default {
         console.log(photo)
         // update this.photos list to update likes
 
-        this.photos[index] = photo
+        // this.photos[index] = photo
         await this.getUserStream();
+        document.location.reload()
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -252,7 +253,7 @@ export default {
     <div class="card m-3">
 
 
-      <template v-if="1">
+      <template v-if="photos.length > 0">
         <div class="m-3" v-for="(p,index) in photos" :key="index">
           <div class="card m-3" style="border-radius: 15px;">
             <div class="d-flex p-2 mb-2" style="border-radius: 15px;background-color: #efefef;">
@@ -303,13 +304,20 @@ export default {
 
 
               </div>
-              <div class="m-3">
+
+              <template v-if="p.Likes.length > 0">
                 <div class="m-3">
-                  <h6 class="mb-1 ">Photo ID: {{ p.ID }}</h6>
-                  <p class="mb-1">Likes: {{ JSON.parse(p.Likes).length }}</p>
-                  <p class="mb-1">Comments: {{ p.Comments[index].length }}</p>
+                  <div class="m-3">
+                    <h6 class="mb-1 ">Photo ID: {{ p.ID }}</h6>
+
+
+                    <p class="mb-1">Likes: {{ JSON.parse(p.Likes).length }}</p>
+                    <p class="mb-1">Comments: {{ p.Comments[index].length }}</p>
+                  </div>
                 </div>
-              </div>
+
+              </template>
+
             </div>
 
           </div>

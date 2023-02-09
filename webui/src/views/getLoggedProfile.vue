@@ -205,9 +205,11 @@ export default {
                   <template v-if="JSON.parse(p.Comments).length > 0">
                     <div v-for="(c,index2) in JSON.parse(p.Comments)" :key="index2" class="d-inline-flex p-3">
                       <h6 class="m-3">{{c['UserId']}} : {{c['Content']}}</h6>
-                      <div>
+                      <!--
+                      Here, we won't put a remove button, since comments can only be removed from the author
+                      div>
                         <button type="button" @click="deleteComment(index2)"  class="btn btn-secondary" style="background-color:red; border-color: red"><span class="bi bi-trash">Remove</span> </button>
-                      </div>
+                      </div-->
 
                     </div>
 
