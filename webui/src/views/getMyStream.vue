@@ -75,6 +75,8 @@ export default {
         console.log(photo)
         // console.log(this.photos[castPhoto.ID])
 
+        await this.getUserStream();
+
         /*
 
         // update this.photos list to update likes
@@ -86,7 +88,7 @@ export default {
           }
         }
 
-        await this.getUserStream();
+
         */
 
       } catch (e) {
@@ -101,21 +103,24 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let url = "/users/"+this.token+"/dislike/"+p["id"];
+        let castPhoto = JSON.parse(JSON.stringify(p))
+        console.log(p)
+        let url = "/users/"+this.token+"/dislike/"+castPhoto.ID;
         const response = await this.$axios.delete(url,{
           headers:{"Authorization": this.token,
           }
         }).then(res => res);
         let photo = response.data;
 
-
+        await this.getUserStream();
+        /*
         // update this.photos list to update likes
         for (let i = 0; i < this.photos.length; i++) {
           if (this.photos[i].ID == photo.ID) {
             // update likes list
             this.photos[i].Likes = photo.Likes
           }
-        }
+        }*/
 
       } catch (e) {
         this.errormsg = e.toString();

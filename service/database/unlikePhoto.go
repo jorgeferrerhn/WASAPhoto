@@ -10,34 +10,6 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 	var castPhotos []Photo
 	var castLikes []int
 
-	// search for the user
-	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
-
-	if err != nil {
-
-		return p, u, err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-
-		err2 := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
-
-		if err2 != nil {
-			return p, u, err2
-		}
-	}
-
-	if u.Name == "" {
-		// el usuario no existía
-		return p, u, errors.New("User not found")
-	}
-	err3 := rows.Err()
-	if err3 != nil {
-		return p, u, err3
-	}
-
 	// search the photo
 	rows2, err4 := db.c.Query(`select userId,path,likes,comments,date from photos where id=?`, p.ID)
 
@@ -65,6 +37,34 @@ func (db *appdbimpl) UnlikePhoto(p Photo, u User) (Photo, User, error) {
 	if p.Path == "" {
 		// el usuario no existía
 		return p, u, errors.New("Photo not found")
+	}
+
+	// search for the user
+	rows, err := db.c.Query(`select name,profilepic,followers,banned,photos from users where id=?`, p.UserId)
+
+	if err != nil {
+
+		return p, u, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+
+		err2 := rows.Scan(&u.Name, &u.ProfilePic, &u.Followers, &u.Banned, &u.Photos)
+
+		if err2 != nil {
+			return p, u, err2
+		}
+	}
+
+	if u.Name == "" {
+		// el usuario no existía
+		return p, u, errors.New("User not found")
+	}
+	err3 := rows.Err()
+	if err3 != nil {
+		return p, u, err3
 	}
 
 	in2 := []byte(p.Likes)
