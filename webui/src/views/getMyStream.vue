@@ -5,6 +5,7 @@ export default {
       errormsg: null,
       loading: false,
       photos:[],
+      comments: [],
       usernames:[],
       token: 0
     }
@@ -33,6 +34,7 @@ export default {
         const photos = await this.$axios.get(url,{
           headers:{"Authorization": this.token}}).then(res => res);
         this.photos = photos.data
+
         console.log(this.photos)
 
         if (this.photos != null){
@@ -42,6 +44,7 @@ export default {
             const name = await this.$axios.get(url,{
               headers:{"Authorization": this.photos[i].UserId}}).then(res => res.data);
             this.usernames.push(name)
+            this.comments.push([]) //This will be useful for later
           }
 
 
@@ -143,7 +146,7 @@ export default {
 
     deleteComment: async function (index,index2){
       let comment = JSON.parse(this.photos[index].Comments)[index2];
-      console.log(comment)
+
 
       this.loading = true;
       this.errormsg = null;
@@ -160,13 +163,7 @@ export default {
         console.log(photo)
         // update this.photos list to update likes
 
-        let updatedPhoto = JSON.parse(JSON.stringify(this.photos[index]))
-        console.log(JSON.parse(photo.comments))
-        updatedPhoto.Comments = JSON.parse(photo.comments)
-        this.photos[index] = updatedPhoto
-
-
-        console.log(this.photos[index])
+        this.photos[index] = photo
         await this.getUserStream();
 
       } catch (e) {
@@ -179,7 +176,7 @@ export default {
     },
 
 
-    commentPhoto: async function(p) {
+    commentPhoto: async function(p,index) {
 
       this.loading = true;
       this.errormsg = null;
@@ -196,18 +193,10 @@ export default {
           headers:{"Authorization": this.token,
           }
         }).then(res => res);
-        let photo = response.data;
-        console.log(photo)
+        let comment = response.data;
+        console.log(comment)
 
-
-        // update this.photos list to update likes
-        for (let i = 0; i < this.photos.length; i++) {
-          if (this.photos[i]["id"] == photo["id"]){
-
-            // update likes list
-            this.photos[i]["comments"] = photo["comments"]
-          }
-        }
+        this.comments[index].push(comment) // Add comment
 
 
 
@@ -240,11 +229,7 @@ export default {
 
       <div class="btn-toolbar mb-2 mb-md-0">
 
-        <div class="btn-group me-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
-            Refresh
-          </button>
-        </div>
+
 
       </div>
     </div>
@@ -271,16 +256,16 @@ export default {
               <div class="m-3">
                 <h5 class="mb-1 m-3 p-3">Photo comments: </h5>
 
-                <template v-if="JSON.parse(p.Comments).length > 0">
-                  <div v-for="(c,index2) in JSON.parse(p.Comments)" :key="index2" class="d-inline-flex p-3">
-                    <h6 class="m-3">{{c['UserId']}} : {{c['Content']}}</h6>
+
+                  <div v-for="(c,index2) in comments[index]" :key="index2" class="d-inline-flex p-3">
+                    <h6 class="m-3">{{c['userId']}} : {{c['content']}}</h6>
                     <div>
                       <button type="button" @click="deleteComment(index,index2)"  class="btn btn-secondary" style="background-color:red; border-color: red"><span class="bi bi-trash">Remove</span> </button>
                     </div>
 
                   </div>
 
-                </template>
+
 
 
               </div>
@@ -296,7 +281,7 @@ export default {
               <div class="m-3">
                 <input v-model="comment" placeholder="Add a comment..." class="form-control">
                 <div class="d-flex align-items-center">
-                  <button class="btn btn-primary m-3" @click="commentPhoto(p)">Comment</button>
+                  <button class="btn btn-primary m-3" @click="commentPhoto(p,index)">Comment</button>
 
                   <template v-if="!isLiked(p)">
                     <button class="btn btn-primary m-3" @click="likePhoto(p)">Like</button>
@@ -312,7 +297,7 @@ export default {
                 <div class="m-3">
                   <h6 class="mb-1 ">Photo ID: {{ p.ID }}</h6>
                   <p class="mb-1">Likes: {{ JSON.parse(p.Likes).length }}</p>
-                  <p class="mb-1">Comments: {{ JSON.parse(p.Comments).length }}</p>
+                  <p class="mb-1">Comments: {{ comments[index].length }}</p>
                 </div>
               </div>
             </div>
